@@ -2,7 +2,7 @@
 	<div>
 		<Search></Search>
 		<div class="tableCss">
-			<el-table :data="tableData3" height="600" border stripe style="width: 100%" :row-class-name="tableRowClassName">
+			<el-table :data="tableData3" height="400" border stripe style="width: 100%" :row-class-name="tableRowClassName">
 				<el-table-column align="center" prop="date" label="编号" width="180">
 				</el-table-column>
 				<el-table-column align="center" prop="date" label="创建日期" width="180">
@@ -120,16 +120,16 @@
 	}
 </script>
 
-<style>
+<style lang="scss">
 	.tableCss {
 		box-sizing: border-box;
 		padding: 20px;
 	}
-	
+
 	.el-table .warning-row {
 		background: oldlace;
 	}
-	
+
 	.el-table .success-row {
 		background: #f0f9eb;
 	}

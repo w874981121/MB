@@ -1,150 +1,164 @@
 <!--导航组件-->
 <template>
-	<el-row>
-		<el-col :span="12">
-			<el-menu :router="true" default-active="/websitemm" class="el-menu-vertical-demo" @select="handleSelect" @open="handleOpen" @close="handleClose" background-color="#545c64" text-color="#fff" :unique-opened="true" active-text-color="#ffd04b">
-				<template v-for="(i, index) in navlistData">
-					<el-submenu v-if="i.list" :index="indexergeM(index,index)" :key="i.key">
-						<template>
-							<!--<i class="el-icon-caret-right"></i>-->
-							<span slot="title" :style="{'color': indexergeM(index,index) == navindex ? '#ffd04b' : '#fff'}">{{i.name}}</span>
-						</template>
-						<el-menu-item-group v-for="(f, len) in i.list" :key="f.key">
-							<el-menu-item :index="f.url">{{f.name}}</el-menu-item>
-						</el-menu-item-group>
-					</el-submenu>
-					<el-menu-item :index="i.url" v-if="i.url">
-						<!--<i class="el-icon-setting"></i>-->
-						<span slot="title">{{i.name}}</span>
-					</el-menu-item>
-				</template>
-			</el-menu>
-		</el-col>
-	</el-row>
+  <el-row>
+    <el-col :span="12">
+      <el-menu :router="true" default-active="/websitemm" class="el-menu-vertical-demo" @select="handleSelect"
+               @open="handleOpen" @close="handleClose" background-color="#545c64" text-color="#fff"
+               :unique-opened="true" active-text-color="#ffd04b">
+        <template v-for="(i, index) in navlistData">
+
+          <el-submenu v-if="i.list" :index="indexergeM(index,index)" :key="i.key">
+            <template slot="title">
+              <!--<i class="el-icon-caret-right"></i>-->
+              <span slot="title"
+                    :style="{'color': indexergeM(index,index) == navindex ? '#ffd04b' : '#fff'}">{{i.name}}</span>
+            </template>
+
+            <el-menu-item v-for="(f, len) in i.list" :key="f.key" :index="f.url">{{f.name}}</el-menu-item>
+
+          </el-submenu>
+
+
+          <el-menu-item :index="i.url" v-if="i.url">
+            <!--<i class="el-icon-setting"></i>-->
+            <span slot="title">{{i.name}}</span>
+          </el-menu-item>
+        </template>
+      </el-menu>
+    </el-col>
+  </el-row>
 </template>
 
 <style lang="scss">
-	.nav {
-		.el-row {
-			height: 100%;
-		}
-		.el-col-12 {
-			width: 100%;
-			height: 100%;
-		}
-		.el-submenu,
-		.el-menu-item {
-			min-width: 150px;
-			text-align: left;
-		}
-		.el-icon-arrow-down::before {
-			color: #fff !important;
-		}
-		.el-menu-vertical-demo {
-			height: 100%;
-		}
-		.el-menu-item {
-			height: 36px;
-			line-height: 36px;
-		}
-		.el-submenu__title {
-			height: 48px;
-			line-height: 48px;
-		}
-	}
+  .nav {
+
+  .el-row {
+    height: 100%;
+  }
+
+  .el-col-12 {
+    width: 100%;
+    height: 100%;
+  }
+
+  .el-submenu,
+  .el-menu-item {
+    min-width: 150px;
+    text-align: left;
+  }
+
+  .el-icon-arrow-down::before {
+    color: #fff !important;
+  }
+
+  .el-menu-vertical-demo {
+    height: 100%;
+  }
+
+  .el-menu-item {
+    height: 36px;
+    line-height: 36px;
+  }
+
+  .el-submenu__title {
+    height: 48px;
+    line-height: 48px;
+  }
+
+  }
 </style>
 
 <script>
-	export default {
-		name: 'NavList',
-		data() {
-			return {
-				navindex:"0-0",  //上级导航index
-				navlistData: [{
-					name: '账号管理',
-					key: '0',
-					list: [{
-						name: '网站账号管理',
-						key: '00',
-						url: '/websitemm',
-					}, {
-						name: '角色权限管理',
-						key: '01',
-						url: '/roleam',
-					}]
-				}, {
-					name: '网站管理',
-					key: '1',
-					list: [{
-						name: '论坛管理',
-						key: '10',
-						url: '/forumm',
-					}, {
-						name: '企业公告',
-						key: '11',
-						url: '/enterprisa',
-					}, {
-						name: '专家讲堂',
-						key: '12',
-						url: '/expertlh',
-					}]
-				}, {
-					name: 'VIP医生管理',
-					key: '2',
-					url: '/vipdm',
-				}, {
-					name: '医生管理',
-					key: '3',
-					url: '/doctorm',
-				}, {
-					name: 'VIP会员管理',
-					key: '4',
-					list: [{
-						name: 'VIP信息',
-						key: '40',
-						url: '/vipi',
-					}, {
-						name: '健康记录',
-						key: '41',
-						url: '/healthr',
-					}, {
-						name: '异常报告',
-						key: '42',
-						url: '/abnormalr',
-					}, {
-						name: '远程订单',
-						key: '43',
-						url: '/remoteo',
-					}, {
-						name: '数据统计',
-						key: '44',
-						url: '/datas',
-					}]
-				}, {
-					name: '普通会员管理',
-					key: '5',
-					url: '/generalmm',
-				}, {
-					name: '登录遇到问题',
-					key: '6',
-					url: '/loginlog',
-				}]
-			}
-		},
-		methods: {
-			handleOpen(key, keyPath) {
-				console.log(key, keyPath);
-			},
-			handleClose(key, keyPath) {
-				console.log(key, keyPath);
-			},
-			handleSelect(key, keyPath){
-				this.navindex = keyPath[0];
-				console.log(key, keyPath)
-			},
-			indexergeM(i, d) {
-				return i + "-" + d
-			}
-		}
-	}
+  export default {
+    name: 'NavList',
+    data() {
+      return {
+        navindex: "0-0",  //上级导航index
+        navlistData: [{
+          name: '账号管理',
+          key: '0',
+          list: [{
+            name: '网站账号管理',
+            key: '00',
+            url: '/websitemm',
+          }, {
+            name: '角色权限管理',
+            key: '01',
+            url: '/roleam',
+          }]
+        }, {
+          name: '网站管理',
+          key: '1',
+          list: [{
+            name: '论坛管理',
+            key: '10',
+            url: '/forumm',
+          }, {
+            name: '企业公告',
+            key: '11',
+            url: '/enterprisa',
+          }, {
+            name: '专家讲堂',
+            key: '12',
+            url: '/expertlh',
+          }]
+        }, {
+          name: 'VIP医生管理',
+          key: '2',
+          url: '/vipdm',
+        }, {
+          name: '医生管理',
+          key: '3',
+          url: '/doctorm',
+        }, {
+          name: 'VIP会员管理',
+          key: '4',
+          list: [{
+            name: 'VIP信息',
+            key: '40',
+            url: '/vipi',
+          }, {
+            name: '健康记录',
+            key: '41',
+            url: '/healthr',
+          }, {
+            name: '异常报告',
+            key: '42',
+            url: '/abnormalr',
+          }, {
+            name: '远程订单',
+            key: '43',
+            url: '/remoteo',
+          }, {
+            name: '数据统计',
+            key: '44',
+            url: '/datas',
+          }]
+        }, {
+          name: '普通会员管理',
+          key: '5',
+          url: '/generalmm',
+        }, {
+          name: '登录遇到问题',
+          key: '6',
+          url: '/loginlog',
+        }]
+      }
+    },
+    methods: {
+      handleOpen(key, keyPath) {
+        console.log(key, keyPath);
+      },
+      handleClose(key, keyPath) {
+        console.log(key, keyPath);
+      },
+      handleSelect(key, keyPath){
+        this.navindex = keyPath[0];
+        console.log(key, keyPath)
+      },
+      indexergeM(i, d) {
+        return i + "-" + d
+      }
+    }
+  }
 </script>

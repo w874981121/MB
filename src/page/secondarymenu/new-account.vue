@@ -1,8 +1,17 @@
 <template>
+  
 </template>
 
-<script>
+<script type="text/javascript">
+  export default {
+    name: 'new-account',
+    data(){
+      return{
+
+      }
+    }
+  }
 </script>
 
-<style>
+<style scoped lang="scss">
 </style>

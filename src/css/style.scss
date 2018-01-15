@@ -1,3 +1,11 @@
+
+*{
+  margin: 0;
+  padding: 0;
+}
+.db{
+  display: block;
+}
 .fl{
     float: left;
 }
@@ -10,8 +18,14 @@
 .ml20{
     margin-left: 20px;
 }
+.mt10{
+  margin-top: 10px;
+}
 .mt20{
     margin-top: 20px;
+}
+.mb18{
+  margin-bottom: 18px;
 }
 .w200{
     width: 200px;
@@ -22,4 +36,9 @@
 .tac{
     text-align: center;
 }
-
+.fsz14{
+  font-size: 14px;
+}
+.fsz20{
+  font-size: 20px;
+}

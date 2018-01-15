@@ -2,24 +2,20 @@
 <template>
   <el-row>
     <el-col :span="12">
-      <el-menu :router="true" default-active="/websitemm" class="el-menu-vertical-demo" @select="handleSelect"
+      <el-menu :router="true" :default-active="initnav" class="el-menu-vertical-demo" @select="handleSelect"
                @open="handleOpen" @close="handleClose" background-color="#545c64" text-color="#fff"
                :unique-opened="true" active-text-color="#ffd04b">
         <template v-for="(i, index) in navlistData">
-
-          <el-submenu v-if="i.list" :index="indexergeM(index,index)" :key="i.key">
+          <el-submenu v-if="i.list" :index="i.url" :key="i.key">
             <template slot="title">
               <!--<i class="el-icon-caret-right"></i>-->
               <span slot="title"
-                    :style="{'color': indexergeM(index,index) == navindex ? '#ffd04b' : '#fff'}">{{i.name}}</span>
+                    :style="{'color': repTest(i.url, initindex) ? '#ffd04b' : '#fff'}">{{i.name}}</span>
             </template>
-
             <el-menu-item v-for="(f, len) in i.list" :key="f.key" :index="f.url">{{f.name}}</el-menu-item>
-
           </el-submenu>
 
-
-          <el-menu-item :index="i.url" v-if="i.url">
+          <el-menu-item :index="i.url" v-if="!i.list">
             <!--<i class="el-icon-setting"></i>-->
             <span slot="title">{{i.name}}</span>
           </el-menu-item>
@@ -31,40 +27,32 @@
 
 <style lang="scss">
   .nav {
-
   .el-row {
     height: 100%;
   }
-
   .el-col-12 {
     width: 100%;
     height: 100%;
   }
-
   .el-submenu,
   .el-menu-item {
     min-width: 150px;
     text-align: left;
   }
-
   .el-icon-arrow-down::before {
     color: #fff !important;
   }
-
   .el-menu-vertical-demo {
     height: 100%;
   }
-
   .el-menu-item {
     height: 36px;
     line-height: 36px;
   }
-
   .el-submenu__title {
     height: 48px;
     line-height: 48px;
   }
-
   }
 </style>
 
@@ -74,74 +62,79 @@
     data() {
       return {
         navindex: "0-0",  //上级导航index
+        initnav: "websitemm",
+        initindex: "websitemm",
         navlistData: [{
           name: '账号管理',
           key: '0',
+          url: 'open-websitemm-roleam',
           list: [{
             name: '网站账号管理',
             key: '00',
-            url: '/websitemm',
+            url: 'websitemm',
           }, {
             name: '角色权限管理',
             key: '01',
-            url: '/roleam',
+            url: 'roleam',
           }]
         }, {
           name: '网站管理',
           key: '1',
+          url: 'open-forumm-enterprisa-expertlh',
           list: [{
             name: '论坛管理',
             key: '10',
-            url: '/forumm',
+            url: 'forumm',
           }, {
             name: '企业公告',
             key: '11',
-            url: '/enterprisa',
+            url: 'enterprisa',
           }, {
             name: '专家讲堂',
             key: '12',
-            url: '/expertlh',
+            url: 'expertlh',
           }]
         }, {
           name: 'VIP医生管理',
           key: '2',
-          url: '/vipdm',
+          url: 'vipdm',
         }, {
           name: '医生管理',
           key: '3',
-          url: '/doctorm',
+          url: 'doctorm',
         }, {
           name: 'VIP会员管理',
           key: '4',
+          url: 'open-vipi-healthr-abnormalr-remoteo-datas',
           list: [{
             name: 'VIP信息',
             key: '40',
-            url: '/vipi',
+            url: 'vipi',
           }, {
             name: '健康记录',
             key: '41',
-            url: '/healthr',
+            url: 'healthr',
           }, {
             name: '异常报告',
             key: '42',
-            url: '/abnormalr',
+            url: 'abnormalr',
           }, {
             name: '远程订单',
             key: '43',
-            url: '/remoteo',
+            url: 'remoteo',
           }, {
             name: '数据统计',
             key: '44',
-            url: '/datas',
+            url: 'datas',
           }]
         }, {
           name: '普通会员管理',
           key: '5',
-          url: '/generalmm',
+          url: 'generalmm',
         }, {
           name: '登录遇到问题',
           key: '6',
-          url: '/loginlog',
+          url: 'loginlog',
         }]
       }
     },
@@ -153,12 +146,30 @@
         console.log(key, keyPath);
       },
       handleSelect(key, keyPath){
-        this.navindex = keyPath[0];
+        this.initindex = key;
         console.log(key, keyPath)
       },
-      indexergeM(i, d) {
-        return i + "-" + d
+      repTest(str, txt){
+        let re =txt.split("/")
+        console.log(re.length)
+        if(re.length<2){
+          re = txt
+        }else{
+          re = re[1]
+        }
+        console.log(re)
+        let start = new RegExp(re).test(str);
+        console.log(start)
+        return start
       }
+    },
+    beforeMount(){
+      console.log(this.$route.path)
+      this.initnav = this.$route.path.split("/")[1]
+      this.initindex = this.$route.path
+    },
+    mounted(){
+      console.log(this)
     }
   }
 </script>

@@ -1,0 +1,157 @@
+<template>
+  <div class="new-account m20 fsz14">
+    <el-breadcrumb separator=">">
+      <el-breadcrumb-item :to="{ path: '/websitemm' }">网站账号管理</el-breadcrumb-item>
+      <el-breadcrumb-item>修改账号</el-breadcrumb-item>
+    </el-breadcrumb>
+    <div class="get_form mt20">
+      <div class="uplogo">
+        <span class="title">公司logo:</span>
+        <el-upload
+          class="avatar-uploader mb18"
+          action="/api/back/users/image"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload">
+          <img v-if="imageUrl" :src="imageUrl" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
+      </div>
+
+      <el-form ref="form" :model="form" label-width="120px">
+        <el-form-item label="公司名称：">
+          <el-input v-model="form.truename"></el-input>
+        </el-form-item>
+        <el-form-item label="公司联系人：">
+          <el-input v-model="form.linkName"></el-input>
+        </el-form-item>
+        <el-form-item label="电话：">
+          <el-input v-model="form.phone"></el-input>
+        </el-form-item>
+
+        <el-form-item>
+          <a href="javascropt:;" @click="disableFn">禁用账号</a>
+          <a href="javascropt:;" class="ml20" @click="resetFn">重置密码</a>
+        </el-form-item>
+
+        <el-form-item>
+          <el-button type="primary" @click="onSubmit">保存修改</el-button>
+        </el-form-item>
+      </el-form>
+
+    </div>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+  import qs from 'qs';
+  export default {
+    name: 'new-account',
+    data(){
+      return {
+        imageUrl: "",
+        form: {
+          photoUrl: "",
+          truename: "",
+          linkName: "",
+          phone: ""
+        }
+      }
+    },
+    mounted(){
+      this.$axios.get('/api/back/users/'+this.$route.query.usersid, { params:{usersid:this.$route.query.usersid}}).then((response)=> {
+        console.log(response)
+        let data = response.data.data;
+        this.imageUrl = "http://47.104.146.162:8080/images/" + data.photoUrl,
+        this.form.photoUrl = data.photoUrl;
+        this.form.truename = data.truename;
+        this.form.linkName = data.linkName;
+        this.form.phone = data.phone;
+        console.log(this.getdata)
+      }).catch(function (error) {
+        console.log(error);
+      });
+    },
+    methods: {
+      //文件上传成功
+      handleAvatarSuccess(res, file) {
+        this.imageUrl = "http://47.104.146.162:8080/images/" + res.data;
+        this.form.photoUrl = res.data;
+      },
+      //上传文件之前
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg' || 'image/png';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        debugger
+        return isJPG && isLt2M;
+      },
+      onSubmit() {
+        this.form.usersid = this.$route.query.usersid;
+        this.$axios.post('/api/back/users/webSite', this.form)
+          .then((response)=> {
+            console.log(response)
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      },
+
+      //禁用账号
+      disableFn() {
+        let _this = this;
+        this.$confirm('禁用账号后，本账号的网址、医生账号、会员账号都不可继续使用！', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$axios.put('/api/back/users', {usersid: this.$route.query.usersid})
+            .then((response)=> {
+              console.log(response)
+              this.$message({
+                type: 'success',
+                message: '禁用成功!'
+              });
+              history.go(-1)
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消禁用'
+          });
+        });
+      },
+      //  重置
+      resetFn() {
+        this.$confirm('重置密码, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '重置成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消重置'
+          });
+        });
+      }
+    },
+  }
+</script>
+
+<style lang="scss">
+
+</style>

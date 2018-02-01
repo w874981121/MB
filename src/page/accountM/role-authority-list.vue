@@ -1,0 +1,100 @@
+<!--网站账号管理-->
+
+<template>
+  <div class="website-mccount-management m20">
+    <el-breadcrumb separator=">">
+      <el-breadcrumb-item :to="{ path: '/roleam' }">角色权限管理</el-breadcrumb-item>
+      <el-breadcrumb-item>精益天成医疗科技有限公司-管理员列表</el-breadcrumb-item>
+    </el-breadcrumb>
+    <div class="searchBox">
+      <el-form :inline="true" class="demo-form-inline mt10">
+        <el-button class="fl ml10 mb18" type="primary" @click="newAccount">新建账号</el-button>
+      </el-form>
+    </div>
+    <DataTable :dataTable="tableData" @modify="postModify"></DataTable>
+    <el-pagination background layout="prev, pager, next" @current-change="getPage" :total="total"></el-pagination>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+  import DataTable from '../../components/DataTable.vue'
+  export default {
+    name: 'website-mccount-management',
+    data() {
+      return {
+        total:0,
+        pageSize:20,
+        parentUsersId: this.$route.query.usersid,
+        currentPage: 1,
+        tableData: {
+          listname:[
+            {field:'usersid',name:'编号',width:'200'},
+            {field:'username',name:'账号',width:'200'},
+            {field:'truename',name:'姓名',width:'200'},
+            {field:'lockState',name:'是否禁用'},
+            {field:'registerDate',name:'添加时间', width: '90'},
+          ],  //设置排列顺序
+          data:[]
+        }
+      }
+    },
+    mounted(){
+      this.getData();
+    },
+    methods: {
+      getData(){
+        let _this = this;
+        let data = {
+          currentPage:this.currentPage,  //页码
+          users:this.parentUsersId       //公司id
+        }
+        this.$axios.get('/api/back/users/role', { params: data}).then((response)=> {
+          console.log(response)
+        let datelist = response.data.data.list;
+        datelist.forEach(function(item,i){
+          datelist[i].registerDate = _this.$timeonversionC(item.registerDate);
+          datelist[i].truename = unescape(item.truename);
+        })
+        this.tableData.data = datelist;
+        this.total = response.data.data.total;
+        this.pageSize = Number(response.data.data.pageSize);
+        }).catch(function (error) {
+          console.log(error);
+        })
+      },
+      //翻页请求
+      getPage(a){
+        this.webSitedata.currentPage = a;
+        this.getData();
+      },
+      //接收table ---  操作栏回传id
+      postModify(id){
+        //传递 用户(usersid)id 公司(parentUsersId)id
+        this.$router.push({path: "/roleam/reviseadministrator", query: {usersid: id.usersid,parentUsersId: this.parentUsersId}})
+      },
+      //跳转新建页
+      newAccount(){
+        this.$router.push({path: "/roleam/newadministrator", query: {parentUsersId: this.parentUsersId}})
+      },
+    },
+    components: {
+      DataTable
+    }
+  }
+</script>
+
+<style lang="scss">
+  .tableCss {
+    box-sizing: border-box;
+    padding: 20px;
+  }
+
+  .el-table .warning-row {
+    background: oldlace;
+  }
+
+  .el-table .success-row {
+    background: #f0f9eb;
+  }
+
+</style>

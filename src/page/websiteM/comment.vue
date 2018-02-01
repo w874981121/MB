@@ -1,11 +1,19 @@
+<!--评论-->
 <template>
     <div>
-      <router-view/>
+
     </div>
 </template>
 
 <script type="text/ecmascript-6">
-    export default {}
+    export default {
+      name:'comment',
+      data(){
+        return{
+
+        }
+      },
+    }
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss" type="text/css">

@@ -1,7 +1,7 @@
-<!--网站账号管理-->
+<!--vip信息-->
 
 <template>
-  <div class="website-mccount-management">
+  <div class="vip-information">
     <Search :searchData="searchData" @response="onSubmit"></Search>
     <DataTable :dataTable="tableData" @modify="postModify"></DataTable>
     <el-pagination background layout="prev, pager, next" :page-size="pageSize" @current-change="getPage" :total="total"></el-pagination>
@@ -10,14 +10,14 @@
 
 <script type="text/ecmascript-6">
   import Search from '../../components/Search.vue'
-  import DataTable from '../../components/DataTable.vue'
+  import DataTable from '../../components/DataTableImg.vue'
   import qs from 'qs';
   export default {
-    name: 'website-mccount-management',
+    name: 'vip-information',
     data() {
       return {
         searchData: {
-          path: '/websitemm/newaccount',
+          path: '/vipi/newvipinformation',
           name:'',
           placeholder:'输入公司名称'
         },
@@ -30,14 +30,12 @@
         //传递给table的数据
         tableData: {
           listname: [
-            {field: 'usersid', name: '编号', width: '50'},
-            {field: 'registerDate', name: '创建时间', width: '90'},
-            {field: 'truename', name: '公司名称'},
-            {field: 'comments', name: '网站地址'},
-            {field: 'username', name: '账号'},
-            {field: 'password', name: '初始密码',},
-            {field: 'linkName', name: '联系人',},
-            {field: 'phone', name: '联系人手机号',},
+            {field: 'customerId', name: '编号', width: '50'},
+            {field: 'photoUrl', name: '头像', width: '100'},
+            {field: 'customerName', name: '姓名'},
+            {field: 'phone', name: '手机号'},
+            {field: 'loginName', name: '账号',},
+            {field: 'status', name: '状态',},
           ],  //设置排列顺序
           data:[],
         }
@@ -49,12 +47,12 @@
     methods: {
       getData(){
         let _this = this;
-        this.$axios.get('/api/back/users/webSite', { params: this.webSitedata}).then((response)=> {
+        this.$axios.get('/api/back/customers/vip', { params: this.webSitedata}).then((response)=> {
           let datelist = response.data.data.list;
           datelist.forEach(function(item,i){
-              datelist[i].registerDate = _this.$timeonversionC(item.registerDate);
-              datelist[i].truename = decodeURIComponent(item.truename);
-              datelist[i].linkName = decodeURIComponent(item.linkName);
+            datelist[i].customerName = unescape(item.customerName);
+            datelist[i].status = item.status == 0 ? "未禁用" : "禁用";
+            datelist[i].photoUrl ="http://47.104.146.162:8080/images/" + item.photoUrl;
           })
           this.tableData.data = datelist;
           this.total = response.data.data.total;
@@ -77,7 +75,7 @@
       },
       //接收操作栏回传id//修改
       postModify(row){
-        this.$router.push({path: "/websitemm/reviseaccount", query: {usersid: row.usersid}})
+        this.$router.push({path: "/vipi/revisevipinformation", query: {customerId: row.customerId}})
       }
     },
     components: {
@@ -89,16 +87,5 @@
 </script>
 
 <style lang="scss">
-  .tableCss {
-    box-sizing: border-box;
-    padding: 20px;
-  }
 
-  .el-table .warning-row {
-    background: oldlace;
-  }
-
-  .el-table .success-row {
-    background: #f0f9eb;
-  }
 </style>

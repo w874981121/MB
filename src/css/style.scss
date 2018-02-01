@@ -12,11 +12,20 @@
 .fr{
     float: right;
 }
+.por{
+  position: relative;
+}
 .ml10{
     margin-left: 10px;
 }
 .ml20{
     margin-left: 20px;
+}
+.mr20{
+  margin-right:20px;
+}
+.mr10{
+  margin-right: 10px;
 }
 .mt10{
   margin-top: 10px;
@@ -24,8 +33,14 @@
 .mt20{
     margin-top: 20px;
 }
+.mt30{
+  margin-top: 30px;
+}
 .mb18{
   margin-bottom: 18px;
+}
+.p20{
+  padding: 20px;
 }
 .w200{
     width: 200px;
@@ -41,4 +56,62 @@
 }
 .fsz20{
   font-size: 20px;
+}
+.h100{
+  height: 100%;
+}
+
+.searchBox {
+  margin: 10px;
+  border-bottom: 1px dashed #ccc;
+  overflow: hidden;
+  .box {
+    overflow: hidden;
+  }
+}
+.get_form {
+  width: 500px;
+}
+.uplogo {
+  overflow: hidden;
+  width: 100%;
+  .title {
+    width: 120px;
+    text-align: right;
+    line-height: 32px;
+    padding-right: 12px;
+    display: block;
+    float: left;
+    box-sizing: border-box;
+  }
+
+  .avatar-uploader {
+    float: left;
+  }
+}
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 128px;
+  line-height: 128px;
+  text-align: center;
+}
+
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
 }

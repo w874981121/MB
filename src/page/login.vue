@@ -30,28 +30,55 @@
       }
     },
     methods: {
+      //登陆请求
       postLogin(){
-        var data = qs.stringify(this.login);
-        this.$axios.post('/api/login',data, {
+        let data = qs.stringify(this.login);
+        this.$axios.post('/api/login', data,{
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
           }
         }).then((response)=> {
           console.log(response)
+          let data = response.data.data;
+          switch (response.data.errcode){
+            case 0:
+              this.$message({
+                showClose: true,
+                type: "success",
+                message: '登陆成功！'
+              });
+              this.cookieFn.set("username", response.data.data.username);
+              this.cookieFn.set("truename", response.data.data.truename);
+              this.cookieFn.set("usersid", response.data.data.usersid);
+              this.cookieFn.set("type", response.data.data.type);
+//              this.$store.dispatch('signIn', {username: data.username, truename: data.truename, type: data.type})
+              this.$router.push({path: "/websitemm"})
+              break;
+
+            case 30002:
+              this.$alert('登录失败(账号密码错误)', '登录失败', {
+                confirmButtonText: '确定',
+                type: "error",
+              });
+              break;
+
+            case 30010:
+              this.$alert('登录失败(账号被冻结)', '登录失败', {
+                confirmButtonText: '确定',
+                type: "error",
+              });
+              break;
+
+            default :
+
+          }
         }).catch(function (error) {
           console.log(error);
         });
       },
-//        this.$router.push({path: "/websitemm", query: {token: '1232432543534'}})
       open() {
         this.$alert('客服电话：010-12345678', '联系客服', {
           confirmButtonText: '确定',
-          callback: action => {
-            this.$message({
-              type: 'info',
-              message: `action: ${ action }`
-            });
-          }
         });
       }
     }

@@ -80,18 +80,22 @@
         }, {
           name: '网站管理',
           key: '1',
-          url: 'open-forumm-enterprisa-expertlh',
+          url: 'open-forumm-enterprisa-expertlh',///
           list: [{
-            name: '论坛管理',
+            name: '网站账号',
             key: '10',
+            url: 'webaccount',
+          }, {
+            name: '论坛管理',
+            key: '11',
             url: 'forumm',
           }, {
             name: '企业公告',
-            key: '11',
+            key: '12',
             url: 'enterprisa',
           }, {
             name: '专家讲堂',
-            key: '12',
+            key: '13',
             url: 'expertlh',
           }]
         }, {
@@ -130,13 +134,16 @@
         }, {
           name: '普通会员管理',
           key: '5',
-          url: 'generalmm',
+          url: 'regularmm',
         }, {
           name: '登录遇到问题',
           key: '6',
           url: 'loginlog',
         }]
       }
+    },
+    beforeRouteEnter (to, from, next) {
+      console.log(to,"------------to")
     },
     methods: {
       handleOpen(key, keyPath) {
@@ -147,24 +154,20 @@
       },
       handleSelect(key, keyPath){
         this.initindex = key;
-        console.log(key, keyPath)
+//        this.$router.push({ path: '/'+key})
       },
       repTest(str, txt){
         let re =txt.split("/")
-        console.log(re.length)
         if(re.length<2){
           re = txt
         }else{
           re = re[1]
         }
-        console.log(re)
         let start = new RegExp(re).test(str);
-        console.log(start)
         return start
       }
     },
     beforeMount(){
-      console.log(this.$route.path)
       this.initnav = this.$route.path.split("/")[1]
       this.initindex = this.$route.path
     },

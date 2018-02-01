@@ -1,4 +1,4 @@
-<!--网站账号管理-->
+<!--普通会员管理-->
 
 <template>
   <div class="website-mccount-management">
@@ -10,16 +10,15 @@
 
 <script type="text/ecmascript-6">
   import Search from '../../components/Search.vue'
-  import DataTable from '../../components/DataTable.vue'
-  import qs from 'qs';
+  import DataTable from '../../components/DataTableImg.vue'
   export default {
-    name: 'website-mccount-management',
+    name: 'regular-member-management',
     data() {
       return {
         searchData: {
-          path: '/websitemm/newaccount',
+          path: '/regularmm/newregularmembermanagement',
           name:'',
-          placeholder:'输入公司名称'
+          placeholder:'输入用户名/手机号'
         },
         total: 0,
         pageSize: 0,
@@ -30,16 +29,15 @@
         //传递给table的数据
         tableData: {
           listname: [
-            {field: 'usersid', name: '编号', width: '50'},
-            {field: 'registerDate', name: '创建时间', width: '90'},
-            {field: 'truename', name: '公司名称'},
-            {field: 'comments', name: '网站地址'},
-            {field: 'username', name: '账号'},
-            {field: 'password', name: '初始密码',},
-            {field: 'linkName', name: '联系人',},
-            {field: 'phone', name: '联系人手机号',},
+            {field: 'customerId', name: '编号', width: '50'},
+            {field: 'creatDate', name: '创建时间', width: '90'},
+            {field: 'photoUrl', name: '头像', width: '100'},
+            {field: 'customerName', name: '姓名'},
+            {field: 'phone', name: '手机号'},
+            {field: 'loginName', name: '账号'},
+            {field: 'passWord', name: '密码',},
           ],  //设置排列顺序
-          data:[],
+          data: []
         }
       }
     },
@@ -49,12 +47,12 @@
     methods: {
       getData(){
         let _this = this;
-        this.$axios.get('/api/back/users/webSite', { params: this.webSitedata}).then((response)=> {
+        this.$axios.get('/api/back/customers', { params:this.webSitedata}).then((response)=> {
           let datelist = response.data.data.list;
           datelist.forEach(function(item,i){
-              datelist[i].registerDate = _this.$timeonversionC(item.registerDate);
-              datelist[i].truename = decodeURIComponent(item.truename);
-              datelist[i].linkName = decodeURIComponent(item.linkName);
+            datelist[i].creatDate = _this.$timeonversionC(item.creatDate);
+            datelist[i].customerName = unescape(item.customerName);
+            datelist[i].photoUrl ="http://47.104.146.162:8080/images/" + item.photoUrl;
           })
           this.tableData.data = datelist;
           this.total = response.data.data.total;
@@ -66,8 +64,8 @@
       },
       //接受seach 查询参数
       onSubmit(tabletext) {
-        this.webSitedata.name = tabletext;
-        this.getData();
+        console.log(tabletext)
+        this.getData()
       },
       //翻页请求
       getPage(a){
@@ -75,15 +73,15 @@
         this.webSitedata.currentPage = a;
         this.getData();
       },
-      //接收操作栏回传id//修改
-      postModify(row){
-        this.$router.push({path: "/websitemm/reviseaccount", query: {usersid: row.usersid}})
+      //接收操作栏回传id
+      postModify(rom){
+        console.log(rom.customerId)
+        this.$router.push({path: "/regularmm/reviseregularmembermanagement", query: {customerId: rom.customerId}})
       }
     },
     components: {
       Search,
       DataTable
-
     }
   }
 </script>

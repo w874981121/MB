@@ -1,12 +1,25 @@
+<!--
+复用组件：查询头
+功能：1.跳转新建页面
+     2.发送查询请求，
+接收参数：  searchData   参数类型 object
+           参数{
+             path：新建页路由地址
+             url:  查询地址
+           }
+           参数向父组件传递定义 "response"
+父组件使用定义：<Search :searchData="" @response=""> </Search>
+-->
+
 <template>
 	<div class="searchBox">
-		<el-form :inline="true" :model="formInline" class="demo-form-inline mt10">
+		<el-form :inline="true" class="demo-form-inline mt10">
 			<el-button class="fl ml10" type="primary" @click="newAccount">新建账号</el-button>
       <el-form-item class="fr">
         <el-button icon="el-icon-search" type="primary" @click="onSubmit">查询</el-button>
       </el-form-item>
-			<el-form-item label="公司名称" class="fr">
-				<el-input v-model="formInline.user" placeholder="请输入公司名称"></el-input>
+			<el-form-item :label="searchData.name" class="fr">
+				<el-input v-model="text" :placeholder="searchData.placeholder"></el-input>
 			</el-form-item>
 		</el-form>
 	</div>
@@ -15,35 +28,31 @@
 <script type="text/javascript">
 	export default {
 		name: 'searchBox',
-		data() {
+    props: {
+      searchData: {
+        type: Object,      //objectl类型
+        required: true,    //必传
+      }
+    },
+    data() {
 			return {
-				inputName: '',
-				formInline: {
-					user: '',
-					region: ''
-				}
+         path: this.searchData.path,
+         url:this.searchData.url,
+         text:''
 			}
 		},
 		methods: {
-			onSubmit() {
-				console.log('submit!');
+			onSubmit() {    //绑定查询   向上层返回查询得到的数据
+        this.$emit('response', this.text);
 			},
-      newAccount(){
+      newAccount(){    //跳转至指定新建内容页面
 			  console.log(this)
-        this.$router.push({name: "newaccount"})
+        this.$router.push({path: this.path})
       }
 		}
 	}
 </script>
 
 <style scoped lang="scss">
-	.searchBox {
-		margin: 10px;
-		/*background: #ccc;*/
-		border-bottom: 1px dashed #ccc;
-		overflow: hidden;
-		.box {
-			overflow: hidden;
-		}
-	}
+
 </style>

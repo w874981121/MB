@@ -1,4 +1,4 @@
-<!--网站账号管理-->
+<!--vip医生管理-->
 
 <template>
   <div class="website-mccount-management">
@@ -10,36 +10,39 @@
 
 <script type="text/ecmascript-6">
   import Search from '../../components/Search.vue'
-  import DataTable from '../../components/DataTable.vue'
-  import qs from 'qs';
+  import DataTable from '../../components/DataTableImg.vue'
   export default {
-    name: 'website-mccount-management',
+    name: 'vip-coctor-management',
     data() {
       return {
         searchData: {
-          path: '/websitemm/newaccount',
-          name:'',
-          placeholder:'输入公司名称'
+          path: '/vipdm/newdoctorinformation',
+          url: '',
         },
         total: 0,
         pageSize: 0,
-        webSitedata:{
+        webSitedata: {
           currentPage: 1,
-          name:''
+          name: ''
         },
         //传递给table的数据
         tableData: {
           listname: [
-            {field: 'usersid', name: '编号', width: '50'},
-            {field: 'registerDate', name: '创建时间', width: '90'},
-            {field: 'truename', name: '公司名称'},
-            {field: 'comments', name: '网站地址'},
-            {field: 'username', name: '账号'},
-            {field: 'password', name: '初始密码',},
-            {field: 'linkName', name: '联系人',},
-            {field: 'phone', name: '联系人手机号',},
+            {field: 'customerId', name: '编号', width: '50'},
+//            {field: 'registerDate', name: '创建时间', width: '100'},
+            {field: 'photoUrl', name: '头像', width: '100'},
+            {field: 'customerName', name: '姓名'},
+            {field: 'price', name: '诊疗价格'},
+            {field: 'phone', name: '手机号',},
+            {field: 'hospital', name: '医院'},
+            {field: 'department', name: '科室',},
+            {field: 'title', name: '职称',},
+            {field: 'loginName', name: '账号'},
+            {field: 'passWord', name: '密码',},
+            {field: 'date', name: '会员',},
+            {field: 'status', name: '是否禁用',},
           ],  //设置排列顺序
-          data:[],
+          data: []
         }
       }
     },
@@ -48,13 +51,15 @@
     },
     methods: {
       getData(){
-        let _this = this;
-        this.$axios.get('/api/back/users/webSite', { params: this.webSitedata}).then((response)=> {
+        this.$axios.get('/api/back/doctor/vip', {params: this.webSitedata}).then((response)=> {
           let datelist = response.data.data.list;
           datelist.forEach(function(item,i){
-              datelist[i].registerDate = _this.$timeonversionC(item.registerDate);
-              datelist[i].truename = decodeURIComponent(item.truename);
-              datelist[i].linkName = decodeURIComponent(item.linkName);
+            datelist[i].customerName = unescape(item.customerName);
+            datelist[i].hospital = unescape(item.hospital);
+            datelist[i].department = unescape(item.department);
+            datelist[i].title = unescape(item.title);
+            datelist[i].status = item.status == 0 ? "未禁用" : "禁用";
+            datelist[i].photoUrl ="http://47.104.146.162:8080/images/" + item.photoUrl;
           })
           this.tableData.data = datelist;
           this.total = response.data.data.total;
@@ -67,23 +72,21 @@
       //接受seach 查询参数
       onSubmit(tabletext) {
         this.webSitedata.name = tabletext;
-        this.getData();
+        this.getData()
       },
       //翻页请求
       getPage(a){
         console.log(a)
-        this.webSitedata.currentPage = a;
-        this.getData();
       },
-      //接收操作栏回传id//修改
+      //接收操作栏回传id
       postModify(row){
-        this.$router.push({path: "/websitemm/reviseaccount", query: {usersid: row.usersid}})
+        console.log(row)
+        this.$router.push({path: "/vipdm/revisedoctorinformmation", query: {customerId: row.customerId}})
       }
     },
     components: {
       Search,
       DataTable
-
     }
   }
 </script>

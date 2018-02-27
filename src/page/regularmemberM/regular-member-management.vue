@@ -36,6 +36,7 @@
             {field: 'phone', name: '手机号'},
             {field: 'loginName', name: '账号'},
             {field: 'passWord', name: '密码',},
+            {field: 'status', name: '状态',},
           ],  //设置排列顺序
           data: []
         }
@@ -52,6 +53,7 @@
           datelist.forEach(function(item,i){
             datelist[i].creatDate = _this.$timeonversionC(item.creatDate);
             datelist[i].customerName = unescape(item.customerName);
+            datelist[i].status = item.status == 0 ? "未禁用" : "禁用";
             datelist[i].photoUrl ="http://47.104.146.162:8080/images/" + item.photoUrl;
           })
           this.tableData.data = datelist;

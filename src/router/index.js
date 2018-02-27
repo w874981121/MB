@@ -19,11 +19,16 @@ import Webaccount from '@/page/websiteM/web-account'
 
 import Enterprisannouncement from '@/page/websiteM/enterpris-announcement'
 import Expertlecturehall from '@/page/websiteM/expert-lecture-hall'
-
 import Newannouncement from '@/page/websiteM/new-announcement.vue'
+import Newexpertlecturehall from '@/page/websiteM/new-expert-lecture-hall.vue'
+import Reviseexpertlecturehall from '@/page/websiteM/revise-expert-lecture-hall.vue'
+import Comment from '@/page/websiteM/comment.vue'
+
+
 
 
 //vip 医生管理
+
 import Vipdoctormanagement from '@/page/vipDoctorM/vip-doctor-management'
 import Newdoctorinformation from '@/page/vipDoctorM/new-doctor-information'
 import Revisedoctorinformmation from '@/page/vipDoctorM/revise-doctor-informmation'
@@ -122,7 +127,7 @@ Vue.use(Router)
         meta: {
           requireAuth: true,
         },
-        component: Reviseadministrator,//
+        component: Reviseadministrator,
       }, {
         path: '/webaccount',
         name: '网站账号',
@@ -136,7 +141,14 @@ Vue.use(Router)
         meta: {
           requireAuth: true,
         },
-        component: Forummanagement
+        component: Forummanagement  //
+      }, {
+        path: '/forumm/comment',
+        name: '评论',
+        meta: {
+          requireAuth: true,
+        },
+        component: Comment
       }, {
         path: '/enterprisa',
         name: '企业公告',
@@ -158,13 +170,27 @@ Vue.use(Router)
           requireAuth: true,
         },
         component: Expertlecturehall
+      },{
+        path: '/expertlh/newexpertlecturehall',
+        name: '专家讲堂-上传视频',
+        meta: {
+          requireAuth: true,
+        },
+        component: Newexpertlecturehall
       }, {
+        path: '/expertlh/reviseexpertlecturehall',
+        name: '专家讲堂-修改视频',
+        meta: {
+          requireAuth: true,
+        },
+        component: Reviseexpertlecturehall
+      },{
         path: '/vipdm',
         name: 'VIP医生管理',
         meta: {
           requireAuth: true,
         },
-        component: Vipdoctormanagement //
+        component: Vipdoctormanagement
       }, {
         path: '/vipdm/newdoctorinformation',
         name: '新建VIP医生',
@@ -206,7 +232,7 @@ Vue.use(Router)
         meta: {
           requireAuth: true,
         },
-        component: Vipinformation    //Revisevipinformation
+        component: Vipinformation
       }, {
         path: '/vipi/newvipinformation',
         name: '新建vip会员',
@@ -272,7 +298,7 @@ Vue.use(Router)
         component: Reviseregularmembermanagement
       }, {
         path: '/loginlog',
-        name: 'Loginlog',    //登录遇到问题
+        name: '登录遇到问题',
         meta: {
           requireAuth: true,
         },

@@ -32,11 +32,8 @@
     methods: {
       //登陆请求
       postLogin(){
-        let data = qs.stringify(this.login);
-        this.$axios.post('/api/login', data,{
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-          }
+        this.$axios.post('/api/login', qs.stringify(this.login),{
+          headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'}
         }).then((response)=> {
           console.log(response)
           let data = response.data.data;
@@ -51,7 +48,6 @@
               this.cookieFn.set("truename", response.data.data.truename);
               this.cookieFn.set("usersid", response.data.data.usersid);
               this.cookieFn.set("type", response.data.data.type);
-//              this.$store.dispatch('signIn', {username: data.username, truename: data.truename, type: data.type})
               this.$router.push({path: "/websitemm"})
               break;
 

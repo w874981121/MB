@@ -26,32 +26,34 @@
 <script type="text/ecmascript-6">
   import NavList from '../components/NavList.vue'
   export default {
-    name:'contentbox',
+    name: 'contentbox',
     data(){
-      return{
+      return {
         username: this.cookieFn.get("username"),
         truename: this.cookieFn.get("truename"),
       }
     },
     mounted(){
-      console.log(this.username,this.truename)
+      console.log(this.username, this.truename)
       console.log(this.$store.state)//获取参数
     },
-    methods:{
+    methods: {
       signOut(){
         let _this = this;
-        this.$axios.get("/api/usersLogin").then((response)=> {
+        this.$axios.get("/api/usersLogin").then((response) => {
           console.log(response)
-            this.$message({
-              showClose: true,
-              type: "warning",
-              message: '退出成功！'
-            });
-          _this.$router.push({path: "/"})
-          _this.cookieFn.delete("username")
-          _this.cookieFn.delete("truename")
-          _this.cookieFn.delete("type")
-        }).catch(function (error) {
+        this.$message({
+          showClose: true,
+          type: "warning",
+          message: '退出成功！'
+        });
+        _this.$router.push({path: "/"})
+        _this.cookieFn.delete("username")
+        _this.cookieFn.delete("truename")
+        _this.cookieFn.delete("usersid")
+        _this.cookieFn.delete("type")
+      }).
+        catch(function (error) {
           console.log(error);
         });
       }
@@ -73,11 +75,11 @@
       background: #409EFF;
       color: #fff;
       z-index: 9;
-      .sign_out{
+      .sign_out {
         position: relative;
         padding-left: 30px;
         cursor: pointer;
-        i{
+        i {
           position: absolute;
           width: 20px;
           height: 20px;
@@ -88,10 +90,10 @@
           background-size: 100%;
         }
       }
-      .username{
+      .username {
         position: relative;
         padding-left: 30px;
-        i{
+        i {
           position: absolute;
           width: 20px;
           height: 20px;
@@ -101,7 +103,7 @@
           background: url("../assets/username.png") no-repeat center;
           background-size: 100%;
         }
-        span{
+        span {
           font-size: 14px;
         }
       }
@@ -123,7 +125,7 @@
       box-sizing: border-box;
       padding-left: 200px;
       padding-top: 60px;
-      top:0;
+      top: 0;
       left: 0;
       overflow: auto;
       z-index: 1;

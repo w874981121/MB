@@ -9,12 +9,14 @@
             </template>
           </el-table-column>
       </template>
-      <el-table-column align="center" prop="address" label="健康记录">
+
+      <el-table-column v-if="dataTable.healthy" align="center" label="健康记录">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="seeHealthy(scope.row)">查看</el-button>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="address" label="操作">
+
+      <el-table-column align="center" prop="" label="操作">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="postModify(scope.row)">修改</el-button>
         </template>
@@ -49,18 +51,14 @@
         }
         return '';
       },
-      postModify(uid){
-        console.log(uid)
-        this.$emit('modify',uid);
+      postModify(row){
+        console.log(row)
+        this.$emit('modify',row);
       },
       //查看健康记录
       seeHealthy(row){
         console.log(row.customerId)
-      },
-
-      newAccount(){     //跳转操作
-        console.log(this)
-        this.$router.push({path: ""})
+        this.$emit('healthy',row);
       },
     }
   }

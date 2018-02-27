@@ -21,13 +21,19 @@
           <router-link v-if="scope.row.type == 0" :to="{ path: '/regularmm/reviseregularmembermanagement', query: { customerId: scope.row.customerId}}">
             {{scope.row.customerName}}
           </router-link>
-          <router-link v-if="scope.row.type == 1" :to="{ path: '/vipi', query: { customerId: scope.row.customerId}}">
+          <router-link v-if="scope.row.type == 1" :to="{ path: '/vipi/revisevipinformation', query: { customerId: scope.row.customerId}}">
             {{scope.row.customerName}}
           </router-link>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="title" label="发布内容"></el-table-column>
-      <el-table-column align="center" prop="count" label="评论列表"></el-table-column>
+      <el-table-column align="center" prop="title" label="标题"></el-table-column>
+      <el-table-column align="center" prop="count" label="评论列表">
+        <template slot-scope="scope">
+          <router-link :to="{ path: '/forumm/comment', query: { questionId: scope.row.questionId}}">
+            {{scope.row.count}}
+          </router-link>
+        </template>
+      </el-table-column>
       <el-table-column align="center" prop="doctors" label="回复的医生">
         <template slot-scope="scope">
 
@@ -43,8 +49,9 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作">
-        <template slot-scope="scope">
-          <el-button size="mini" type="primary" @click="postModify(scope.row)">下线</el-button>
+        <template slot-scope="scope" >
+            <el-button size="mini" v-if="scope.row.isShow == 0" type="primary" @click="postOffline(scope.row)">下线</el-button>
+          <el-button size="mini"  v-if="scope.row.isShow == 1"  type="primary" @click="goOnline(scope.row)">上线</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -104,8 +111,63 @@
         this.getData()
       },
       //下线
-      postModify(){
+      postOffline(row){
+        let _this = this;
+        this.$confirm('下线后，健康管理网站将看不到本条提问？', '提示', {
+          confirmButtonText: '知道了',
+          cancelButtonText: '暂不下线',
+          type: 'warning'
+        }).then(() => {
+          this.$axios.post('/api/back/questions', {questionId: row.questionId})
+            .then((response)=> {
+              console.log(response)
+              this.getData()
+              this.$message({
+                type: 'success',
+                message: '下线成功!'
+              });
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
 
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消下线'
+          });
+        });
+      },
+      //上线
+      goOnline(row){
+        let _this = this;
+        this.$confirm('线后，健康管理网站会展示本条提问。', '提示', {
+          confirmButtonText: '知道了',
+          cancelButtonText: '暂不上线',
+          type: 'warning'
+        }).then(() => {
+          this.$axios.post('/api/back/questions', {questionId: row.questionId}).then((response)=> {
+              console.log(response)
+              this.getData()
+              this.$message({
+                type: 'success',
+                message: '上线成功!'
+              });
+            })
+            .catch(function (error) {
+              this.$message({
+                type: 'error',
+                message: '上线失败!'
+              });
+              console.log(error);
+            });
+
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消上线'
+          });
+        });
       },
 
 

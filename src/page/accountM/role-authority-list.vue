@@ -29,8 +29,9 @@
         tableData: {
           listname:[
             {field:'usersid',name:'编号',width:'200'},
-            {field:'username',name:'账号',width:'200'},
             {field:'truename',name:'姓名',width:'200'},
+            {field:'username',name:'账号',width:'200'},
+            {field:'password',name:'密码',width:'200'},
             {field:'lockState',name:'是否禁用'},
             {field:'registerDate',name:'添加时间', width: '90'},
           ],  //设置排列顺序
@@ -54,6 +55,7 @@
         datelist.forEach(function(item,i){
           datelist[i].registerDate = _this.$timeonversionC(item.registerDate);
           datelist[i].truename = unescape(item.truename);
+          datelist[i].lockState = item.lockState == 0 ? "未禁用" : "已禁用";
         })
         this.tableData.data = datelist;
         this.total = response.data.data.total;

@@ -1,10 +1,6 @@
 <!--账号管理-->
 <template>
   <div class="web_account m20 fsz14">
-    <el-breadcrumb separator=">">
-      <el-breadcrumb-item :to="{ path: '/websitemm' }">网站账号管理</el-breadcrumb-item>
-      <el-breadcrumb-item>新建账号</el-breadcrumb-item>
-    </el-breadcrumb>
     <div class="get_form mt20">
       <div class="uplogo">
         <span class="title">公司logo:</span>
@@ -29,9 +25,9 @@
         <el-form-item label="密码：">
           <el-input :disabled="true" v-model="form.password"></el-input>
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="onSubmit">修改登录密码</el-button>
-        </el-form-item>
+        <!--<el-form-item>-->
+          <!--<el-button type="primary" @click="onSubmit">修改登录密码</el-button>-->
+        <!--</el-form-item>-->
       </el-form>
     </div>
 

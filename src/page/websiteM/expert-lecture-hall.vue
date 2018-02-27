@@ -23,7 +23,7 @@
         <template slot-scope="scope">
           <el-button size="mini" type="primary" v-show="scope.row.isPass == 0" @click="postModify(scope.row)">上线</el-button>
           <el-button size="mini" type="primary" v-show="scope.row.isPass == 1" @click="postModify(scope.row)">下线</el-button>
-          <el-button size="mini" type="primary" v-show="scope.row.isPass == 0" @click="postModify(scope.row)">修改</el-button>
+          <el-button size="mini" type="primary" v-show="scope.row.isPass == 0" @click="postRevise(scope.row)">修改</el-button>
         </template>
       </el-table-column>
       <el-table-column align="center" prop="" label="备注"></el-table-column>
@@ -88,8 +88,12 @@
       postModify(){
 
       },
+      //修改
+      postRevise(row){
+        this.$router.push({path: "/expertlh/reviseexpertlecturehall", query: {articleId: row.articleId}})
+      },
       newAccount(){
-        this.$router.push({path: '/enterprisa/newannouncement'})
+        this.$router.push({path: '/expertlh/newexpertlecturehall'})
       },
 
 

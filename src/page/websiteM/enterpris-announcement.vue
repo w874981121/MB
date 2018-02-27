@@ -14,39 +14,44 @@
       </el-form>
     </div>
     <!--table列表-->
-    <el-table class="mt30" :data="tableData.data" height="400" border stripe style="width: 100%" :row-class-name="tableRowClassName">
+    <el-table class="mt30" :data="tableData.data" height="400" border stripe style="width: 100%"
+              :row-class-name="tableRowClassName">
       <el-table-column align="center" prop="articleId" label="编号"></el-table-column>
       <el-table-column align="center" prop="updateTime" label="创建时间" width="90"></el-table-column>
       <el-table-column align="center" prop="title" label="公告名称"></el-table-column>
       <el-table-column align="center" label="操作" width="160">
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" v-show="scope.row.isPass == 0" @click="postModify(scope.row)">上线</el-button>
-          <el-button size="mini" type="primary" v-show="scope.row.isPass == 1" @click="postModify(scope.row)">下线</el-button>
-          <el-button size="mini" type="primary" v-show="scope.row.isPass == 0" @click="postModify(scope.row)">修改</el-button>
+          <el-button size="mini" type="primary" v-show="scope.row.isPass == 0" @click="postnline(scope.row)">上线
+          </el-button>
+          <el-button size="mini" type="primary" v-show="scope.row.isPass == 1" @click="postOffline(scope.row)">下线
+          </el-button>
+          <el-button size="mini" type="primary" v-show="scope.row.isPass == 0" @click="postModify(scope.row)">修改
+          </el-button>
         </template>
       </el-table-column>
       <el-table-column align="center" prop="" label="备注"></el-table-column>
     </el-table>
     <!--翻页-->
-    <el-pagination background layout="prev, pager, next" :page-size="pageSize" @current-change="getPage" :total="total"></el-pagination>
+    <el-pagination background layout="prev, pager, next" :page-size="pageSize" @current-change="getPage"
+                   :total="total"></el-pagination>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import Search from '../../components/Search.vue'
   export default {
-    name:'enterpris_announcement',
+    name: 'enterpris_announcement',
     data(){
-      return{
-        text:'',
+      return {
+        text: '',
         total: 0,
         pageSize: 0,
-        webSitedata:{
+        webSitedata: {
           currentPage: 1,
-          categoryId:1
+          categoryId: 1
         },
         tableData: {
-          data:[],
+          data: [],
         }
 
       }
@@ -54,13 +59,13 @@
     mounted(){
       this.getData();
     },
-    methods:{
+    methods: {
       getData(){
         let _this = this;
-        this.$axios.get('/api/back/article', { params: this.webSitedata}).then((response)=> {
+        this.$axios.get('/api/back/article', {params: this.webSitedata}).then((response)=> {
           let datelist = response.data.data.list;
           console.log(datelist)
-          datelist.forEach(function(item,i){
+          datelist.forEach(function (item, i) {
             datelist[i].updateTime = _this.$timeonversionC(item.updateTime);
             datelist[i].truename = unescape(item.truename);
             datelist[i].linkName = unescape(item.linkName);
@@ -83,7 +88,26 @@
       onSubmit(){
         this.getData()
       },
+      //上线
+      postOnline(val){
+        let formdata = {
+          articleId: val.articleId
+        }
+        this.$axios.post('/api/back/article/pass', formdata).then((response) => {
+          console.log(response)
+        }).catch((error) => {
+          console.log(error);
+        });
+      },
       //下线
+      postOffline(row){
+        this.$axios.post('/api/back/article/pass', {articleId: row.articleId}).then((response) => {
+          console.log(response)
+        }).catch((error) => {
+          console.log(error);
+        });
+      },
+      //修改
       postModify(){
 
       },

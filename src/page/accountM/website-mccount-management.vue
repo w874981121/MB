@@ -37,6 +37,7 @@
             {field: 'username', name: '账号'},
             {field: 'password', name: '初始密码',},
             {field: 'linkName', name: '联系人',},
+            {field: 'lockState', name: '状态',},
             {field: 'phone', name: '联系人手机号',},
           ],  //设置排列顺序
           data:[],
@@ -55,6 +56,7 @@
               datelist[i].registerDate = _this.$timeonversionC(item.registerDate);
               datelist[i].truename = decodeURIComponent(item.truename);
               datelist[i].linkName = decodeURIComponent(item.linkName);
+              datelist[i].lockState = item.lockState == 0 ? "未禁用" : "已禁用";
           })
           this.tableData.data = datelist;
           this.total = response.data.data.total;

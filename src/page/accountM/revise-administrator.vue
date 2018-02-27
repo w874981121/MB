@@ -25,8 +25,8 @@
 
         <el-form-item>
           <a href="javascropt:;" @click="purviewidsAlert">修改权限</a>
-          <a href="javascropt:;" class="ml20" @click="disableFn">禁用账号</a>
-          <a href="javascropt:;" class="ml20" @click="resetFn">重置密码</a>
+          <a href="javascropt:;" class="ml20" @click="disableFn">{{form.lockState ==0 ? '禁用账号':'启用账号'}}</a>
+          <!--<a href="javascropt:;" class="ml20" @click="resetFn">重置密码</a>-->
         </el-form-item>
 
         <el-form-item>
@@ -51,50 +51,52 @@
   export default {
     name: 'new-account',
     data(){
-      const generateData = _ => {
-        const data = [];
-        this.$axios.get('/api/back/purview')
-          .then((response)=> {
-            let datalist = response.data.data;
-            datalist.forEach(function (item, i) {
-              if(item.isleaf === 1){
-                data.push({
-                  key: item.purviewid,
-                  label: item.purviewname,
-                  disabled: true
-                });
-                item.childPurview.forEach(function (tem, i) {
+      const generateData = () => {
+          const data = [];
+          this.$axios.get('/api/back/purview')
+            .then((response) => {
+              let datalist = response.data.data;
+              datalist.forEach(function (item, i) {
+                if (item.isleaf === 1) {
                   data.push({
-                    key: tem.purviewid,
-                    label: tem.purviewname,
+                    key: item.purviewid,
+                    label: item.purviewname,
+                    disabled: true
+                  });
+                  item.childPurview.forEach(function (tem, i) {
+                    data.push({
+                      key: tem.purviewid,
+                      label: tem.purviewname,
+                      disabled: false
+                    });
+                  })
+                } else if (item.isleaf === 0) {
+                  data.push({
+                    key: item.purviewid,
+                    label: item.purviewname,
                     disabled: false
                   });
-                })
-              }else if(item.isleaf === 0){
-                data.push({
-                  key: item.purviewid,
-                  label: item.purviewname,
-                  disabled: false
-                });
-              }
+                }
+              })
             })
-          })
-          .catch((error) => {
+            .catch((error) => {
             console.log(error);
-          })
-        console.log(data)
-        return data;
-      };
+        })
+          console.log(data)
+          return data;
+        }
+        ;
       return {
         powerdata: generateData(), //所有权限请求
-        purviewids:[],        //选中权限id
+        purviewids: [],        //选中权限id
         purviewidsstate: false, //权限窗口状态
-        powerTag:[],
+        powerTag: [],
         form: {
           parentUsersId: this.$route.query.parentUsersId,  //公司账号id
           usersid: this.$route.query.usersid,     //用户id
           truename: '',  //姓名
           username: '',   //账号
+          lockState: '',    //状态
         }
       }
     },
@@ -104,35 +106,39 @@
       }
     },
     mounted(){
-      //用户信息查询
-      this.$axios.get('/api/back/users/' + this.form.usersid, {params: {usersid: this.form.usersid}})
-        .then((response) => {
-        console.log(response)
-      let data = response.data.data;
-          this.form.truename = unescape(data.truename);
-          this.form.username = data.username;
-          this.powerShow()
-    })
-    .catch(function (error) {
-        console.log(error);
-      });
-      //用户权限查询
-      this.$axios.get('/api/back/purview/' + this.form.usersid)
-        .then((response) => {
-          console.log("权限")
-          console.log(response)
-          let data = response.data.data;
-          data.forEach((item, i) => {
-            this.purviewids.push(item.purviewid)
-          })
-          this.powerShow();
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-
+      this.getData();
     },
     methods: {
+//      查询
+      getData(){
+        //用户信息查询
+        this.$axios.get('/api/back/users/' + this.form.usersid, {params: {usersid: this.form.usersid}})
+          .then((response) => {
+            console.log(response)
+            let data = response.data.data;
+            this.form.truename = decodeURIComponent(data.truename);
+            this.form.username = data.username;
+            this.form.lockState = data.lockState;
+            this.powerShow()
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        //用户权限查询
+        this.$axios.get('/api/back/purview/' + this.form.usersid)
+          .then((response) => {
+            console.log("权限")
+            console.log(response)
+            let data = response.data.data;
+            data.forEach((item, i) => {
+              this.purviewids.push(item.purviewid)
+          })
+            this.powerShow();
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      },
       //添加权限弹窗
       purviewidsAlert(){
         this.purviewidsstate = !this.purviewidsstate;
@@ -145,15 +151,14 @@
       //权限展示
       powerShow(){
         let _this = this;
-            this.powerTag =[];
+        this.powerTag = [];
         this.powerdata.forEach(function (item, i) {
           _this.purviewids.forEach(function (tem, s) {
-            if(item.key === tem){
+            if (item.key === tem) {
               _this.powerTag.push(item.label)
             }
           })
         })
-        console.log(this.powerTag)
       },
       //修改提交
       onSubmit() {
@@ -163,28 +168,26 @@
           parentUsersId: this.form.parentUsersId,
           truename: escape(this.form.truename),
           username: this.form.username,
-          type:2,
+          type: 2,
         }
+
         this.$axios.post('/api/back/users/role', fromdata)
           .then((response) => {
-        console.log(response)
-      })
-      .catch(function (error) {
-          console.log(error);
-        });
+            console.log(response)
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
 
         // 修改权限
         let setPurview = {
           purviewids: this.purviewids.join(","),
-          usersid:this.form.usersid
+          usersid: this.form.usersid
         }
-        let data = qs.stringify(setPurview);
-        this.$axios.post('/api/back/purview', data,{
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
-        })
-          .then((response) => {
+
+        this.$axios.post('/api/back/purview', qs.stringify(setPurview),{
+          headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'}
+        }).then((response) => {
             console.log("2")
             console.log(response)
           })
@@ -195,17 +198,25 @@
       //禁用
       disableFn() {
         let _this = this;
-        this.$confirm('禁用账号后，本账号的网址、医生账号、会员账号都不可继续使用！', '提示', {
+        let messageText = [];
+        if (this.form.lockState == 0) {
+          messageText[0] = '禁用账号后，本账号的网址、医生账号、会员账号都不可继续使用！';
+          messageText[1] = '禁用成功！';
+        } else {
+          messageText[0] = '启用账号后，本账号的网址、医生账号、会员账号都可继续使用！';
+          messageText[1] = '启用成功！';
+        }
+        this.$confirm(messageText[0], '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           this.$axios.post('/api/back/users', {usersid: this.$route.query.usersid})
-            .then((response)=> {
+            .then((response) => {
               console.log(response)
               this.$message({
                 type: 'success',
-                message: '禁用成功!'
+                message: messageText[1]
               });
               history.go(-1)
             })
@@ -218,11 +229,26 @@
             type: 'info',
             message: '已取消禁用'
           });
-        });
+        })
       },
       //重置密码
       resetFn(){
-
+        this.$confirm('重置密码, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          //  发送请求
+          this.$message({
+            type: 'success',
+            message: '重置成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消重置'
+          });
+        });
       }
     },
   }
@@ -240,9 +266,11 @@
     top: 34%;
     left: 50%;
     transform: translate(-50%, -50%);
-  .preservation_but{
+
+  .preservation_but {
     float: right;
-    margin-top:20px;
+    margin-top: 20px;
   }
+
   }
 </style>

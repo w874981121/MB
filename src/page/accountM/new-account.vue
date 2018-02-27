@@ -90,7 +90,7 @@
           this.$message({
             showClose: true,
             type: "success",
-            message: '登陆成功！'
+            message: '创建成功！'
           });
           history.go(-1)
         }

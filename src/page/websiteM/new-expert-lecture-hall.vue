@@ -1,22 +1,23 @@
-<!--新建公告-->
-
+<!-- 上传视频-->
 <template>
   <div class="new-announcement m20 fsz14">
     <el-breadcrumb separator=">">
-      <el-breadcrumb-item :to="{ path: '/enterprisa' }">企业公告</el-breadcrumb-item>
-      <el-breadcrumb-item>新建公告</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/expertlh' }">专家讲堂</el-breadcrumb-item>
+      <el-breadcrumb-item>上传视频</el-breadcrumb-item>
     </el-breadcrumb>
+
     <div class="edit mt20">
       <el-form ref="form" :model="form" label-width="60px">
         <el-form-item label="标题：">
           <el-input v-model="form.truename"></el-input>
         </el-form-item>
       </el-form>
-      <quill-editor ref="myTextEditor" v-model="form.content" :config="editorOption"></quill-editor>
     </div>
+
+
     <div class="block mt20">
       <span class="demonstration">上线时间：</span>
-      <el-date-picker v-model="form.datatext" type="datetime" placeholder="选择上线时间"></el-date-picker>
+      <el-date-picker v-model="datatext" type="datetime" placeholder="选择上线时间"></el-date-picker>
     </div>
     <el-form ref="form" class="mt20">
       <el-form-item>
@@ -29,14 +30,12 @@
 <script type="text/ecmascript-6">
   import { VueEditor } from 'vue2-editor'
   export default {
-    name: 'new-announcement',
+    name: 'new-expert-lecture-hall',
     data(){
       return {
-        editorOption: {},          // 编辑器的配置
         form: {
-          truename: '',
-          content: '',             // 编辑器的内容
           datatext: '',
+          truename: '',
         },
       }
     },
@@ -51,13 +50,11 @@
     methods: {
       onSubmit(){
         let formdata = {
-          categoryId:1,
-          title: this.form.truename,
-          content: this.form.content,
-          sortCode:1,
+          title:'',
+          content:'',
         }
         this.$axios.post('/api/back/article', formdata).then((response) => {
-          console.log(response)
+
         }).catch((error) => {
           console.log(error);
         });
@@ -86,7 +83,7 @@
     position: absolute;
   }
   .ql-editor.ql-blank::before {
-    content: "编辑公告内容" !important;
+    content: "输入培训讲解内容" !important;
   }
 
   .limit {

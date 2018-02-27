@@ -30,8 +30,8 @@
         </el-form-item>
 
         <el-form-item>
-          <a href="javascropt:;" @click="disableFn">禁用账号</a>
-          <a href="javascropt:;" class="ml20" @click="resetFn">重置密码</a>
+          <a href="javascropt:;" @click="disableFn">{{form.lockState == 0 ? '禁用账号':'启用账号'}}</a>
+          <!--<a href="javascropt:;" class="ml20" @click="resetFn">重置密码</a>-->
         </el-form-item>
 
         <el-form-item>
@@ -54,19 +54,20 @@
           photoUrl: "",
           truename: "",
           linkName: "",
-          phone: ""
+          phone: "",
+          lockState: '',
         }
       }
     },
     mounted(){
-      this.$axios.get('/api/back/users/'+this.$route.query.usersid, { params:{usersid:this.$route.query.usersid}}).then((response)=> {
+      this.$axios.get('/api/back/users/' + this.$route.query.usersid, {params: {usersid: this.$route.query.usersid}}).then((response)=> {
         console.log(response)
         let data = response.data.data;
-        this.imageUrl = "http://47.104.146.162:8080/images/" + data.photoUrl,
-        this.form.photoUrl = data.photoUrl;
+        this.imageUrl = "http://47.104.146.162:8080/images/" + data.photoUrl, this.form.photoUrl = data.photoUrl;
         this.form.truename = data.truename;
         this.form.linkName = data.linkName;
         this.form.phone = data.phone;
+        this.form.lockState = data.lockState;
         console.log(this.getdata)
       }).catch(function (error) {
         console.log(error);
@@ -91,11 +92,23 @@
         debugger
         return isJPG && isLt2M;
       },
+      //修改
       onSubmit() {
-        this.form.usersid = this.$route.query.usersid;
-        this.$axios.post('/api/back/users/webSite', this.form)
+        let form = {
+          usersid: this.$route.query.usersid,
+          photoUrl: this.form.photoUrl,
+          truename: escape(this.form.truename),
+          linkName: escape(this.form.linkName),
+          phone: this.form.phone
+        }
+        this.$axios.post('/api/back/users/webSite', form)
           .then((response)=> {
-            console.log(response)
+            this.$message({
+              showClose: true,
+              type: "success",
+              message: '修改成功！'
+            });
+            history.go(-1)
           })
           .catch(function (error) {
             console.log(error);
@@ -105,18 +118,27 @@
       //禁用账号
       disableFn() {
         let _this = this;
-        this.$confirm('禁用账号后，本账号的网址、医生账号、会员账号都不可继续使用！', '提示', {
+        let messageText = [];
+        if (this.form.lockState == 0) {
+          messageText[0] = '禁用账号后，本账号的网址、医生账号、会员账号都不可继续使用！';
+          messageText[1] = '禁用成功！';
+        }else{
+          messageText[0] = '启用账号后，本账号的网址、医生账号、会员账号都可继续使用！';
+          messageText[1] = '启用成功！';
+        }
+        this.$confirm(messageText[0], '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$axios.put('/api/back/users', {usersid: this.$route.query.usersid})
+          this.$axios.post('/api/back/users', {usersid: this.$route.query.usersid})
             .then((response)=> {
               console.log(response)
               this.$message({
                 type: 'success',
-                message: '禁用成功!'
+                message: messageText[1],
               });
+
               history.go(-1)
             })
             .catch(function (error) {
@@ -126,7 +148,7 @@
         }).catch(() => {
           this.$message({
             type: 'info',
-            message: '已取消禁用'
+            message: '已取消'
           });
         });
       },
@@ -137,6 +159,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+          //发送请求
           this.$message({
             type: 'success',
             message: '重置成功!'

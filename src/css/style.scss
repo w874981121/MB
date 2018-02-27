@@ -3,6 +3,9 @@
   margin: 0;
   padding: 0;
 }
+li{
+  list-style-type: none;
+}
 .db{
   display: block;
 }
@@ -30,8 +33,14 @@
 .mt10{
   margin-top: 10px;
 }
+.mb10{
+  margin-bottom: 10px;
+}
 .mt20{
     margin-top: 20px;
+}
+.mb20{
+  margin-bottom: 20px;
 }
 .mt30{
   margin-top: 30px;

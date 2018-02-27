@@ -3,7 +3,7 @@
 <template>
   <div class="vip-information">
     <Search :searchData="searchData" @response="onSubmit"></Search>
-    <DataTable :dataTable="tableData" @modify="postModify"></DataTable>
+    <DataTable :dataTable="tableData" @modify="postModify" @healthy="seeHealthy"></DataTable>
     <el-pagination background layout="prev, pager, next" :page-size="pageSize" @current-change="getPage" :total="total"></el-pagination>
   </div>
 </template>
@@ -36,7 +36,9 @@
             {field: 'phone', name: '手机号'},
             {field: 'loginName', name: '账号',},
             {field: 'status', name: '状态',},
+//            {field: 'healthy', name: '健康',},
           ],  //设置排列顺序
+          healthy:true,
           data:[],
         }
       }
@@ -76,6 +78,10 @@
       //接收操作栏回传id//修改
       postModify(row){
         this.$router.push({path: "/vipi/revisevipinformation", query: {customerId: row.customerId}})
+      },
+      //健康记录查看
+      seeHealthy(row){
+        this.$router.push({path: "/healthr", query: {companyId: row.companyId, customerName:row.customerName}})
       }
     },
     components: {

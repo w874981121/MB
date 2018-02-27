@@ -106,8 +106,7 @@
       }
     },
     mounted(){
-      console.log("来了")
-      console.log(this.$route.query)
+
     }
   }
 </script>

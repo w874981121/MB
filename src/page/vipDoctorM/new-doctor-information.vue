@@ -1,6 +1,6 @@
 <!--新建vip医生信息-->
 <template>
-  <div class="new-account m20 fsz14">
+  <div class="new-account m20 por fsz14">
     <el-breadcrumb separator=">">
       <el-breadcrumb-item :to="{ path: '/vipdm' }">VIP医生管理</el-breadcrumb-item>
       <el-breadcrumb-item>新建VIP医生信息</el-breadcrumb-item>
@@ -37,7 +37,15 @@
           <el-input v-model="form.phone"></el-input>
         </el-form-item>
         <el-form-item label="我的会员：">
-          <el-button plain>添加会员</el-button>
+          <div>
+            <template v-for="name in memberTag">
+              <el-tag class="mr10">{{name}}</el-tag>
+            </template>
+          </div>
+        </el-form-item>
+
+        <el-form-item>
+          <el-button type="primary" plain @click="purviewidsAlert">添加会员</el-button>
         </el-form-item>
         <el-form-item label="诊疗费用：">
           <el-input v-model="form.price">
@@ -51,6 +59,14 @@
       </el-form>
 
     </div>
+    <template>
+      <div class="alert_box_transfer" v-show="memberidsstate">
+        <h3>添加会员：</h3>
+        <el-transfer v-model="memberids" :button-texts="['删除', '添加']" :titles="['未分配会员', '选中会员']" :data="memberdata">
+        </el-transfer>
+        <el-button class="preservation_but" type="primary" @click="preservationFn">保存</el-button>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -59,6 +75,25 @@
   export default {
     name: 'new-vip-coctor-management',
     data(){
+      const generateData = () => {
+        const data = [];
+        this.$axios.get('/api/back/doctors/customers')
+          .then((response) => {
+            console.log(response)
+            let datalist = response.data.data;
+            datalist.forEach(function (item, i) {
+              data.push({
+                key: item.customerId,
+                label: item.customerName,
+              });
+            })
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+        console.log(data)
+        return data;
+      }
       return {
         imageUrl: '',
         form: {
@@ -71,7 +106,11 @@
           price: '',   //诊疗费
           customersId: '',  //会员ID
           type: 1
-        }
+        },
+        memberdata: generateData(), //所有权限请求
+        memberids: [],        //选中权限id
+        memberidsstate: false, //权限窗口状态
+        memberTag: [],
       }
     },
     watch: {},
@@ -93,6 +132,27 @@
         }
         return isJPG && isLt2M;
       },
+      //添加会员弹窗
+      purviewidsAlert(){
+        this.memberidsstate = !this.memberidsstate;
+      },
+      //保存
+      preservationFn(){
+        this.purviewidsAlert();
+        this.powerShow();
+      },
+      //会员展示
+      powerShow(){
+        let _this = this;
+        this.memberTag = [];
+        this.memberdata.forEach(function (item, i) {
+          _this.memberids.forEach(function (tem, s) {
+            if (item.key === tem) {
+              _this.memberTag.push(item.label)
+            }
+          })
+        })
+      },
       onSubmit() {
         let fromdata = {
           photoUrl: this.form.photoUrl,
@@ -102,8 +162,11 @@
           department: escape(this.form.department),
           title: escape(this.form.title),
           price: this.form.price,
-          customersId: this.form.customersId,
+          customersId: "",
           type: this.form.type,
+        }
+        if(this.memberids.length > 0){
+          fromdata.customersId = this.memberids.join(",");
         }
         this.$axios.post('/api/back/doctors', fromdata)
           .then((response)=> {

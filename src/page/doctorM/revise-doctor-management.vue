@@ -36,13 +36,13 @@
           <el-input v-model="form.phone"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button plain>网站禁言</el-button>
-          <el-button plain>禁用账号</el-button>
-          <el-button plain>重置密码</el-button>
+          <!--<el-button plain>网站禁言</el-button>-->
+          <el-button plain @click="disableFn">{{status ==0 ? '禁用账号':'启用账号'}}</el-button>
+          <!--<el-button plain>重置密码</el-button>-->
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">立即创建</el-button>
+          <el-button type="primary" @click="onSubmit">保存修改</el-button>
         </el-form-item>
       </el-form>
 
@@ -51,41 +51,43 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import qs from 'qs';
   export default {
     name: 'revise-doctor-management',
     data(){
-      console.log(this.$route.query.customerId)
-      const getForm = () => {
+      return {
+        imageUrl: "http://47.104.146.162:8080/images/" + this.photoUrl,
+        form: {},
+        status: null,
+      }
+    },
+    watch: {},
+    mounted(){
+      console.log("000")
+      this.getData();
+    },
+    methods: {
+      getData(){
         let form = {};
         this.$axios.get('/api/back/customers/' + this.$route.query.customerId).then((response)=> {
           console.log(response)
           let data = response.data.data;
           this.imageUrl = "http://47.104.146.162:8080/images/" + data.photoUrl,
             this.form = {
+              customerId: data.customerId,
               photoUrl: data.photoUrl,  //头像地址
-              customerName: unescape(data.customerName),  //医生姓名
+              customerName: data.customerName,  //医生姓名
               phone: data.phone, //医生手机号
-              hospital: unescape(data.hospital), //医院名称
-              department: unescape(data.department), //科室
-              title: unescape(data.title), //职称
-              type: 0
+              hospital: data.hospital, //医院名称
+              department: data.department, //科室
+              title: data.title, //职称
             }
+            this.status = data.status
         }).catch(function (error) {
           console.log(error);
         });
         return
-      };
-      return {
-        imageUrl: "http://47.104.146.162:8080/images/" + this.photoUrl,
-        form: getForm()
-      }
-    },
-    watch: {},
-    mounted(){
-      console.log("000")
-
-    },
-    methods: {
+      },
       //上传文件之前
       beforeAvatarUpload(file) {
         const isJPG = file.type === 'image/jpeg' || 'image/png';
@@ -106,19 +108,55 @@
         this.form.photoUrl = res.data;
         console.log(res.data)
       },
+      //禁用/启用
+      disableFn(){
+        let _this = this;
+        let messageText = [];
+        if (this.status == 0) {
+          messageText[0] = '禁用账号后此账号都不可继续使用！';
+          messageText[1] = '成功！';
+        } else {
+          messageText[0] = '启用账号此账号都可正常使用！';
+          messageText[1] = '成功！';
+        }
+        this.$confirm(messageText[0], '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$axios.post('/api/back/customers/lock', {customerId: this.$route.query.customerId})
+            .then((response) => {
+              console.log(response)
+              this.$message({
+                type: 'success',
+                message: messageText[1]
+              });
+              history.go(-1)
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消禁用'
+          });
+        })
+      },
       //修改确认
       onSubmit() {
         let fromdata = {
+          customerId: this.form.customerId,
           photoUrl: this.form.photoUrl,
-          customerName: escape(this.form.customerName),
+          customerName: this.form.customerName,
           phone: this.form.phone,
-          hospital: escape(this.form.hospital),
-          department: escape(this.form.department),
-          title: escape(this.form.title),
-          type: this.form.type,
+          hospital: this.form.hospital,
+          department: this.form.department,
+          title: this.form.title,
+          price: 0,
         }
         this.$axios.post('/api/back/doctors', fromdata).then((response)=> {
-          console.log("2")
           console.log(response)
         })
           .catch(function (error) {

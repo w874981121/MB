@@ -6,13 +6,13 @@
                @open="handleOpen" @close="handleClose" background-color="#545c64" text-color="#fff"
                :unique-opened="true" active-text-color="#ffd04b">
         <template v-for="(i, index) in navlistData">
-          <el-submenu v-if="i.list && i.state || i.default" :index="i.url" :key="i.key">
+          <el-submenu v-if="i.list && i.state" :index="i.url" :key="i.key">
             <template slot="title">
               <!--<i class="el-icon-caret-right"></i>-->
               <span slot="title"
                     :style="{'color': repTest(i.url, initindex) ? '#ffd04b' : '#fff'}">{{i.name}}</span>
             </template>
-            <el-menu-item v-if="f.state || f.default" v-for="(f, len) in i.list" :key="f.key" :index="f.url">
+            <el-menu-item v-if="f.state" v-for="(f, len) in i.list" :key="f.key" :index="f.url">
               {{f.name}}
             </el-menu-item>
           </el-submenu>
@@ -39,28 +39,28 @@
           name: '账号管理',
           key: '0',
           url: 'open-websitemm-roleam',
-          default: true,
+          state: false,
           list: [{
             name: '网站账号管理',
             key: '00',
             url: 'websitemm',
-            default: false,
+            state: false,
           }, {
             name: '角色权限管理',
             key: '01',
             url: 'roleam',
-            default: false,
+            state: false,
           }]
         }, {
           name: '网站管理',
           key: '1',
           url: 'open-forumm-enterprisa-expertlh',//
-          default: true,
+          state: false,
           list: [{
             name: '网站信息',
             key: '10',
             url: 'webaccount',
-            default: true,
+            state: false,
           }, {
             name: '论坛管理',
             key: '11',
@@ -96,27 +96,22 @@
             name: 'VIP信息',
             key: '40',
             url: 'vipi',
-            default: true,
+            state: false,
           }, {
             name: '健康记录',
             key: '41',
             url: 'healthr',
-            default: true,
+            state: false,
           }, {
             name: '异常报告',
             key: '42',
             url: 'abnormalr',
-            default: true,
+            state: false,
           }, {
             name: '远程订单',
             key: '43',
             url: 'remoteo',
-            default: true,
-          }, {
-            name: '数据统计',
-            key: '44',
-            url: 'datas',
-            default: true,
+            state: false,
           }]
         }, {
           name: '普通会员管理',
@@ -157,44 +152,50 @@
       },
       getPurview(){
         let navlistData = this.navlistData
-//        console.log(this.cookieFn.get("username"),'------------')
-        if(this.cookieFn.get("username") == 'admin'){
-          navlistData[0].list[0].default = true;
-          navlistData[0].list[1].default = true;
-        }else{
-          navlistData[0].list[0].default = false;
-          if(this.cookieFn.get("type") == 1){
-            navlistData[0].list[1].default = true;
-          }else{
-            navlistData[0].list[1].default = false;
-            navlistData[0].default = false
-          }
+
+        //全部显示
+        const setState = ()=> {
+          navlistData.forEach((item, i)=> {
+            item.state = true
+            if (!!item.list) {
+              item.list.forEach((o, f)=> {
+                o.state = true
+              })
+            }
+          })
+        }
+        if (this.cookieFn.get("type") == 0) {  //类型为0 全部显示
+          setState();
+        } else if (this.cookieFn.get("type") == 1) {   //类型为1 关闭网站账号管理
+          setState();
+          navlistData[0].list[0].state = false;
+        } else {
+          this.$axios.get('/api/back/purview/' + this.cookieFn.get("usersid")).then((response)=> {
+            console.log(response)
+            let data = response.data.data;
+            data.forEach(function (obj, n) {
+              navlistData.forEach(function (item, i) {
+                if (item.hasOwnProperty('state')) {
+                  if (item.name == obj.purviewname) {
+                    navlistData[i].state = true;
+                  }
+                } else {
+                  item.list.forEach((tem, index) => {
+                    if (tem.hasOwnProperty('state') && tem.name == obj.purviewname) {
+                      if (tem.name == obj.purviewname) {
+                        navlistData[i].list[index].state = true;
+                      }
+                    }
+                  })
+                }
+              })
+            })
+          }).catch(function (error) {
+            console.log(error);
+          });
         }
 
-        this.$axios.get('/api/back/purview/' + this.cookieFn.get("usersid")).then((response)=> {
-          console.log(response)
-          let data = response.data.data;
-          data.forEach(function (obj, n) {
-            navlistData.forEach(function (item, i) {
-              if (item.hasOwnProperty('state')) {
-                if (item.name == obj.purviewname) {
-                  navlistData[i].state = true;
-                }
-              } else {
-                item.list.forEach((tem, index) => {
-                  if (tem.hasOwnProperty('state') && tem.name == obj.purviewname) {
-                    if (tem.name == obj.purviewname) {
-                      navlistData[i].list[index].state = true;
-                    }
-                  }
-                })
-              }
-            })
-          })
 
-        }).catch(function (error) {
-          console.log(error);
-        });
       },
     },
     beforeMount(){

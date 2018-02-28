@@ -16,7 +16,7 @@
     <!--table列表-->
     <el-table class="mt30" :data="tableData.data" height="400" border stripe style="width: 100%"
               :row-class-name="tableRowClassName">
-      <el-table-column align="center" prop="articleId" label="编号"></el-table-column>
+      <el-table-column align="center" prop="articleId" label="编号"  width="120"></el-table-column>
       <el-table-column align="center" prop="updateTime" label="创建时间" width="90"></el-table-column>
       <el-table-column align="center" prop="title" label="公告名称"></el-table-column>
       <el-table-column align="center" label="操作" width="160">
@@ -89,12 +89,15 @@
         this.getData()
       },
       //上线
-      postOnline(val){
+      postnline(val){
         let formdata = {
           articleId: val.articleId
         }
         this.$axios.post('/api/back/article/pass', formdata).then((response) => {
           console.log(response)
+          if (response.data.errcode == 0) {
+            this.getData();
+          }
         }).catch((error) => {
           console.log(error);
         });
@@ -103,13 +106,16 @@
       postOffline(row){
         this.$axios.post('/api/back/article/pass', {articleId: row.articleId}).then((response) => {
           console.log(response)
+          if (response.data.errcode == 0) {
+            this.getData();
+          }
         }).catch((error) => {
           console.log(error);
         });
       },
       //修改
-      postModify(){
-
+      postModify(row){
+        this.$router.push({path: "/enterprisa/reviseannouncement", query: {articleId: row.articleId}})
       },
       newAccount(){
         this.$router.push({path: '/enterprisa/newannouncement'})

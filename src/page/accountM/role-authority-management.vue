@@ -26,6 +26,10 @@
       }
     },
     mounted(){
+      if(this.cookieFn.get("type") == 1){
+        this.$router.push({path: "/roleam/roleamlist", query: {usersid: this.cookieFn.get("usersid")}})
+        return
+      }
       this.getData();
     },
     methods:{

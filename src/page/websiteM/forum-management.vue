@@ -27,7 +27,7 @@
         </template>
       </el-table-column>
       <el-table-column align="center" prop="title" label="标题"></el-table-column>
-      <el-table-column align="center" prop="count" label="评论列表">
+      <el-table-column align="center" prop="count" label="评论条数">
         <template slot-scope="scope">
           <router-link :to="{ path: '/forumm/comment', query: { questionId: scope.row.questionId}}">
             {{scope.row.count}}
@@ -36,15 +36,15 @@
       </el-table-column>
       <el-table-column align="center" prop="doctors" label="回复的医生">
         <template slot-scope="scope">
-
           <span v-for="i in scope.row.doctors">
            <!--0 普通  1 VIP-->
           <router-link v-if="scope.row.type == 0" :to="{ path: '/doctorm/revisedoctormanagement', query: { customerId: i.customerId}}">
-            {{i.customerName}}
+            {{i.customerName}}，
           </router-link>
           <router-link v-if="scope.row.type == 1" :to="{ path: '/vipdm/revisedoctorinformmation', query: { customerId: i.customerId}}">
             {{i.customerName}}
           </router-link>
+            <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
           </span>
         </template>
       </el-table-column>
@@ -61,6 +61,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import qs from 'qs';
   export default {
     name:'forum_manage',
     data(){
@@ -126,8 +127,7 @@
                 type: 'success',
                 message: '下线成功!'
               });
-            })
-            .catch(function (error) {
+            }).catch(function (error) {
               console.log(error);
             });
 
@@ -155,10 +155,7 @@
               });
             })
             .catch(function (error) {
-              this.$message({
-                type: 'error',
-                message: '上线失败!'
-              });
+              this.$message.error('上线失败');
               console.log(error);
             });
 

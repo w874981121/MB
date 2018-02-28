@@ -48,6 +48,7 @@
               this.cookieFn.set("truename", response.data.data.truename);
               this.cookieFn.set("usersid", response.data.data.usersid);
               this.cookieFn.set("type", response.data.data.type);
+              this.cookieFn.set("token", response.data.data.token);
               this.$router.push({path: "/websitemm"})
               break;
 

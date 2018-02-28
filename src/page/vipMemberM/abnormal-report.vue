@@ -36,67 +36,12 @@
 
     </div>
     <div class="tableCss">
-      <!--  BG table 血糖数据-->
-      <el-table v-show="tableData.BG.state" :data="tableData.BG.data" height="400" border stripe style="width: 100%">
-        <template v-for="i in tableData.BG.title">
+      <el-table :data="tableData.data" height="400" border stripe style="width: 100%">
+        <template v-for="i in tableData.title">
           <el-table-column align="center" :prop="i.field" :label="i.name"
                            :width="i.width?i.width:'auto'"></el-table-column>
         </template>
       </el-table>
-      <!--  BLOODFAT table 血脂数据-->
-      <el-table v-show="tableData.BLOODFAT.state" :data="tableData.BLOODFAT.data" height="400" border stripe
-                style="width: 100%">
-        <template v-for="i in tableData.BLOODFAT.title">
-          <el-table-column align="center" :prop="i.field" :label="i.name"
-                           :width="i.width?i.width:'auto'"></el-table-column>
-        </template>
-      </el-table>
-      <!--  BLOODPRESSURE table 血压数据-->
-      <el-table v-show="tableData.BLOODPRESSURE.state" :data="tableData.BLOODPRESSURE.data" height="400" border stripe
-                style="width: 100%">
-        <template v-for="i in tableData.BLOODPRESSURE.title">
-          <el-table-column align="center" :prop="i.field" :label="i.name"
-                           :width="i.width?i.width:'auto'"></el-table-column>
-        </template>
-      </el-table>
-      <!--  ECGPICTURE table 心电图-->
-      <el-table v-show="tableData.ECGPICTURE.state" :data="tableData.ECGPICTURE.data" height="400" border stripe
-                style="width: 100%">
-        <template v-for="i in tableData.ECGPICTURE.title">
-          <el-table-column align="center" :prop="i.field" :label="i.name"
-                           :width="i.width?i.width:'auto'"></el-table-column>
-        </template>
-      </el-table>
-      <!--  FAT table 脂肪数据-->
-      <el-table v-show="tableData.FAT.state" :data="tableData.FAT.data" height="400" border stripe style="width: 100%">
-        <template v-for="i in tableData.FAT.title">
-          <el-table-column align="center" :prop="i.field" :label="i.name"
-                           :width="i.width?i.width:'auto'"></el-table-column>
-        </template>
-      </el-table>
-      <!--  SPO table 血氧数据-->
-      <el-table v-show="tableData.SPO.state" :data="tableData.SPO.data" height="400" border stripe style="width: 100%">
-        <template v-for="i in tableData.SPO.title">
-          <el-table-column align="center" :prop="i.field" :label="i.name"
-                           :width="i.width?i.width:'auto'"></el-table-column>
-        </template>
-      </el-table>
-      <!--  UR table 尿常规分析数据-->
-      <el-table v-show="tableData.UR.state" :data="tableData.UR.data" height="400" border stripe style="width: 100%">
-        <template v-for="i in tableData.UR.title">
-          <el-table-column align="center" :prop="i.field" :label="i.name"
-                           :width="i.width?i.width:'auto'"></el-table-column>
-        </template>
-      </el-table>
-      <!--  WEIGHT table 体重计数据-->
-      <el-table v-show="tableData.WEIGHT.state" :data="tableData.WEIGHT.data" height="400" border stripe
-                style="width: 100%">
-        <template v-for="i in tableData.WEIGHT.title">
-          <el-table-column align="center" :prop="i.field" :label="i.name"
-                           :width="i.width?i.width:'auto'"></el-table-column>
-        </template>
-      </el-table>
-
     </div>
     <el-pagination background layout="prev, pager, next" :page-size="webSitedata.pageSize" @current-change="getPage"
                    :total="webSitedata.total"></el-pagination>
@@ -105,7 +50,7 @@
 
 <script type="text/ecmascript-6">
   export default {
-    name: "abnormal-report",
+    name: "remote-order",
     data(){
       return {
         options: [{
@@ -142,184 +87,81 @@
           pageSize: 1,
         },
         tableData: {
-          BG: {
-            name: '血糖数据',
-            state: true,
-            value: 'BG',
-            currentPage: 1,
-            total: 1,
-            title: [
-              {field: 'dataKey', name: '用户设备编号', width: '200'},
-              {field: 'addDate', name: '添加时间', width: '90'},
-              {field: 'customerName', name: '用户姓名'},
-              {field: 'bloodSugarDataId', name: '血糖数据编号'},
-              {field: 'bloodSugar', name: '血糖值(mmol(1mmol=18mg/dl))', width: '220'},  //mmol(1mmol=18mg/dl)
-            ],
-            data: [],
-          },
-          BLOODFAT: {
-            name: '血脂数据',
-            state: false,
-            value: 'BLOODFAT',
-            title: [
-              {field: 'dataKey', name: '用户设备编号', width: '200'},
-              {field: 'addDate', name: '添加时间', width: '90'},
-              {field: 'customerName', name: '用户姓名'},
-              {field: 'bloodFatDataId', name: '血糖数据编号'},
-              {field: 'chol', name: '胆固醇含量	（mmol/L）'},
-              {field: 'hdlchol', name: '高密度脂蛋白胆固醇含量（mmol/L）'},
-              {field: 'trig', name: '甘油三酯含量（mmol/L）'},
-              {field: 'calcldl', name: '低密度脂蛋白胆固醇含量（mmol/L）',},
-              {field: 'tchdl', name: '总胆固醇和高密度胆固醇的比值'},
-            ],
-            data: [],
-          },
-          BLOODPRESSURE: {
-            name: '血压数据',
-            state: false,
-            value: 'BLOODPRESSURE',
-            title: [
-              {field: 'dataKey', name: '用户设备编号', width: '200'},
-              {field: 'addDate', name: '添加时间', width: '90'},
-              {field: 'customerName', name: '用户姓名'},
-              {field: 'bloodPressureDataId', name: '血压数据编号'},
-              {field: 'diastolicPressure', name: '舒张压'},
-              {field: 'systolicPressure', name: '收缩压'},
-              {field: 'pulse', name: '脉率'},
-            ],
-            data: [],
-          },
-          ECGPICTURE: {
-            name: '心电图',
-            state: false,
-            value: 'ECGPICTURE',
-            title: [
-              {field: 'dataKey', name: '用户设备编号', width: '200'},
-              {field: 'addDate', name: '添加时间', width: '90'},
-              {field: 'customerName', name: '用户姓名'},
-              {field: 'ecgPictureDataId', name: '心电数据编号'},
-              {field: 'pictureDataUrl', name: '心电图路径'},
-            ],
-            data: [],
-          },
-          FAT: {
-            name: '脂肪数据',
-            state: false,
-            value: 'FAT',
-            title: [
-              {field: 'dataKey', name: '用户设备编号', width: '200'},
-              {field: 'addDate', name: '添加时间', width: '90'},
-              {field: 'customerName', name: '用户姓名'},
-              {field: 'fatDataId', name: '脂肪数据编号'},
-              {field: 'height', name: '身高(cm)'},
-              {field: 'weight', name: '体重(kg)'},
-              {field: 'age', name: '年龄'},
-              {field: 'sex', name: '性别'},
-              {field: 'fatContent', name: '脂肪含量'},
-              {field: 'bmi', name: '体质指数'},
-              {field: 'bmr', name: '基础代谢值'},
-              {field: 'bmiResult', name: '体质指数判断结果'},
-              {field: 'bt', name: '体型类型'},
-            ],
-            data: [],
-          },
-          SPO: {
-            name: '血氧数据',
-            state: false,
-            value: 'SPO',
-            title: [
-              {field: 'dataKey', name: '用户设备编号', width: '200'},
-              {field: 'addDate', name: '添加时间', width: '90'},
-              {field: 'customerName', name: '用户姓名'},
-              {field: 'spoDataId', name: '血氧数据编号'},
-              {field: 'pulse', name: '脉率'},
-              {field: 'oxygen', name: '血氧值'},
-            ],
-            data: [],
-          },
-          UR: {
-            name: '尿常规分析数据',
-            state: false,
-            value: 'UR',
-            title: [
-              {field: 'dataKey', name: '用户设备编号', width: '200'},
-              {field: 'addDate', name: '添加时间', width: '90'},
-              {field: 'customerName', name: '用户姓名'},
-              {field: 'urDataId', name: '尿常规数据编号'},
-              {field: 'leu', name: '白细胞值'},
-              {field: 'nit', name: '亚硝酸盐值'},
-              {field: 'ubg', name: '尿胆原值'},
-              {field: 'pro', name: '蛋白质值'},
-              {field: 'ph', name: '酸碱度值'},
-              {field: 'bld', name: '红细胞值'},
-              {field: 'sg', name: '比重'},
-              {field: 'ket', name: '酮体值'},
-              {field: 'bil', name: '胆红素值'},
-              {field: 'glu', name: '葡萄糖值'},
-              {field: 'vc', name: '维生素值'},
-            ],
-            data: [],
-          },
-          WEIGHT: {
-            name: '体重计数据',
-            state: false,
-            value: 'WEIGHT',
-            title: [
-              {field: 'dataKey', name: '用户设备编号', width: '200'},
-              {field: 'addDate', name: '添加时间', width: '90'},
-              {field: 'customerName', name: '用户姓名'},
-              {field: 'weightDataId', name: '体重计数据编号'},
-              {field: 'weight', name: '体重数据(kg)'},
-            ],
-            data: [],
-          },
-
+          title: [
+            {field: 'creatDate', name: '异常上报时间', width: '200'},
+            {field: 'customerName', name: '会员', width: '100'},
+            {field: 'doctorName', name: '家庭医生', width: '100'},
+            {field: 'abnormalDataText', name: '异常数据'},
+            {field: 'abnormal', name: '医生建议'},
+            {field: 'state', name: '远程会诊订单状态'},
+          ],
+          data: [],
         }
       }
     },
-    watch: {
-      "webSitedata.type"(val){
-        let _this = this;
-        Object.keys(this.tableData).forEach(function (tem, s) {
-          if (_this.tableData[tem].value == val) {
-            _this.tableData[tem].state = true;
-            _this.webSitedata.total = _this.tableData[tem].total
-            _this.webSitedata.pageSize = _this.tableData[tem].pageSize
-            _this.webSitedata.currentPage = _this.tableData[tem].currentPage
-          } else {
-            _this.tableData[tem].state = false
-          }
-        })
-      },
-    },
+    watch: {},
     methods: {
       getData(){
         let _this = this;
         let fromData = {
           beginDate: '',  //开始时间
           endDate: '',    //结束时间
-          companyId: 2,   //公司id
+          customerName: this.webSitedata.customerName,  //姓名
+          companyId: this.cookieFn.get("usersid"),   //公司id
           currentPage: 1, //页码
           type: this.webSitedata.type,      //数据类型
         }
-        this.modifytateS(fromData.type);
-        this.$axios.get('/api/back/customers/data', {params: fromData}).then((response)=> {
+        if (this.webSitedata.time != '') {
+          let timeA = new Date(this.webSitedata.time[0]);
+          let timeB = new Date(this.webSitedata.time[1]);
+
+          let zeroZh = (z)=>{
+            return z < 10 ? "0" + z : z;
+          }
+          fromData.beginDate = String(timeA.getFullYear())+ "-" +zeroZh(String(timeA.getMonth() + 1)) +"-" +zeroZh(String(timeA.getDate()));  //开始时间
+          fromData.endDate = String(timeB.getFullYear()) +"-" +zeroZh( String(timeB.getMonth() + 1)) + "-" +zeroZh(String(timeB.getDate()));    //结束时间
+        }
+        this.$axios.get('/api/back/customers/abnormal', {params: fromData}).then((response) => {
           console.log(response)
-          let datelist = response.data.data.list;
-          datelist.forEach(function (item, i) {
-            datelist[i].customerName = decodeURIComponent(item.customerName);
+        if (response.data.data == null) {
+          console.log("数据为空")
+          return
+        }
+        let datelist = response.data.data.list;
+        datelist.forEach(function (item, i) {
+          datelist[i].customerName = decodeURIComponent(item.customerName);
+          let titleText = " ";
+          switch (item.state) {
+            case 0:
+              titleText = "无状态"
+              break;
+            case 1:
+              titleText = "会员发起远程会诊,未支付"
+              break;
+            case 2:
+              titleText = "发起会诊已支付未结束"
+              break;
+            case 3:
+              titleText = "会诊结束"
+              break;
+          }
+
+          console.log(datelist[i].creatDate)
+          datelist[i].creatDate = _this.$timeonversionC(item.creatDate)
+          console.log(datelist[i].creatDate)
+          datelist[i].abnormalDataText = []
+          datelist[i].abnormalData.forEach(function (a, b) {
+            datelist[i].abnormalDataText.push(a.name + ":" + a.value)
           })
-          this.tableData[fromData.type].data = datelist;
-
-          this.webSitedata.total = response.data.data.total;
-          this.webSitedata.pageSize = Number(response.data.data.pageSize);
-          this.webSitedata.currentPage = response.data.data.pageNum;
-          //存储对应页码信息
-          this.tableData[fromData.type].total = response.data.data.total;
-          this.tableData[fromData.type].pageSize = Number(response.data.data.pageSize);
-          this.tableData[fromData.type].currentPage = response.data.data.pageNum;
-
-        }).catch(function (error) {
+          datelist[i].abnormalDataText = datelist[i].abnormalDataText.join("  ")
+          datelist[i].state = titleText;
+        })
+        console.log(datelist)
+        this.tableData.data = datelist;
+        this.webSitedata.total = response.data.data.total;
+        this.webSitedata.pageSize = Number(response.data.data.pageSize);
+        this.webSitedata.currentPage = response.data.data.pageNum;
+      }).catch(function (error) {
           console.log(error);
         })
       },
@@ -328,11 +170,6 @@
       },
       getPage(){
 
-      },
-      modifytateS(val){
-        this.tableData.listname = [];
-        this.tableData.listname = this.tableData[val].title;
-        this.tableData.data = [];
       },
     },
   }

@@ -52,40 +52,39 @@
     name: 'new-account',
     data(){
       const generateData = () => {
-          const data = [];
-          this.$axios.get('/api/back/purview')
-            .then((response) => {
-              let datalist = response.data.data;
-              datalist.forEach(function (item, i) {
-                if (item.isleaf === 1) {
+        const data = [];
+        this.$axios.get('/api/back/purview')
+          .then((response) => {
+            let datalist = response.data.data;
+            datalist.forEach(function (item, i) {
+              if (item.isleaf === 1) {
+                data.push({
+                  key: item.purviewid,
+                  label: item.purviewname,
+                  disabled: true
+                });
+                item.childPurview.forEach(function (tem, i) {
                   data.push({
-                    key: item.purviewid,
-                    label: item.purviewname,
-                    disabled: true
-                  });
-                  item.childPurview.forEach(function (tem, i) {
-                    data.push({
-                      key: tem.purviewid,
-                      label: tem.purviewname,
-                      disabled: false
-                    });
-                  })
-                } else if (item.isleaf === 0) {
-                  data.push({
-                    key: item.purviewid,
-                    label: item.purviewname,
+                    key: tem.purviewid,
+                    label: tem.purviewname,
                     disabled: false
                   });
-                }
-              })
+                })
+              } else if (item.isleaf === 0) {
+                data.push({
+                  key: item.purviewid,
+                  label: item.purviewname,
+                  disabled: false
+                });
+              }
             })
-            .catch((error) => {
+          })
+          .catch((error) => {
             console.log(error);
-        })
-          console.log(data)
-          return data;
-        }
-        ;
+          })
+        console.log(data)
+        return data;
+      }
       return {
         powerdata: generateData(), //所有权限请求
         purviewids: [],        //选中权限id
@@ -132,7 +131,7 @@
             let data = response.data.data;
             data.forEach((item, i) => {
               this.purviewids.push(item.purviewid)
-          })
+            })
             this.powerShow();
           })
           .catch(function (error) {
@@ -185,9 +184,10 @@
           usersid: this.form.usersid
         }
 
-        this.$axios.post('/api/back/purview', qs.stringify(setPurview),{
+        this.$axios.post('/api/back/purview', qs.stringify(setPurview), {
           headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'}
-        }).then((response) => {
+        })
+          .then((response) => {
             console.log("2")
             console.log(response)
           })

@@ -4,7 +4,8 @@ import Vue from 'vue'
 // ui组件
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import {Loading} from 'element-ui';
+import { Loading } from 'element-ui';
+import { Message } from 'element-ui';
 import App from './App'
 import {router} from './router/index'    //路由
 import Axios from 'axios'
@@ -22,15 +23,15 @@ Vue.use(VueQuillEditor)
 //自定义方法
 Vue.use(util);
 let loadingInstance = null;
+Axios.defaults.timeout = 5000
 //添加一个请求拦截器
 Axios.interceptors.request.use(function (config) {
   //在请求发出之前进行一些操作
   console.log("请求前")
-  console.log(config)
-  if(config.method == 'post'){
-    // config.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
-    // config.data = qs.stringify(config.data)
-  }
+  // console.log(config)
+  // let token = Vue.prototype.cookieFn.get("token")
+  // config.headers.Authorization = token
+  // console.log(config.headers)
   loadingInstance = Loading.service({
     lock: true,
     text: 'Loading',
@@ -55,11 +56,12 @@ Axios.interceptors.response.use(function (res) {
   return res;
 }, function (err) {
   //返回错误
+  loadingInstance.close();
   console.log("返回错误")
   if (err.response.status == 401) {
+    Message.error('登陆超时')
     router.push({path: "/"})
   }
-  loadingInstance.close();
   return Promise.reject(error);
 })
 

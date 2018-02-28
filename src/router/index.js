@@ -19,10 +19,11 @@ import Webaccount from '@/page/websiteM/web-account'
 
 import Enterprisannouncement from '@/page/websiteM/enterpris-announcement'
 import Expertlecturehall from '@/page/websiteM/expert-lecture-hall'
-import Newannouncement from '@/page/websiteM/new-announcement.vue'
-import Newexpertlecturehall from '@/page/websiteM/new-expert-lecture-hall.vue'
-import Reviseexpertlecturehall from '@/page/websiteM/revise-expert-lecture-hall.vue'
-import Comment from '@/page/websiteM/comment.vue'
+import Newannouncement from '@/page/websiteM/new-announcement'
+import Newexpertlecturehall from '@/page/websiteM/new-expert-lecture-hall'
+import Reviseexpertlecturehall from '@/page/websiteM/revise-expert-lecture-hall'
+import Comment from '@/page/websiteM/comment'
+import Reviseannouncement from '@/page/websiteM/revise-announcement.vue'
 
 
 
@@ -155,7 +156,7 @@ Vue.use(Router)
         meta: {
           requireAuth: true,
         },
-        component: Enterprisannouncement
+        component: Enterprisannouncement   //
       }, {
         path: '/enterprisa/newannouncement',
         name: '新建公告',
@@ -163,6 +164,13 @@ Vue.use(Router)
           requireAuth: true,
         },
         component: Newannouncement
+      },{
+        path: '/enterprisa/reviseannouncement',
+        name: '修改公告',
+        meta: {
+          requireAuth: true,
+        },
+        component: Reviseannouncement
       },{
         path: '/expertlh',
         name: '专家讲堂',

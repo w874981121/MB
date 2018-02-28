@@ -104,10 +104,10 @@
         let messageText = [];
         if (this.form.lockState == 0) {
           messageText[0] = '禁用账号后此账号都不可继续使用！';
-          messageText[1] = '禁用成功！';
+          messageText[1] = '成功！';
         } else {
           messageText[0] = '启用账号此账号都可正常使用！';
-          messageText[1] = '启用成功！';
+          messageText[1] = '成功！';
         }
         this.$confirm(messageText[0], '提示', {
           confirmButtonText: '确定',

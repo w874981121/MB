@@ -313,8 +313,12 @@
         if (this.webSitedata.time != '') {
           let timeA = new Date(this.webSitedata.time[0]);
           let timeB = new Date(this.webSitedata.time[1]);
-          fromData.beginDate = String(timeA.getFullYear()) + String(timeA.getMonth() + 1) + String(timeA.getDate());  //开始时间
-          fromData.endDate = String(timeB.getFullYear()) + String(timeB.getMonth() + 1) + String(timeB.getDate());    //结束时间
+
+          let zeroZh = (z)=>{
+            return z < 10 ? "0" + z : z;
+          }
+          fromData.beginDate = String(timeA.getFullYear())+ "-" +zeroZh(String(timeA.getMonth() + 1)) +"-" +zeroZh(String(timeA.getDate()));  //开始时间
+          fromData.endDate = String(timeB.getFullYear()) +"-" +zeroZh( String(timeB.getMonth() + 1)) + "-" +zeroZh(String(timeB.getDate()));    //结束时间
         }
         this.modifytateS(fromData.type);
         this.$axios.get('/api/back/customers/data', {params: fromData}).then((response)=> {
@@ -347,8 +351,9 @@
       onSubmit(){
         this.getData()
       },
-      getPage(){
-
+      getPage(a){
+        this.tableData[fromData.type].currentPage = a;
+        this.getData();
       },
       modifytateS(val){
         this.tableData.listname = [];

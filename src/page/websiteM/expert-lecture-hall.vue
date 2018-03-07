@@ -17,19 +17,24 @@
     <el-table class="mt30" :data="tableData.data" height="400" border stripe style="width: 100%" :row-class-name="tableRowClassName">
       <el-table-column align="center" prop="articleId" label="编号"></el-table-column>
       <el-table-column align="center" prop="updateTime" label="创建时间" width="90"></el-table-column>
-      <el-table-column align="center" prop="title" label="公司名称"></el-table-column>
+      <el-table-column align="center" prop="truename" label="创建人名称"></el-table-column>
       <el-table-column align="center" prop="title" label="视频标题"></el-table-column>
+      <el-table-column align="center" prop="title" label="图片" width="160">
+        <template slot-scope="scope">
+          <img style="width:100%;display: block" :src="scope.row.imgUrl" alt="">
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="操作" width="160">
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" v-show="scope.row.isPass == 0" @click="postModify(scope.row)">上线</el-button>
-          <el-button size="mini" type="primary" v-show="scope.row.isPass == 1" @click="postModify(scope.row)">下线</el-button>
+          <el-button size="mini" type="primary" v-show="scope.row.isPass == 0" @click="postnline(scope.row)">上线</el-button>
+          <el-button size="mini" type="primary" v-show="scope.row.isPass == 1" @click="postOffline(scope.row)">下线</el-button>
           <el-button size="mini" type="primary" v-show="scope.row.isPass == 0" @click="postRevise(scope.row)">修改</el-button>
         </template>
       </el-table-column>
       <el-table-column align="center" prop="" label="备注"></el-table-column>
     </el-table>
     <!--翻页-->
-    <el-pagination background layout="prev, pager, next" :page-size="pageSize" @current-change="getPage" :total="total"></el-pagination>
+    <el-pagination class="mt20" background layout="prev, pager, next" :page-size="pageSize" @current-change="getPage" :total="total"></el-pagination>
   </div>
 </template>
 
@@ -65,6 +70,7 @@
             datelist[i].updateTime = _this.$timeonversionC(item.updateTime);
             datelist[i].truename = unescape(item.truename);
             datelist[i].linkName = unescape(item.linkName);
+            datelist[i].imgUrl = _this.$api + "/images/" + item.imgUrl
           })
           this.tableData.data = datelist;
           this.total = response.data.data.total;
@@ -84,14 +90,56 @@
       onSubmit(){
         this.getData()
       },
-      //下线
-      postModify(){
-
+      //上线
+      postnline(val){
+        let formdata = {
+          articleId: val.articleId
+        }
+        this.$axios.post('/api/back/article/pass', formdata).then((response) => {
+          console.log(response)
+        if (response.data.errcode == 0) {
+          this.getData();
+          this.$message({
+            type: 'success',
+            message: '上线成功!'
+          });
+        }else{
+          this.$message({
+            type: 'error',
+            message: '下线失败!'
+          });
+        }
+      }).catch((error) => {
+          console.log(error);
+      });
       },
+      //下线
+      postOffline(row){
+        this.$axios.post('/api/back/article/pass', {articleId: row.articleId}).then((response) => {
+          console.log(response)
+          if (response.data.errcode == 0) {
+            this.getData();
+            this.$message({
+              type: 'success',
+              message: '下线成功!'
+            });
+          }else{
+            this.$message({
+              type: 'error',
+              message: '下线失败!'
+            });
+          }
+        }).catch((error) => {
+          console.log(error);
+        });
+      },
+
       //修改
       postRevise(row){
         this.$router.push({path: "/expertlh/reviseexpertlecturehall", query: {articleId: row.articleId}})
       },
+
+      //跳转
       newAccount(){
         this.$router.push({path: '/expertlh/newexpertlecturehall'})
       },

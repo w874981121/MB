@@ -18,13 +18,13 @@
         searchData: {
           path: '/regularmm/newregularmembermanagement',
           name:'',
-          placeholder:'输入用户名/手机号'
+          placeholder:'输入姓名'
         },
         total: 0,
         pageSize: 0,
         webSitedata:{
           currentPage: 1,
-          name:''
+          customer:''
         },
         //传递给table的数据
         tableData: {
@@ -35,7 +35,7 @@
             {field: 'customerName', name: '姓名'},
             {field: 'phone', name: '手机号'},
             {field: 'loginName', name: '账号'},
-            {field: 'passWord', name: '密码',},
+//            {field: 'passWord', name: '密码',},
             {field: 'status', name: '状态',},
           ],  //设置排列顺序
           data: []
@@ -49,29 +49,31 @@
       getData(){
         let _this = this;
         this.$axios.get('/api/back/customers', { params:this.webSitedata}).then((response)=> {
+          console.log(response,"-------")
           let datelist = response.data.data.list;
           datelist.forEach(function(item,i){
             datelist[i].creatDate = _this.$timeonversionC(item.creatDate);
             datelist[i].customerName = unescape(item.customerName);
             datelist[i].status = item.status == 0 ? "未禁用" : "禁用";
-            datelist[i].photoUrl ="http://47.104.146.162:8080/images/" + item.photoUrl;
+            datelist[i].photoUrl = _this.$api + "/images/" + item.photoUrl;
           })
           this.tableData.data = datelist;
           this.total = response.data.data.total;
           this.pageSize = Number(response.data.data.pageSize);
           this.webSitedata.currentPage = response.data.data.pageNum;
+        console.log(this.tableData.data)
+
         }).catch(function (error) {
           console.log(error);
         })
       },
       //接受seach 查询参数
       onSubmit(tabletext) {
-        console.log(tabletext)
+        this.webSitedata.customer = tabletext
         this.getData()
       },
       //翻页请求
       getPage(a){
-        console.log(a)
         this.webSitedata.currentPage = a;
         this.getData();
       },

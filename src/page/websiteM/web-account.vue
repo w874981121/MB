@@ -92,7 +92,7 @@
           console.log(datelist)
           _this.form = datelist;
           console.log(_this.form)
-          _this.imageUrl = "http://47.104.146.162:8080/images/" + this.form.photoUrl
+          _this.imageUrl = this.$api+"/images/" + this.form.photoUrl
         }).catch(function (error) {
           console.log(error);
         })

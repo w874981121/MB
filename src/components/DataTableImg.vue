@@ -10,6 +10,13 @@
           </el-table-column>
       </template>
 
+      <el-table-column v-if="dataTable.soleCode" align="center" label="绑定手机唯一码">
+        <template slot-scope="scope">
+          <el-button v-if="scope.row.soleCode" size="mini" type="primary" @click="untiePhone(scope.row)">解绑手机</el-button>
+          <span v-if="!scope.row.soleCode">未绑定</span>
+        </template>
+      </el-table-column>
+
       <el-table-column v-if="dataTable.healthy" align="center" label="健康记录">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="seeHealthy(scope.row)">查看</el-button>
@@ -54,6 +61,22 @@
       postModify(row){
         console.log(row)
         this.$emit('modify',row);
+      },
+      //untiePhone
+      untiePhone(row){
+        this.$axios.post('/api/back/unbundling', {customerId:row.customerId})
+          .then((response)=> {
+          console.log(response)
+        if (response.data.errcode == 0) {
+          this.$message({
+            showClose: true,
+            type: "success",
+            message: '解绑成功！'
+          });
+        }
+      }).catch(function (error) {
+          console.log(error);
+        });
       },
       //查看健康记录
       seeHealthy(row){

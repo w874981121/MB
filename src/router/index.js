@@ -4,6 +4,11 @@ import Router from 'vue-router'
 import Contentbox from '@/page/content.vue'
 import Login from '@/page/login.vue'
 
+
+import Welcome from '@/page/welcome.vue'
+
+
+
 //账户管理
 import Websitemccountmanagement from '@/page/accountM/website-mccount-management'  //网站查询列表
 import Reviseaccount from '@/page/accountM/revise-account'   //修改
@@ -24,6 +29,7 @@ import Newexpertlecturehall from '@/page/websiteM/new-expert-lecture-hall'
 import Reviseexpertlecturehall from '@/page/websiteM/revise-expert-lecture-hall'
 import Comment from '@/page/websiteM/comment'
 import Reviseannouncement from '@/page/websiteM/revise-announcement.vue'
+
 
 
 
@@ -49,7 +55,7 @@ import Revisevipinformation from '@/page/vipMemberM/revise-vip-regular-member-ma
 import Healthrecords from '@/page/vipMemberM/health-records'
 import Abnormalreport from '@/page/vipMemberM/abnormal-report'
 import Remoteorder from '@/page/vipMemberM/remote-order'
-import Datastatistics from '@/page/vipMemberM/data-statistics'
+import Chart from '@/page/vipMemberM/chart.vue'
 
 
 
@@ -74,13 +80,20 @@ Vue.use(Router)
       component: Login,
     }, {
       path: '/contentbox',
-      redirect: '/websitemm',
+      redirect: '/welcome',
       name: '管理平台入口',
       meta: {
         requireAuth: true,
       },
       component: Contentbox,
       children: [{
+        path:'/welcome',
+        name:'入场页',
+        meta: {
+          requireAuth: true,
+        },
+        component:Welcome,
+      },{
         path: '/websitemm',
         name: '网站账号管理',
         meta: {
@@ -277,12 +290,12 @@ Vue.use(Router)
         },
         component: Remoteorder
       }, {
-        path: '/datas',
+        path: '/chart',
         name: '数据统计',
         meta: {
           requireAuth: true,
         },
-        component: Datastatistics
+        component: Chart
       }, {
         path: '/regularmm',
         name: '普通会员管理',
@@ -315,12 +328,19 @@ Vue.use(Router)
     }]
 
 //路径配置项    设置为固定量，在main文件引入注入全局
-export const router = new Router({  mode: 'history',routes })
+export const router = new Router({routes })
 
 router.beforeEach((to, from, next) => {
+
+  console.log(to)
   let instart = to.path.split("/")
-  if (to.name == null) {
+  if (to.name == null && instart.length === 3) {
     next({path: "/" + instart[instart.length - 1]})
+    return
+  }else if(to.name == null){
+    next({path: "/"})
+    return
   }
+
   next()
 })

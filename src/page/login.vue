@@ -1,12 +1,13 @@
 <template>
   <div id="login">
     <div class="login_box">
+      <div class="login_bg">
       <div class="text"><img src="../assets/login_text.png" alt="">
       </div>
       <div class="formdiv">
         <el-input size="medium" placeholder="请输入账号" v-model="login.usersname">
         </el-input>
-        <el-input class="mt20" size="medium" placeholder="请输入密码" v-model="login.password">
+        <el-input class="mt20" type="password" size="medium" placeholder="请输入密码" v-model="login.password">
         </el-input>
         <a class="mt10" @click="open">遇到问题</a>
         <el-button class="mt20" style="width:100%" size="medium" type="primary" @click="postLogin">
@@ -14,7 +15,7 @@
         </el-button>
       </div>
     </div>
-
+    </div>
   </div>
 </template>
 
@@ -24,8 +25,8 @@
     data(){
       return {
         login: {
-          usersname: 'admin',
-          password: 'admin'
+          usersname: '',
+          password: ''
         }
       }
     },
@@ -49,7 +50,7 @@
               this.cookieFn.set("usersid", response.data.data.usersid);
               this.cookieFn.set("type", response.data.data.type);
               this.cookieFn.set("token", response.data.data.token);
-              this.$router.push({path: "/websitemm"})
+              this.$router.push({path: "/contentbox"})
               break;
 
             case 30002:
@@ -87,15 +88,24 @@
     width: 100%;
     height: 100%;
     background: url(../assets/bgT.jpg) center no-repeat;
+    background-size: 100% 100%;
     .login_box {
       width: 800px;
       height: 400px;
+
       background: rgba(158, 172, 181, 0.4);
       border-radius: 5px;
       position: absolute;
       top: 50%;
       right: 74px;
       margin-top: -200px;
+      .login_bg{
+        width: 100%;
+        height:100%;
+        background: url("../assets/login_bg.png") no-repeat;
+        background-size: 1000px 500px;
+        background-position: -100px;
+      }
     }
     .text {
       width: 400px;

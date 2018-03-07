@@ -8,7 +8,7 @@
         <el-button icon="el-icon-search" type="primary" @click="onSubmit">查询</el-button>
       </el-form-item>
       <el-form-item class="fr">
-        <el-input v-model="seach_text" placeholder="发布人/医生"></el-input>
+        <el-input v-model="webSitedata.customerName" placeholder="请输入发布人"></el-input>
       </el-form-item>
     </el-form>
     <!--table列表-->
@@ -26,7 +26,11 @@
           </router-link>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="title" label="标题"></el-table-column>
+      <el-table-column align="center" prop="title" label="标题">
+        <template slot-scope="scope">
+          <a href="javascript:void(0);" @click="openText(scope.row)">{{scope.row.title}}</a>
+        </template>
+      </el-table-column>
       <el-table-column align="center" prop="count" label="评论条数">
         <template slot-scope="scope">
           <router-link :to="{ path: '/forumm/comment', query: { questionId: scope.row.questionId}}">
@@ -38,16 +42,23 @@
         <template slot-scope="scope">
           <span v-for="i in scope.row.doctors">
            <!--0 普通  1 VIP-->
-          <router-link v-if="scope.row.type == 0" :to="{ path: '/doctorm/revisedoctormanagement', query: { customerId: i.customerId}}">
+          <router-link v-if="i.type == 0" :to="{ path: '/doctorm/revisedoctormanagement', query: { customerId: i.customerId}}">
             {{i.customerName}}，
           </router-link>
-          <router-link v-if="scope.row.type == 1" :to="{ path: '/vipdm/revisedoctorinformmation', query: { customerId: i.customerId}}">
+          <router-link v-if="i.type == 1" :to="{ path: '/vipdm/revisedoctorinformmation', query: { customerId: i.customerId}}">
             {{i.customerName}}
           </router-link>
             <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
           </span>
         </template>
       </el-table-column>
+
+      <el-table-column align="center" prop="isShow" label="状态">
+        <template slot-scope="scope" >
+          {{scope.row.isShow == 0 ? '已上线':'已下线'}}
+        </template>
+      </el-table-column>
+
       <el-table-column align="center" label="操作">
         <template slot-scope="scope" >
             <el-button size="mini" v-if="scope.row.isShow == 0" type="primary" @click="postOffline(scope.row)">下线</el-button>
@@ -56,7 +67,7 @@
       </el-table-column>
     </el-table>
     <!--翻页-->
-    <el-pagination background layout="prev, pager, next" :page-size="pageSize" @current-change="getPage" :total="total"></el-pagination>
+    <el-pagination class="mt20" background layout="prev, pager, next" :page-size="pageSize" @current-change="getPage" :total="total"></el-pagination>
 	</div>
 </template>
 
@@ -66,12 +77,11 @@
     name:'forum_manage',
     data(){
       return{
-        seach_text: '',
         total: 0,
         pageSize: 0,
         webSitedata:{
           currentPage: 1,
-          name:''
+          customerName:'',
         },
         tableData: {
           data:[],
@@ -141,7 +151,7 @@
       //上线
       goOnline(row){
         let _this = this;
-        this.$confirm('线后，健康管理网站会展示本条提问。', '提示', {
+        this.$confirm('上线后，健康管理网站会展示本条提问。', '提示', {
           confirmButtonText: '知道了',
           cancelButtonText: '暂不上线',
           type: 'warning'
@@ -166,8 +176,15 @@
           });
         });
       },
-
-
+      //文章窗口
+      openText(row){
+        this.$alert(row.content, row.title, {
+          confirmButtonText: '确定',
+//          callback: action => {
+//
+//          }
+        });
+      },
 
       tableRowClassName({
         row,

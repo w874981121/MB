@@ -13,6 +13,20 @@
           </el-form-item>
         </el-form>
       </div>
+      <div style="overflow: hidden">
+        <div class="fl">上传图片：</div>
+        <el-upload
+          class="avatar-uploader mb18 fl"
+          action="/api/back/article/image"
+          name="imagePath"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccessImg"
+          :before-upload="beforeAvatarUploadImg">
+          <img v-if="form.imgUrl" :src="imageUrl" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
+      </div>
+
 
       <el-upload
         class="upload-demo"
@@ -28,13 +42,14 @@
         :file-list="fileList">
         <el-button size="small" type="primary">点击上传视频</el-button>
       </el-upload>
+
       <quill-editor class="mt20" ref="myTextEditor" v-model="form.content" :config="editorOption"></quill-editor>
     </div>
 
-    <div class="block mt20">
-      <span class="demonstration">上线时间：</span>
-      <el-date-picker v-model="datatext" type="datetime" placeholder="选择上线时间"></el-date-picker>
-    </div>
+    <!--<div class="block mt20">-->
+      <!--<span class="demonstration">上线时间：</span>-->
+      <!--<el-date-picker v-model="datatext" type="datetime" placeholder="选择上线时间"></el-date-picker>-->
+    <!--</div>-->
     <el-form ref="form" class="mt20">
       <el-form-item>
         <el-button type="primary" @click="onSubmit">立即创建</el-button>
@@ -49,13 +64,15 @@
     name: 'new-expert-lecture-hall',
     data(){
       return {
+        editorOption: {},          // 编辑器的配置
         fileList: [],
         datatext:'',
+        imageUrl:'',
         form: {
           title: '',
           content: '',             // 编辑器的内容
-          truename: '',
           outUrl:'',
+          imgUrl:'',
         },
       }
     },
@@ -68,6 +85,27 @@
 
     },
     methods: {
+      //上传文件之前
+      beforeAvatarUploadImg(file) {
+        console.log(file.type)
+        const isJPG = file.type === 'image/jpeg' || 'image/png';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return isJPG && isLt2M;
+      },
+
+      //文件上传成功
+      handleAvatarSuccessImg(res, file) {
+        this.imageUrl = this.$api + "/images/" + res.data;
+        this.form.imgUrl = res.data;
+        console.log(this.imageUrl)
+      },
+
       beforeAvatarUpload(file, fileList){
         console.log(file)
       },
@@ -83,7 +121,7 @@
         console.log(file);
       },
       handleExceed(files, fileList) {
-        this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+        this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
       },
       beforeRemove(file, fileList) {
         return this.$confirm(`确定移除 ${ file.name }？`);
@@ -94,11 +132,22 @@
           title:this.form.title,
           outUrl: this.form.outUrl,
           content:this.form.content,
+          truename: this.cookieFn.get("truename"),
+          imgUrl:this.form.imgUrl,
           categoryId: 2,   //专家讲堂
           sortCode: 1,
         }
+        console.log(this.cookieFn.get("truename"))
         this.$axios.post('/api/back/article', formdata).then((response) => {
           console.log(response)
+        if(response.data.errcode === 0){
+          this.$message({
+            showClose: true,
+            type: "success",
+            message: '创建成功！'
+          });
+          history.go(-1)
+        }
         }).catch((error) => {
           console.log(error);
         });

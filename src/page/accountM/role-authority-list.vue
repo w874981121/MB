@@ -4,7 +4,7 @@
   <div class="website-mccount-management m20">
     <el-breadcrumb separator=">">
       <el-breadcrumb-item :to="{ path: '/roleam' }">角色权限管理</el-breadcrumb-item>
-      <el-breadcrumb-item>精益天成医疗科技有限公司-管理员列表</el-breadcrumb-item>
+      <el-breadcrumb-item>{{truename}}-管理员列表</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="searchBox">
       <el-form :inline="true" class="demo-form-inline mt10">
@@ -26,6 +26,7 @@
         pageSize:20,
         parentUsersId: this.$route.query.usersid,
         currentPage: 1,
+        truename: this.cookieFn.get("truename"),
         tableData: {
           listname:[
             {field:'usersid',name:'编号',width:'200'},

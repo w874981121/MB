@@ -60,7 +60,7 @@
     methods: {
       //文件上传成功
       handleAvatarSuccess(res, file) {
-        this.imageUrl = "http://47.104.146.162:8080/images/" + res.data;
+        this.imageUrl = this.$api+"/images/" + res.data;
         this.form.photoUrl = res.data;
         console.log(res.data)
       },
@@ -85,9 +85,22 @@
           cardNo:this.form.cardNo,
           type: 1,
         }
+
+        if(fromData.phone.length < 1){
+          return
+        }
+
         this.$axios.post('/api/back/customers', fromdata)
           .then((response)=> {
             console.log(response)
+        if (response.data.errcode == 0) {
+          this.$message({
+            showClose: true,
+            type: "success",
+            message: '新建成功！'
+          });
+          history.go(-1)
+        }
           })
           .catch(function (error) {
             console.log(error);

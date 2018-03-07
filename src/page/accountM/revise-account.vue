@@ -10,6 +10,7 @@
         <el-upload
           class="avatar-uploader mb18"
           action="/api/back/users/image"
+          name="imagePath"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload">
@@ -19,23 +20,23 @@
       </div>
 
       <el-form ref="form" :model="form" label-width="120px">
-        <el-form-item label="公司名称：">
+        <el-form-item label="公司名称：" prop="truename" :rules="[{required: true, message: '请输入公司名称', trigger: 'blur'}]">
           <el-input v-model="form.truename"></el-input>
         </el-form-item>
-        <el-form-item label="公司联系人：">
+        <el-form-item label="公司联系人：" prop="linkName" :rules="[{required: true, message: '请输入公司联系人', trigger: 'blur'}]">
           <el-input v-model="form.linkName"></el-input>
         </el-form-item>
-        <el-form-item label="电话：">
-          <el-input v-model="form.phone"></el-input>
+        <el-form-item label="电话：" prop="phone" :rules="[{required: true, message: '请输入电话', trigger: 'blur'}]">
+          <el-input v-model="form.phone" ></el-input>
         </el-form-item>
 
         <el-form-item>
-          <a href="javascropt:;" @click="disableFn">{{form.lockState == 0 ? '禁用账号':'启用账号'}}</a>
-          <!--<a href="javascropt:;" class="ml20" @click="resetFn">重置密码</a>-->
+          <a href="javascript:void(0);" @click="disableFn">{{form.lockState == 0 ? '禁用账号':'启用账号'}}</a>
+          <!--<a href="javascript:void(0);" class="ml20" @click="resetFn">重置密码</a>-->
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">保存修改</el-button>
+          <el-button type="primary" @click="onSubmit('form')">保存修改</el-button>
         </el-form-item>
       </el-form>
 
@@ -63,7 +64,7 @@
       this.$axios.get('/api/back/users/' + this.$route.query.usersid, {params: {usersid: this.$route.query.usersid}}).then((response)=> {
         console.log(response)
         let data = response.data.data;
-        this.imageUrl = "http://47.104.146.162:8080/images/" + data.photoUrl, this.form.photoUrl = data.photoUrl;
+        this.imageUrl = this.$api+ "/images/" + data.photoUrl, this.form.photoUrl = data.photoUrl;
         this.form.truename = data.truename;
         this.form.linkName = data.linkName;
         this.form.phone = data.phone;
@@ -76,7 +77,18 @@
     methods: {
       //文件上传成功
       handleAvatarSuccess(res, file) {
-        this.imageUrl = "http://47.104.146.162:8080/images/" + res.data;
+        if(res.errcode === 30004){
+          this.$message({
+            type: 'error',
+            message: "上传失败"
+          });
+        }else if(res.errcode === 0){
+          this.$message({
+            type: 'success',
+            message: "上传成功"
+          });
+        }
+        this.imageUrl = this.$api + "/images/" + res.data;
         this.form.photoUrl = res.data;
       },
       //上传文件之前
@@ -89,11 +101,18 @@
         if (!isLt2M) {
           this.$message.error('上传头像图片大小不能超过 2MB!');
         }
-        debugger
         return isJPG && isLt2M;
       },
       //修改
-      onSubmit() {
+      onSubmit(formName) {
+
+        this.$refs[formName].validate((valid) => {
+          console.log("=====")
+        if (!valid) {
+          throw new Error('参数错误'); //验证判断
+        }
+      });
+
         let form = {
           usersid: this.$route.query.usersid,
           photoUrl: this.form.photoUrl,

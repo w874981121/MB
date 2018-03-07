@@ -19,12 +19,13 @@
         searchData: {
           path: '/doctorm/newdoctormanagement',
           url: '',
+          placeholder: '输入姓名',
         },
         total: 0,
         pageSize:0,
         webSitedata:{
           currentPage: 1,
-          name:''
+          customer:''
         },
         //传递给table的数据
         tableData: {
@@ -38,9 +39,9 @@
             {field: 'department', name: '科室',},
             {field: 'title', name: '职称',},
             {field: 'loginName', name: '账号',},
-            {field: 'passWord', name: '密码',},
+//            {field: 'passWord', name: '密码',},
             {field: 'status', name: '是否禁用',},
-            {field: 'date', name: '回答问题数',},
+//            {field: 'date', name: '回答问题数',},
           ],  //设置排列顺序
           data: []
         }
@@ -51,6 +52,7 @@
     },
     methods: {
       getData(){
+        let _this = this;
         this.$axios.get('/api/back/doctor', { params: this.webSitedata}).then((response)=> {
           let datelist = response.data.data.list;
           datelist.forEach(function(item,i){
@@ -59,8 +61,7 @@
             datelist[i].department = unescape(item.department);
             datelist[i].title = unescape(item.title);
             datelist[i].status = item.status == 0 ? "未禁用" : "禁用";
-            datelist[i].photoUrl ="http://47.104.146.162:8080/images/" + item.photoUrl;
-
+            datelist[i].photoUrl = _this.$api + "/images/" + item.photoUrl;
           })
           this.tableData.data = datelist;
           this.total = response.data.data.total;
@@ -72,12 +73,11 @@
       },
       //接受seach 查询参数
       onSubmit(tabletext) {
+        this.webSitedata.customer = tabletext;
         this.getData()
-        console.log(tabletext)
       },
       //翻页请求
       getPage(a){
-        console.log(a)
         this.webSitedata.currentPage = a;
         this.getData();
       },

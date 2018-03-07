@@ -68,7 +68,14 @@
     methods: {
       //文件上传成功
       handleAvatarSuccess(res, file) {
-        this.imageUrl = "http://47.104.146.162:8080/images/" + res.data;
+
+      if(response.data.errcode === 30004){
+        this.$message({
+          type: 'error',
+          message: "上传失败"
+        });
+        }
+        this.imageUrl = this.$api + "/images/" + res.data;
         this.form.photoUrl = res.data;
         console.log(res.data)
       },
@@ -97,8 +104,21 @@
           customersId:'',
           type: this.form.type,
         }
+        if(fromdata.phone.length < 1){
+          this.$alert("请完善信息！！！", "提示", {
+            confirmButtonText: '确定',
+          });
+         return
+        }
         this.$axios.post('/api/back/doctors', fromdata).then((response)=> {
             console.log(response)
+        if(response.data.errcode === 0){
+          this.$message({
+            type: 'success',
+            message: "新建成功"
+          });
+          history.go(-1)
+        }
           })
           .catch(function (error) {
             console.log(error);

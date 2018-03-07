@@ -9,8 +9,7 @@
           <el-submenu v-if="i.list && i.state" :index="i.url" :key="i.key">
             <template slot="title">
               <!--<i class="el-icon-caret-right"></i>-->
-              <span slot="title"
-                    :style="{'color': repTest(i.url, initindex) ? '#ffd04b' : '#fff'}">{{i.name}}</span>
+              <span slot="title" :style="{'color': repTest(i.url, initindex) ? '#ffd04b' : '#fff'}">{{i.name}}</span>
             </template>
             <el-menu-item v-if="f.state" v-for="(f, len) in i.list" :key="f.key" :index="f.url">
               {{f.name}}
@@ -112,6 +111,11 @@
             key: '43',
             url: 'remoteo',
             state: false,
+          }, {
+            name: '数据统计',
+            key: '44',
+            url: 'chart',
+            state: false,
           }]
         }, {
           name: '普通会员管理',
@@ -141,6 +145,9 @@
         this.initindex = key;
       },
       repTest(str, txt){
+
+        console.log(str, txt)
+
         let re = txt.split("/")
         if (re.length < 2) {
           re = txt
@@ -175,19 +182,35 @@
             let data = response.data.data;
             data.forEach(function (obj, n) {
               navlistData.forEach(function (item, i) {
-                if (item.hasOwnProperty('state')) {
-                  if (item.name == obj.purviewname) {
-                    navlistData[i].state = true;
-                  }
+                if (item.name == obj.purviewname) {
+                  navlistData[i].state = true;
                 } else {
-                  item.list.forEach((tem, index) => {
-                    if (tem.hasOwnProperty('state') && tem.name == obj.purviewname) {
+                  if (item.list !== undefined) {
+                    item.list.forEach((tem, index) => {
+                      console.log(tem.name)
                       if (tem.name == obj.purviewname) {
                         navlistData[i].list[index].state = true;
+                        navlistData[i].state = true;
                       }
-                    }
-                  })
+                    })
+                  }
                 }
+
+
+//                if (item.hasOwnProperty('state')) {
+//                  if (item.name == obj.purviewname) {
+//                    navlistData[i].state = true;
+//                  }
+//                } else {
+//                  item.list.forEach((tem, index) => {
+//                    if (tem.hasOwnProperty('state') && tem.name == obj.purviewname) {
+//                      if (tem.name == obj.purviewname) {
+//                        navlistData[i].list[index].state = true;
+//                        navlistData[i].state = true;
+//                      }
+//                    }
+//                  })
+//                }
               })
             })
           }).catch(function (error) {

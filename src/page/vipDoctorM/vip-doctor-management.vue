@@ -18,12 +18,13 @@
         searchData: {
           path: '/vipdm/newdoctorinformation',
           url: '',
+          placeholder:'输入姓名'
         },
         total: 0,
         pageSize: 0,
         webSitedata: {
           currentPage: 1,
-          name: ''
+          customer: ''
         },
         //传递给table的数据
         tableData: {
@@ -38,7 +39,7 @@
             {field: 'department', name: '科室',},
             {field: 'title', name: '职称',},
             {field: 'loginName', name: '账号'},
-            {field: 'passWord', name: '密码',},
+//            {field: 'passWord', name: '密码',},
             {field: 'date', name: '会员',},
             {field: 'status', name: '是否禁用',},
           ],  //设置排列顺序
@@ -51,6 +52,7 @@
     },
     methods: {
       getData(){
+        let _this = this;
         this.$axios.get('/api/back/doctor/vip', {params: this.webSitedata}).then((response)=> {
           let datelist = response.data.data.list;
           datelist.forEach(function(item,i){
@@ -59,7 +61,7 @@
             datelist[i].department = unescape(item.department);
             datelist[i].title = unescape(item.title);
             datelist[i].status = item.status == 0 ? "未禁用" : "禁用";
-            datelist[i].photoUrl ="http://47.104.146.162:8080/images/" + item.photoUrl;
+            datelist[i].photoUrl = _this.$api +"/images/" + item.photoUrl;
           })
           this.tableData.data = datelist;
           this.total = response.data.data.total;
@@ -71,12 +73,13 @@
       },
       //接受seach 查询参数
       onSubmit(tabletext) {
-        this.webSitedata.name = tabletext;
+        this.webSitedata.customer = tabletext;
         this.getData()
       },
       //翻页请求
       getPage(a){
-        console.log(a)
+        this.webSitedata.currentPage = a;
+        this.getData()
       },
       //接收操作栏回传id
       postModify(row){

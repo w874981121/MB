@@ -36,6 +36,9 @@ export default{
           document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
       }
     };
+
+    Vue.prototype.$api = "http://47.104.146.162:8080";
+
     Vue.prototype.$timeonversionC = function(t){
       this.zeroillF = function(z){
         return z < 10 ? "0" + z : z;

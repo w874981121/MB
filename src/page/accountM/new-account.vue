@@ -20,18 +20,18 @@
       </div>
 
       <el-form ref="form" :model="form" label-width="120px">
-        <el-form-item label="公司名称：">
+        <el-form-item label="公司名称：" prop="truename" :rules="[{required: true, message: '请输入公司名称', trigger: 'blur'}]">
           <el-input v-model="form.truename"></el-input>
         </el-form-item>
-        <el-form-item label="公司联系人：">
+        <el-form-item label="公司联系人：" prop="linkName" :rules="[{required: true, message: '请输入公司联系人', trigger: 'blur'}]">
           <el-input v-model="form.linkName"></el-input>
         </el-form-item>
-        <el-form-item label="电话：">
+        <el-form-item label="电话：" prop="phone" :rules="[{required: true, message: '请输入电话号码', trigger: 'blur'}]">
           <el-input v-model="form.phone"></el-input>
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">立即创建</el-button>
+          <el-button type="primary" @click="onSubmit('form')">立即创建</el-button>
         </el-form-item>
       </el-form>
 
@@ -56,10 +56,23 @@
       }
     },
     watch: {},
+    mounted(){
+    },
     methods: {
       //上传文件之前
       beforeAvatarUpload(file) {
-        console.log(file.type)
+        console.log(file)
+        if(file.errcode === 30004){
+          this.$message({
+            type: 'error',
+            message: "上传失败"
+          });
+        }else if(file.errcode === 0){
+          this.$message({
+            type: 'success',
+            message: "上传成功"
+          });
+        }
         const isJPG = file.type === 'image/jpeg' || 'image/png';
         const isLt2M = file.size / 1024 / 1024 < 2;
         if (!isJPG) {
@@ -72,12 +85,19 @@
       },
       //文件上传成功
       handleAvatarSuccess(res, file) {
-        this.imageUrl = "http://47.104.146.162:8080/images/" + res.data;
+        this.imageUrl = this.$api + "/images/" + res.data;
         this.form.photoUrl = res.data;
         console.log(res.data)
       },
       //创建
-      onSubmit() {
+      onSubmit(formName) {
+        this.$refs[formName].validate((valid) => {
+          console.log("=====")
+          if (!valid) {
+          throw new Error('参数错误'); //验证判断
+        }
+      });
+
         let form = {
           photoUrl: this.form.photoUrl,
           truename: escape(this.form.truename),
@@ -96,14 +116,9 @@
         }
       }).catch((error) => {
           console.log(error);
-      })
-        ;
+      });
       }
     },
-    mounted(){
-      console.log("来了")
-      console.log(this.$route.query)
-    }
   }
 </script>
 

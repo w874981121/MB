@@ -2,17 +2,7 @@
 <template>
   <div class="enterpris_announcement m20">
     <!--查询-->
-    <div class="searchBox">
-      <el-form :inline="true" class="demo-form-inline mt10">
-        <el-button class="fl ml10" type="primary" @click="newAccount">新建公告</el-button>
-        <el-form-item class="fr">
-          <el-button icon="el-icon-search" type="primary" @click="onSubmit">查询</el-button>
-        </el-form-item>
-        <el-form-item label="" class="fr">
-          <el-input v-model="text" placeholder="输入公司名称"></el-input>
-        </el-form-item>
-      </el-form>
-    </div>
+      <Search :searchData="searchData" @response="onSubmit"></Search>
     <!--table列表-->
     <el-table class="mt30" :data="tableData.data" height="400" border stripe style="width: 100%"
               :row-class-name="tableRowClassName">
@@ -32,7 +22,7 @@
       <el-table-column align="center" prop="" label="备注"></el-table-column>
     </el-table>
     <!--翻页-->
-    <el-pagination background layout="prev, pager, next" :page-size="pageSize" @current-change="getPage"
+    <el-pagination class="mt20" background layout="prev, pager, next" :page-size="pageSize" @current-change="getPage"
                    :total="total"></el-pagination>
   </div>
 </template>
@@ -43,12 +33,17 @@
     name: 'enterpris_announcement',
     data(){
       return {
-        text: '',
+        searchData: {
+          path: '/enterprisa/newannouncement',
+          name:'',
+          placeholder:'输入公告名称'
+        },
         total: 0,
         pageSize: 0,
         webSitedata: {
           currentPage: 1,
-          categoryId: 1
+          categoryId: 1,
+          title:'',
         },
         tableData: {
           data: [],
@@ -80,12 +75,12 @@
       },
       //翻页
       getPage(a){
-        console.log(a)
         this.webSitedata.currentPage = a;
         this.getData();
       },
       //查询
-      onSubmit(){
+      onSubmit(textdata){
+        this.webSitedata.title = textdata
         this.getData()
       },
       //上线
@@ -97,6 +92,15 @@
           console.log(response)
           if (response.data.errcode == 0) {
             this.getData();
+            this.$message({
+              type: 'success',
+              message: '上线成功!'
+            });
+          }else{
+            this.$message({
+              type: 'error',
+              message: '上线失败!'
+            });
           }
         }).catch((error) => {
           console.log(error);
@@ -108,6 +112,15 @@
           console.log(response)
           if (response.data.errcode == 0) {
             this.getData();
+            this.$message({
+              type: 'success',
+              message: '下线成功!'
+            });
+          }else{
+            this.$message({
+              type: 'error',
+              message: '下线失败!'
+            });
           }
         }).catch((error) => {
           console.log(error);
@@ -117,6 +130,7 @@
       postModify(row){
         this.$router.push({path: "/enterprisa/reviseannouncement", query: {articleId: row.articleId}})
       },
+
       newAccount(){
         this.$router.push({path: '/enterprisa/newannouncement'})
       },

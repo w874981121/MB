@@ -73,12 +73,12 @@
             questionId: this.$route.query.questionId
           }
         }).then((response)=> {
+
           let datelist = response.data.data.answers.list;
-          console.log(typeof datelist)
+          console.log(response)
           datelist.forEach(function (item, i) {
-            datelist[i].photoUrl = 'http://47.104.146.162:8080/' + item.photoUrl;
+            datelist[i].photoUrl = _this.$api + item.photoUrl;
             datelist[i].ask = item.ask;
-//            datelist[i].ans = item.ask.ans;
           })
           this.dataForm = datelist;
           this.total = response.data.data.total;

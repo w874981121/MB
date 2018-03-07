@@ -33,7 +33,6 @@
           </el-form-item>
         </div>
       </el-form>
-
     </div>
     <div class="tableCss">
       <!--  BG table 血糖数据-->
@@ -324,16 +323,14 @@
         this.$axios.get('/api/back/customers/data', {params: fromData}).then((response)=> {
           console.log(response)
           if (response.data.data == null) {
-            console.log("66666666")
             this.tableData[fromData.type].data = []
           } else {
             let datelist = response.data.data.list;
             datelist.forEach(function (item, i) {
               datelist[i].customerName = decodeURIComponent(item.customerName);
               if(item.pictureDataUrl){
-                datelist[i].pictureDataUrl = "http://47.104.146.162:8080//images/" + item.pictureDataUrl
+                datelist[i].pictureDataUrl = _this.$api + "/images/" + item.pictureDataUrl
               }
-
             })
             this.tableData[fromData.type].data = datelist;
             this.webSitedata.total = response.data.data.total;

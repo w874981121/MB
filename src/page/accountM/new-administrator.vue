@@ -33,6 +33,7 @@
         <el-transfer v-model="purviewids" :button-texts="['删除', '添加']" :titles="['所有权限', '选中权限']" :data="powerdata">
         </el-transfer>
           <el-button class="preservation_but" type="primary" @click="preservationFn">保存</el-button>
+          <el-button class="preservation_but mr20" @click="purviewidsAlert">关闭</el-button>
       </div>
     </template>
   </div>

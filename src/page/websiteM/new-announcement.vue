@@ -14,10 +14,10 @@
       </el-form>
       <quill-editor ref="myTextEditor" v-model="form.content" :config="editorOption"></quill-editor>
     </div>
-    <div class="block mt20">
-      <span class="demonstration">上线时间：</span>
-      <el-date-picker v-model="form.datatext" type="datetime" placeholder="选择上线时间"></el-date-picker>
-    </div>
+    <!--<div class="block mt20">-->
+      <!--<span class="demonstration">上线时间：</span>-->
+      <!--<el-date-picker v-model="form.datatext" type="datetime" placeholder="选择上线时间"></el-date-picker>-->
+    <!--</div>-->
     <el-form ref="form" class="mt20">
       <el-form-item>
         <el-button type="primary" @click="onSubmit">立即创建</el-button>
@@ -58,6 +58,15 @@
         }
         this.$axios.post('/api/back/article', formdata).then((response) => {
           console.log(response)
+          if(response.data.errcode === 0){
+            this.$message({
+              showClose: true,
+              type: "success",
+              message: '创建成功！'
+            });
+            history.go(-1)
+          }
+
         }).catch((error) => {
           console.log(error);
         });

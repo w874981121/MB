@@ -3,7 +3,7 @@
     <el-breadcrumb separator=">">
       <el-breadcrumb-item :to="{ path: '/roleam' }">角色权限管理</el-breadcrumb-item>
       <el-breadcrumb-item :to="{ path: '/roleam/roleamlist', query: { usersid: form.parentUsersId }}">
-        精益天成医疗科技有限公司-管理员列表
+        {{truename}}-管理员列表
       </el-breadcrumb-item>
       <el-breadcrumb-item>修改管理员</el-breadcrumb-item>
     </el-breadcrumb>
@@ -24,8 +24,8 @@
         </el-form-item>
 
         <el-form-item>
-          <a href="javascropt:;" @click="purviewidsAlert">修改权限</a>
-          <a href="javascropt:;" class="ml20" @click="disableFn">{{form.lockState ==0 ? '禁用账号':'启用账号'}}</a>
+          <a href="javascript:void(0);" @click="purviewidsAlert">修改权限</a>
+          <a href="javascript:void(0);" class="ml20" @click="disableFn">{{form.lockState ==0 ? '禁用账号':'启用账号'}}</a>
           <!--<a href="javascropt:;" class="ml20" @click="resetFn">重置密码</a>-->
         </el-form-item>
 
@@ -41,6 +41,7 @@
         <el-transfer v-model="purviewids" :button-texts="['删除', '添加']" :titles="['所有权限', '选中权限']" :data="powerdata">
         </el-transfer>
         <el-button class="preservation_but" type="primary" @click="preservationFn">保存</el-button>
+        <el-button class="preservation_but mr20" @click="purviewidsAlert">关闭</el-button>
       </div>
     </template>
   </div>
@@ -90,6 +91,7 @@
         purviewids: [],        //选中权限id
         purviewidsstate: false, //权限窗口状态
         powerTag: [],
+        truename: this.cookieFn.get("truename"),
         form: {
           parentUsersId: this.$route.query.parentUsersId,  //公司账号id
           usersid: this.$route.query.usersid,     //用户id
@@ -170,30 +172,34 @@
           type: 2,
         }
 
-        this.$axios.post('/api/back/users/role', fromdata)
-          .then((response) => {
-            console.log(response)
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-
         // 修改权限
         let setPurview = {
           purviewids: this.purviewids.join(","),
           usersid: this.form.usersid
         }
-
         this.$axios.post('/api/back/purview', qs.stringify(setPurview), {
           headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'}
-        })
-          .then((response) => {
-            console.log("2")
-            console.log(response)
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+        }).then((response) => {
+
+          console.log(response.data.errcode)
+          //权限修改成功后
+          if (response.data.errcode === 0) {
+            this.$axios.post('/api/back/users/role', fromdata).then((response) => {
+              console.log(response)
+              this.$message({
+                type: 'success',
+                message: "修改成功"
+              });
+              history.go(-1)
+            }).catch(function (error) {
+              console.log(error);
+            });
+          }
+        }).catch(function (error) {
+          console.log(error);
+        });
+
+
       },
       //禁用
       disableFn() {
@@ -259,7 +265,7 @@
     background: #eee;
     border: 1px #bbb solid;
     display: block;
-    width: 524px;
+    width: 530px !important;
     padding: 30px;
     position: absolute;
     border-radius: 4px;

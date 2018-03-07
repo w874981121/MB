@@ -38,8 +38,27 @@
     <div class="tableCss">
       <el-table :data="tableData.data" height="400" border stripe style="width: 100%">
         <template v-for="i in tableData.title">
-          <el-table-column align="center" :prop="i.field" :label="i.name"
-                           :width="i.width?i.width:'auto'"></el-table-column>
+          <el-table-column align="center" :prop="i.field" :label="i.name" :width="i.width?i.width:'auto'"></el-table-column>
+        </template>
+
+        <template>
+          <el-table-column align="center" label="远程请求码" width="140">
+            <template slot-scope="scope" >
+              <el-button v-if="!scope.row.consultationCode" size="mini" type="primary" @click="addCoed(scope.row)">添加请求码</el-button>
+              <span v-if="scope.row.consultationCode">
+                {{scope.row.consultationCode}}
+              </span>
+            </template>
+          </el-table-column>
+        </template>
+
+        <template>
+          <el-table-column align="center" label="操作">
+            <template slot-scope="scope" >
+              <el-button size="mini" v-if="scope.row.isShow == 0" type="primary" @click="postOffline(scope.row)">下线</el-button>
+              <el-button size="mini"  v-if="scope.row.isShow == 1"  type="primary" @click="goOnline(scope.row)">上线</el-button>
+            </template>
+          </el-table-column>
         </template>
       </el-table>
     </div>
@@ -49,6 +68,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import qs from 'qs';
   export default {
     name: "remote-order",
     data(){
@@ -108,7 +128,7 @@
           endDate: '',    //结束时间
           customerName: this.webSitedata.customerName,  //姓名
           companyId: this.cookieFn.get("usersid"),   //公司id
-          currentPage: 1, //页码
+          currentPage: this.webSitedata.currentPage, //页码
           type: this.webSitedata.type,      //数据类型_this.$timeonversionC
         }
         if (this.webSitedata.time != '') {
@@ -124,6 +144,7 @@
         this.$axios.get('/api/back/customers/abnormal', {params: fromData}).then((response) => {
           console.log(response)
           if (response.data.data == null) {
+            this.tableData.data = [];
             console.log("数据为空")
             return
           }
@@ -163,9 +184,77 @@
       onSubmit(){
         this.getData()
       },
-      getPage(){
-
+      getPage(a){
+        this.webSitedata.currentPage = a;
+        this.getData();
       },
+      //添加请求码
+      addCoed(row){
+        this.$prompt('请输入添加的请求码', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+        }).then(({ value }) => {
+          let _this = this;
+          this.$axios.post('/api/back/customers/abnormal', {abnormalId: row.abnormalId,consultationCode:value}).then((response)=> {
+            console.log(response)
+            this.getData()
+            this.$message({
+              type: 'success',
+              message: '添加成功!'
+            });
+          }).catch(function (error) {
+            console.log(error);
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消输入'
+          });
+        });
+      },
+      //下线
+      postOffline(row){
+        let _this = this;
+          this.$axios.post('/api/back/abnormal', {abnormalId: row.abnormalId}).then((response)=> {
+           console.log(response)
+             this.getData()
+             this.$message({
+              type: 'success',
+              message: '下线成功!'
+        });
+      }).catch(function (error) {
+          console.log(error);
+        });
+      },
+      //上线
+      goOnline(row){
+        let _this = this;
+        this.$confirm('线后，健康管理网站会展示本条提问。', '提示', {
+          confirmButtonText: '知道了',
+          cancelButtonText: '暂不上线',
+          type: 'warning'
+        }).then(() => {
+          this.$axios.post('/api/back/abnormal', {abnormalId: row.abnormalId}).then((response)=> {
+          console.log(response)
+        this.getData()
+        this.$message({
+          type: 'success',
+          message: '上线成功!'
+        });
+      })
+      .catch(function (error) {
+          this.$message.error('上线失败');
+          console.log(error);
+        });
+
+      }).catch(() => {
+          this.$message({
+          type: 'info',
+          message: '取消上线'
+        });
+      });
+      },
+
     },
   }
 </script>

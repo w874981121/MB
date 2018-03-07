@@ -10,7 +10,7 @@
         <span class="title">照片:</span>
         <el-upload
           class="avatar-uploader mb18"
-          action="/api/back/users/image"
+          action="/api/back/customers/image"
           name="imagePath"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
@@ -20,23 +20,25 @@
         </el-upload>
       </div>
 
-      <el-form ref="form" :model="form" label-width="120px">
+      <el-form ref="form" label-width="120px">
         <el-form-item label="姓名：">
           <el-input v-model="form.customerName"></el-input>
         </el-form-item>
         <el-form-item label="手机号：">
           <el-input v-model="form.phone"></el-input>
         </el-form-item>
+        <el-form-item label="密码：">
+          <el-input v-model="form.passWord"></el-input>
+        </el-form-item>
         <el-form-item>
           <el-button plain @click="upgrade">升级为VIP</el-button>
           <el-button plain @click="disableFn">{{form.status ==0 ? '禁用账号':'启用账号'}}</el-button>
-          <!--<el-button plain>重置密码</el-button>-->
+          <!--<el-button plain @click="setReset">重置密码</el-button>-->
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">保存修改</el-button>
         </el-form-item>
       </el-form>
-
     </div>
   </div>
 </template>
@@ -46,34 +48,38 @@
   export default {
     name: 'new-doctor-management',
     data(){
-      const getForm = () => {
-        let form = {};
-        this.$axios.get('/api/back/customers/' + this.$route.query.customerId).then((response)=> {
-          console.log(response)
-          let data = response.data.data;
-          this.imageUrl = "http://47.104.146.162:8080/images/" + data.photoUrl,
-            this.form = {
-              photoUrl: data.photoUrl,  //头像地址
-              customerName: decodeURIComponent(data.customerName),  //用户姓名
-              phone: data.phone, //手机号
-              cardNo: data.cardNo, //用户设备号
-              status: data.status,
-            }
-        }).catch(function (error) {
-          console.log(error);
-        });
-        return;
-      };
       return {
         imageUrl: '',
-        form: getForm(),
+        form: "",
       }
     },
     watch: {},
+    mounted(){
+      this.getForm()
+    },
     methods: {
+      getForm(){
+      let form = {};
+      this.$axios.get('/api/back/customers/' + this.$route.query.customerId).then((response)=> {
+        console.log(response)
+        let data = response.data.data;
+        this.imageUrl = this.$api+"/images/" + data.photoUrl,
+          this.form = {
+            photoUrl: data.photoUrl,  //头像地址
+            customerName: decodeURIComponent(data.customerName),  //用户姓名
+            phone: data.phone, //手机号
+            cardNo: data.cardNo, //用户设备号
+            status: data.status,
+            passWord: data.passWord,
+          }
+      }).catch(function (error) {
+        console.log(error);
+      });
+      return;
+    },
       //文件上传成功
       handleAvatarSuccess(res, file) {
-        this.imageUrl = "http://47.104.146.162:8080/images/" + res.data;
+        this.imageUrl = this.$api + "/images/" + res.data;
         this.form.photoUrl = res.data;
         console.log(res.data)
       },
@@ -154,16 +160,45 @@
           });
         })
       },
+      //重置密码
+      setReset(){
+        this.$confirm("确认是否要重置密码？", '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$axios.post('/api/back/reset', {customerId: this.$route.query.customerId}).then((response) => {
+            console.log(response)
+            this.$message({
+              type: 'success',
+              message: "重置成功"
+            });
+            history.go(-1)
+          }).catch(function (error) {
+            console.log(error);
+          });
+
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消重置'
+          });
+        })
+      },
       //保存修改
       onSubmit() {
-        let formData = {
+        let fromData = {
           customerId: this.$route.query.customerId,
           photoUrl: this.form.photoUrl,
-          customerName: escape(this.form.customerName),
+          customerName: this.form.customerName,
           phone: this.form.phone,
+          passWord: this.form.passWord,
           type: 0,
         }
-        this.$axios.post('/api/back/customers', formData)
+        if(fromData.phone.length < 1){
+          return
+        }
+        this.$axios.post('/api/back/customers', fromData)
           .then((response)=> {
           console.log(response)
         if (response.data.errcode == 0) {
@@ -180,10 +215,7 @@
         });
       }
     },
-    mounted(){
-      console.log("来了")
-      console.log(this.$route.query)
-    }
+
   }
 </script>
 

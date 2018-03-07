@@ -10,7 +10,7 @@
         <span class="title">照片:</span>
         <el-upload
           class="avatar-uploader mb18"
-          action="/api/back/users/image"
+          action="/api/back/customers/image"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload">
@@ -35,10 +35,13 @@
         <el-form-item label="手机号：">
           <el-input v-model="form.phone"></el-input>
         </el-form-item>
+        <el-form-item label="密码：">
+          <el-input v-model="form.passWord"></el-input>
+        </el-form-item>
         <el-form-item>
-          <!--<el-button plain>网站禁言</el-button>-->
-          <el-button plain @click="disableFn">{{status ==0 ? '禁用账号':'启用账号'}}</el-button>
-          <!--<el-button plain>重置密码</el-button>-->
+          <el-button plain @click="setGuest">{{guest == 1 ? '取消特邀':'设为特邀'}}</el-button>
+          <el-button plain @click="disableFn">{{status == 0 ? '禁用账号':'启用账号'}}</el-button>
+          <!--<el-button plain @click="setReset">重置密码</el-button>-->
         </el-form-item>
 
         <el-form-item>
@@ -56,9 +59,10 @@
     name: 'revise-doctor-management',
     data(){
       return {
-        imageUrl: "http://47.104.146.162:8080/images/" + this.photoUrl,
+        imageUrl: this.$api+"/images/" + this.photoUrl,
         form: {},
         status: null,
+        guest: null,
       }
     },
     watch: {},
@@ -72,7 +76,7 @@
         this.$axios.get('/api/back/customers/' + this.$route.query.customerId).then((response)=> {
           console.log(response)
           let data = response.data.data;
-          this.imageUrl = "http://47.104.146.162:8080/images/" + data.photoUrl,
+          this.imageUrl = this.$api+"/images/" + data.photoUrl,
             this.form = {
               customerId: data.customerId,
               photoUrl: data.photoUrl,  //头像地址
@@ -81,8 +85,10 @@
               hospital: data.hospital, //医院名称
               department: data.department, //科室
               title: data.title, //职称
+              passWord:data.passWord, // 密码
             }
             this.status = data.status
+            this.guest = data.guest
         }).catch(function (error) {
           console.log(error);
         });
@@ -104,10 +110,69 @@
       },
       //文件上传成功
       handleAvatarSuccess(res, file) {
-        this.imageUrl = "http://47.104.146.162:8080/images/" + res.data;
+        this.imageUrl = this.$api+"/images/" + res.data;
         this.form.photoUrl = res.data;
         console.log(res.data)
       },
+
+      //设为特邀
+      setGuest(){
+
+        let _this = this;
+        let messageText = '';
+        if (this.guest == 0) {
+          messageText = '确认取消特邀医生？';
+        } else {
+          messageText = '确认设置为特邀医生？';
+        }
+        this.$confirm(messageText, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$axios.post('/api/back/customers/lock', {customerId: this.$route.query.customerId}).then((response) => {
+              console.log(response)
+              this.$message({
+                type: 'success',
+                message: '成功'
+              });
+              history.go(-1)
+            }).catch(function (error) {
+              console.log(error);
+            });
+
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          });
+        })
+
+
+        this.$confirm("确认是否要设置为特邀医生？", '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$axios.post('/api/back/doctor/guest', {customerId: this.$route.query.customerId}).then((response) => {
+            console.log(response)
+            this.$message({
+              type: 'success',
+              message: "设置成功"
+            });
+            history.go(-1)
+          }).catch(function (error) {
+            console.log(error);
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          });
+        })
+
+      },
+
       //禁用/启用
       disableFn(){
         let _this = this;
@@ -140,9 +205,34 @@
         }).catch(() => {
           this.$message({
             type: 'info',
-            message: '已取消禁用'
+            message: '已取消'
           });
         })
+      },
+      //重置密码
+      setReset(){
+        this.$confirm("确认是否要重置密码？", '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$axios.post('/api/back/reset', {customerId: this.$route.query.customerId}).then((response) => {
+          console.log(response)
+        this.$message({
+          type: 'success',
+          message: "重置成功"
+        });
+        history.go(-1)
+      }).catch(function (error) {
+          console.log(error);
+        });
+
+      }).catch(() => {
+          this.$message({
+          type: 'info',
+          message: '已取消重置'
+        });
+      })
       },
       //修改确认
       onSubmit() {
@@ -154,12 +244,25 @@
           hospital: this.form.hospital,
           department: this.form.department,
           title: this.form.title,
+          passWord: this.form.passWord,
           price: 0,
+        }
+        if(fromdata.phone.length < 1){
+          this.$alert("请完善信息！！！", "提示", {
+            confirmButtonText: '确定',
+          });
+          return
         }
         this.$axios.post('/api/back/doctors', fromdata).then((response)=> {
           console.log(response)
-        })
-          .catch(function (error) {
+        if(response.data.errcode === 0){
+          this.$message({
+            type: 'success',
+            message: "修改成功"
+          });
+          history.go(-1)
+        }
+        }).catch(function (error) {
             console.log(error);
           });
       }

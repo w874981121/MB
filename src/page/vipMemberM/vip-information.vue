@@ -19,13 +19,13 @@
         searchData: {
           path: '/vipi/newvipinformation',
           name:'',
-          placeholder:'输入公司名称'
+          placeholder:'输入姓名'
         },
         total: 0,
         pageSize: 0,
         webSitedata:{
           currentPage: 1,
-          name:''
+          customer:''
         },
         //传递给table的数据
         tableData: {
@@ -36,8 +36,8 @@
             {field: 'phone', name: '手机号'},
             {field: 'loginName', name: '账号',},
             {field: 'status', name: '状态',},
-//            {field: 'healthy', name: '健康',},
           ],  //设置排列顺序
+          soleCode:true,
           healthy:true,
           data:[],
         }
@@ -54,7 +54,7 @@
           datelist.forEach(function(item,i){
             datelist[i].customerName = unescape(item.customerName);
             datelist[i].status = item.status == 0 ? "未禁用" : "禁用";
-            datelist[i].photoUrl ="http://47.104.146.162:8080/images/" + item.photoUrl;
+            datelist[i].photoUrl = _this.$api + "/images/" + item.photoUrl;
           })
           this.tableData.data = datelist;
           this.total = response.data.data.total;
@@ -66,7 +66,7 @@
       },
       //接受seach 查询参数
       onSubmit(tabletext) {
-        this.webSitedata.name = tabletext;
+        this.webSitedata.customer = tabletext
         this.getData();
       },
       //翻页请求

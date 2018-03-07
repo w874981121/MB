@@ -65,6 +65,7 @@
         <el-transfer v-model="memberids" :button-texts="['删除', '添加']" :titles="['未分配会员', '选中会员']" :data="memberdata">
         </el-transfer>
         <el-button class="preservation_but" type="primary" @click="preservationFn">保存</el-button>
+        <el-button class="preservation_but mr20" @click="purviewidsAlert">关闭</el-button>
       </div>
     </template>
   </div>
@@ -117,7 +118,7 @@
     methods: {
       //文件上传成功
       handleAvatarSuccess(res, file) {
-        this.imageUrl = "http://47.104.146.162:8080/images/" + res.data;
+        this.imageUrl = this.$api+"/images/" + res.data;
         this.form.photoUrl = res.data;
       },
       //上传文件之前
@@ -154,23 +155,37 @@
         })
       },
       onSubmit() {
-        let fromdata = {
+        let formdata = {
           photoUrl: this.form.photoUrl,
-          customerName: escape(this.form.customerName),
+          customerName: this.form.customerName,
           phone: this.form.phone,
-          hospital: escape(this.form.hospital),
-          department: escape(this.form.department),
-          title: escape(this.form.title),
+          hospital: this.form.hospital,
+          department: this.form.department,
+          title: this.form.title,
           price: this.form.price,
           customersId: "",
           type: this.form.type,
         }
         if(this.memberids.length > 0){
-          fromdata.customersId = this.memberids.join(",");
+          this.formdata.customersId = this.memberids.join(",");
         }
-        this.$axios.post('/api/back/doctors', fromdata)
+        if(formdata.phone.length < 1){
+          this.$alert("请完善信息！！！", "提示", {
+            confirmButtonText: '确定',
+          });
+          return
+        }
+        this.$axios.post('/api/back/doctors', formdata)
           .then((response)=> {
             console.log(response)
+        if (response.data.errcode == 0) {
+          this.$message({
+            showClose: true,
+            type: "success",
+            message: '新建成功！'
+          });
+          history.go(-1)
+        }
           })
           .catch(function (error) {
             console.log(error);
@@ -185,5 +200,22 @@
 </script>
 
 <style lang="scss">
+  .alert_box_transfer {
+    background: #eee;
+    border: 1px #bbb solid;
+    display: block;
+    width: 524px;
+    padding: 30px;
+    position: absolute;
+    border-radius: 4px;
+    top: 34%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 
+  .preservation_but {
+    float: right;
+    margin-top: 20px;
+  }
+
+  }
 </style>

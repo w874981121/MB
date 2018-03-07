@@ -10,7 +10,7 @@
         <span class="title">照片:</span>
         <el-upload
           class="avatar-uploader mb18"
-          action="/api/back/users/image"
+          action="/api/back/customers/image"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload">
@@ -35,6 +35,9 @@
         <el-form-item label="手机号：">
           <el-input v-model="form.phone"></el-input>
         </el-form-item>
+        <el-form-item label="密码：">
+          <el-input v-model="form.passWord"></el-input>
+        </el-form-item>
         <el-form-item label="我的会员：">
           <div>
             <template v-for="name in memberTag">
@@ -55,7 +58,7 @@
         <el-form-item>
           <!--<el-button plain>设为网站特邀</el-button>-->
           <el-button plain @click="disableFn">{{status ==0 ? '禁用账号':'启用账号'}}</el-button>
-          <!--<el-button plain>重置密码</el-button>-->
+          <!--<el-button plain @click="setReset">重置密码</el-button>-->
         </el-form-item>
 
         <el-form-item>
@@ -69,6 +72,7 @@
         <el-transfer v-model="memberids" :button-texts="['删除', '添加']" :titles="['未分配会员', '选中会员']" :data="memberdata">
         </el-transfer>
         <el-button class="preservation_but" type="primary" @click="preservationFn">保存</el-button>
+        <el-button class="preservation_but mr20" @click="purviewidsAlert">关闭</el-button>
       </div>
     </template>
   </div>
@@ -109,6 +113,7 @@
           title: '', //职称
           price: '',   //诊疗费
           customersId: '',  //会员ID
+          passWord: '', //密码
           type: 1
         },
         status:'',
@@ -123,7 +128,7 @@
       getData(){
         this.$axios.get('/api/back/customers/' + this.$route.query.customerId).then((response)=> {
           let data = response.data.data;
-            this.imageUrl = "http://47.104.146.162:8080/images/" + data.photoUrl,
+            this.imageUrl = this.$api+"/images/" + data.photoUrl,
             this.form = {
               photoUrl: data.photoUrl,  //头像地址
               customerName: unescape(data.customerName),  //医生姓名
@@ -131,6 +136,7 @@
               hospital: unescape(data.hospital), //医院名称
               department: unescape(data.department), //科室
               title: unescape(data.title), //职称
+              passWord: data.passWord,
               price: data.price,
               customersId: data.customersId,
             }
@@ -159,7 +165,7 @@
       },
       //文件上传成功
       handleAvatarSuccess(res, file) {
-        this.imageUrl = "http://47.104.146.162:8080/images/" + res.data;
+        this.imageUrl = this.$api + "/images/" + res.data;
         this.form.photoUrl = res.data;
       },
       //上传文件之前
@@ -233,6 +239,32 @@
           });
         })
       },
+      //重置密码
+      setReset(){
+        this.$confirm("确认是否要重置密码？", '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$axios.post('/api/back/reset', {customerId: this.$route.query.customerId}).then((response) => {
+            console.log(response)
+            this.$message({
+              type: 'success',
+              message: "重置成功"
+            });
+            history.go(-1)
+          }).catch(function (error) {
+            console.log(error);
+          });
+
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消重置'
+          });
+        })
+      },
+      //保存修改
       onSubmit() {
         let fromdata = {
           customerId: Number(this.$route.query.customerId),
@@ -243,18 +275,30 @@
           department: this.form.department, //科室
           title: this.form.title, //职称
           price: this.form.price,   //诊疗费
+          passWord: this.form.passWord,
           customersId: '',  //会员ID
         }
         if(this.memberids.length > 0){
           fromdata.customersId = this.memberids.join(",");
         }
 
+        if(fromData.phone.length < 1){
+          this.$alert("请完善信息！！！", "提示", {
+            confirmButtonText: '确定',
+          });
+          return
+        }
 
-        this.$axios.post('/api/back/doctors',fromdata)
-          .then((response)=> {
+        this.$axios.post('/api/back/doctors',fromdata).then((response)=> {
             console.log(response)
-          })
-          .catch(function (error) {
+        if(response.data.errcode === 0){
+          this.$message({
+            type: 'success',
+            message: "修改成功"
+          });
+          history.go(-1)
+        }
+        }).catch(function (error) {
             console.log(error);
           });
       }

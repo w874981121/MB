@@ -27,9 +27,12 @@
         <el-form-item label="手机号：">
           <el-input v-model="form.phone"></el-input>
         </el-form-item>
+        <el-form-item label="密码：">
+          <el-input v-model="form.passWord"></el-input>
+        </el-form-item>
         <el-form-item>
           <el-button plain @click="disableFn">{{form.status ==0 ? '禁用账号':'启用账号'}}</el-button>
-          <!--<el-button plain>重置密码</el-button>-->
+          <!--<el-button plain @click="setReset">重置密码</el-button>-->
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">保存修改</el-button>
@@ -68,19 +71,20 @@
         this.$axios.get('/api/back/customers/' + this.$route.query.customerId).then((response)=> {
           console.log(response)
           let data = response.data.data;
-          this.imageUrl = "http://47.104.146.162:8080/images/" + data.photoUrl
+          this.imageUrl = this.$api+ "/images/" + data.photoUrl
           this.form.photoUrl = data.photoUrl  //头像地址
           this.form.customerName = decodeURIComponent(data.customerName)  //用户姓名
           this.form.phone = data.phone //手机号
           this.form.cardNo = data.cardNo //用户设备号
           this.form.status = data.status //状态
+          this.form.passWord = data.passWord  //密码
         }).catch(function (error) {
           console.log(error);
         });
       },
       //文件上传成功
       handleAvatarSuccess(res, file) {
-        this.imageUrl = "http://47.104.146.162:8080/images/" + res.data;
+        this.imageUrl = this.$api+"/images/" + res.data;
         this.form.photoUrl = res.data;
         console.log(res.data)
       },
@@ -134,17 +138,46 @@
         });
       })
       },
+      //重置密码
+      setReset(){
+        this.$confirm("确认是否要重置密码？", '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$axios.post('/api/back/reset', {customerId: this.$route.query.customerId}).then((response) => {
+            console.log(response)
+            this.$message({
+              type: 'success',
+              message: "重置成功"
+            });
+            history.go(-1)
+          }).catch(function (error) {
+            console.log(error);
+          });
+
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消重置'
+          });
+        })
+      },
       //保存修改
       onSubmit() {
-        let formData = {
+        let fromData = {
           customerId: this.$route.query.customerId,
           photoUrl: this.form.photoUrl,
           customerName: escape(this.form.customerName),
           phone: this.form.phone,
           cardNo: this.form.cardNo,
+          passWord: this.form.passWord,
           type: 1,
         }
-        this.$axios.post('/api/back/customers', formData)
+        if(fromData.phone.length < 1){
+          return
+        }
+        this.$axios.post('/api/back/customers', fromData)
           .then((response)=> {
             console.log(response)
             if (response.data.errcode == 0) {

@@ -1,6 +1,4 @@
 <!--		角色权限管理    -->
-
-
 <template>
   <div class="m20">
     <template v-if="startview">

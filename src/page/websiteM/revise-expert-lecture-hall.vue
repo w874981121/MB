@@ -16,10 +16,12 @@
         <div class="fl">上传图片：</div>
         <el-upload
           class="avatar-uploader mb18 fl"
-          action="/api/back/users/image"
+          :action="upimgUrl"
+          v-loading="loading"
           name="imagePath"
           :show-file-list="false"
           :on-success="handleAvatarSuccessImg"
+          :on-error="handleAvatarError"
           :before-upload="beforeAvatarUploadImg">
           <img v-if="form.imgUrl" :src="imageUrl" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -39,6 +41,7 @@
         :before-upload="beforeAvatarUpload"
         :file-list="fileList">
         <el-button size="small" type="primary">点击上传视频</el-button>
+        <span style="color: #F56C6C">视频只支持MP4格式</span>
       </el-upload>
       <quill-editor class="mt20" ref="myTextEditor" v-model="form.content" :config="editorOption"></quill-editor>
     </div>
@@ -62,7 +65,9 @@
     name: 'new-expert-lecture-hall',
     data(){
       return {
-        datatext: '1520227140000',
+        upimgUrl: this.$urlapi + '/back/article/image',
+        datatext: '',
+        loading:false,
         content: '',             // 编辑器的内容
         editorOption: {},          // 编辑器的配置
         fileList:[],
@@ -109,19 +114,42 @@
         const isJPG = file.type === 'image/jpeg' || 'image/png';
         const isLt2M = file.size / 1024 / 1024 < 2;
         if (!isJPG) {
+          this.loading = false;
           this.$message.error('上传头像图片只能是 JPG 格式!');
         }
         if (!isLt2M) {
+          this.loading = false;
           this.$message.error('上传头像图片大小不能超过 2MB!');
         }
+        this.loading = true;
         return isJPG && isLt2M;
       },
 
       //文件上传成功
       handleAvatarSuccessImg(res, file) {
-        this.imageUrl = this.$api + "/images/" + res.data;
-        this.form.imgUrl = res.data;
-        console.log(this.imageUrl)
+        if(res.errcode === 0){
+          this.$message({
+            type: 'success',
+            message: "上传成功"
+          });
+          this.imageUrl = this.$api + "/images/" + res.data;
+          this.form.imgUrl = res.data;
+        }else{
+          this.$message({
+            type: 'error',
+            message: "上传失败"
+          });
+        }
+        this.loading = false;
+
+      },
+      //上传文件失败
+      handleAvatarError(res, file){
+        this.loading = false;
+        this.$message({
+          type: 'error',
+          message: "上传失败"
+        });
       },
       //视频
       beforeAvatarUpload(file, fileList){

@@ -2,7 +2,8 @@
   <div id="contentbox">
     <div class="top">
       <div class="toptitle fl ml20">
-        欢迎使用精益天成管理系统
+        <img src="../assets/logo.png" alt="">
+        <!--欢迎使用精益天成管理系统-->
       </div>
       <div class="sign_out fr mr20" @click="signOut">
         <i></i>
@@ -75,6 +76,13 @@
       background: #409EFF;
       color: #fff;
       z-index: 9;
+      .toptitle{
+        height: 100%;
+        img{
+          height: 100%;
+          display: block;
+        }
+      }
       .sign_out {
         position: relative;
         padding-left: 30px;

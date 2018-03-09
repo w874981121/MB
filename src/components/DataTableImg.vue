@@ -80,7 +80,7 @@
       },
       //查看健康记录
       seeHealthy(row){
-        console.log(row.customerId)
+//        console.log(row.customerId)
         this.$emit('healthy',row);
       },
     }

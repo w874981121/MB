@@ -17,7 +17,7 @@
           <el-input :disabled="true" v-model="form.phone"></el-input>
         </el-form-item>
         <el-form-item label="网址：">
-          <el-input :disabled="true" v-model="form.username"></el-input>
+          <el-input :disabled="true" v-model="form.weburl"></el-input>
         </el-form-item>
         <el-form-item label="账号：">
           <el-input :disabled="true" v-model="form.username"></el-input>
@@ -87,7 +87,7 @@
       //请求
       getData(){
         let _this = this;
-        this.$axios.get('/api/back/users/' + this.cookieFn.get("usersid")).then((response)=> {
+        this.$axios.get('/api/back/users/company/' + this.cookieFn.get("usersid")).then((response)=> {
           let datelist = response.data.data;
           console.log(datelist)
           _this.form = datelist;

@@ -100,6 +100,9 @@
       }
     },
     watch: {},
+    mounted(){
+      this.getData()
+    },
     methods: {
       getData(){
         let _this = this;
@@ -108,7 +111,7 @@
           endDate: '',    //结束时间
           customerName: this.webSitedata.customerName,  //姓名
           companyId: this.cookieFn.get("usersid"),   //公司id
-          currentPage: 1, //页码
+          currentPage: this.webSitedata.currentPage, //页码
           type: this.webSitedata.type,      //数据类型
         }
         if (this.webSitedata.time != '') {
@@ -168,8 +171,9 @@
       onSubmit(){
         this.getData()
       },
-      getPage(){
-
+      getPage(a){
+        this.webSitedata.currentPage = a;
+        this.getData();
       },
     },
   }

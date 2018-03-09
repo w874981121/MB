@@ -120,6 +120,9 @@
       }
     },
     watch: {},
+    mounted(){
+      this.getData()
+    },
     methods: {
       getData(){
         let _this = this;
@@ -254,7 +257,6 @@
         });
       });
       },
-
     },
   }
 </script>

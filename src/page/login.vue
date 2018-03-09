@@ -7,10 +7,10 @@
       <div class="formdiv">
         <el-input size="medium" placeholder="请输入账号" v-model="login.usersname">
         </el-input>
-        <el-input class="mt20" type="password" size="medium" placeholder="请输入密码" v-model="login.password">
+        <el-input class="mt20" @keyup.enter.native="postLogin($event)" type="password" size="medium" placeholder="请输入密码" v-model="login.password">
         </el-input>
         <a class="mt10" @click="open">遇到问题</a>
-        <el-button class="mt20" style="width:100%" size="medium" type="primary" @click="postLogin">
+        <el-button class="mt20" @keyup.enter.native="postLogin($event)" style="width:100%" size="medium" type="primary" @click="postLogin">
           登陆
         </el-button>
       </div>
@@ -93,8 +93,9 @@
       width: 800px;
       height: 400px;
 
-      background: rgba(158, 172, 181, 0.4);
-      border-radius: 5px;
+      background: url("../assets/login_bg.png") no-repeat;
+      background-size: 1000px 500px;
+      background-position: -100px;
       position: absolute;
       top: 50%;
       right: 74px;
@@ -102,9 +103,8 @@
       .login_bg{
         width: 100%;
         height:100%;
-        background: url("../assets/login_bg.png") no-repeat;
-        background-size: 1000px 500px;
-        background-position: -100px;
+        border-radius: 5px;
+        background: rgba(158, 172, 181, 0.4);
       }
     }
     .text {

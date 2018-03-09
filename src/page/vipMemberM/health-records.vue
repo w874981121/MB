@@ -298,13 +298,15 @@
       },
     },
     mounted(){
+      this.webSitedata.customerName = this.$route.query.customerName
+      this.webSitedata.companyId = this.$route.query.companyId
       this.getData();
     },
     methods: {
       getData(){
         let _this = this;
         let fromData = {
-          companyId: 0,   //公司id
+          companyId: this.webSitedata.companyId,   //公司id
           currentPage: 1, //页码
           type: this.webSitedata.type,      //数据类型
           customerName: this.webSitedata.customerName,

@@ -2,7 +2,7 @@
   <div class="new-account m20 fsz14 por h100">
     <el-breadcrumb separator=">">
       <el-breadcrumb-item :to="{ path: '/roleam' }">角色权限管理</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: '/roleam/roleamlist', query: { usersid: form.parentUsersId }}">精益天成医疗科技有限公司-管理员列表</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/roleam/roleamlist', query: { usersid: form.parentUsersId }}">管理员列表</el-breadcrumb-item>
       <el-breadcrumb-item>新建管理员</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="get_form mt20">
@@ -130,12 +130,23 @@
               this.$message({
                 showClose: true,
                 type: "success",
-                message: '登陆成功！'
+                message: '创建成功！'
               });
               history.go(-1)
-            }
+            }else{
+          this.$message({
+            showClose: true,
+            type: "error",
+            message: '创建失败！'
+          });
+        }
           })
           .catch(function (error) {
+          this.$message({
+            showClose: true,
+            type: "error",
+            message: '创建失败！'
+          });
             console.log(error);
           });
       }

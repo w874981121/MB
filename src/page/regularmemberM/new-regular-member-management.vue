@@ -10,10 +10,12 @@
         <span class="title">照片:</span>
         <el-upload
           class="avatar-uploader mb18"
-          action="/api/back/customers/image"
+          v-loading="loading"
+          :action="upimgUrl"
           name="imagePath"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
+          :on-error="handleAvatarError"
           :before-upload="beforeAvatarUpload">
           <img v-if="imageUrl" :src="imageUrl" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -46,7 +48,9 @@
     name: 'new-doctor-management',
     data(){
       return {
+        upimgUrl: this.$urlapi + '/back/customers/image',
         imageUrl: '',
+        loading:false,
         form: {
           photoUrl: '',  //头像地址
           customerName: '',  //用户姓名
@@ -60,9 +64,20 @@
     methods: {
       //文件上传成功
       handleAvatarSuccess(res, file) {
-        this.imageUrl = this.$api+"/images/" + res.data;
-        this.form.photoUrl = res.data;
-        console.log(res.data)
+        if(res.errcode === 0){
+          this.$message({
+            type: 'success',
+            message: "上传成功"
+          });
+          this.imageUrl = this.$api+"/images/" + res.data;
+          this.form.photoUrl = res.data;
+        }else{
+          this.$message({
+            type: 'error',
+            message: "上传失败"
+          });
+        }
+        this.loading = false;
       },
       //上传文件之前
       beforeAvatarUpload(file) {
@@ -70,12 +85,23 @@
         const isLt2M = file.size / 1024 / 1024 < 2;
         console.log(file)
         if (!isJPG) {
+          this.loading = false;
           this.$message.error('上传头像图片只能是 JPG 格式!');
         }
         if (!isLt2M) {
+          this.loading = false;
           this.$message.error('上传头像图片大小不能超过 2MB!');
         }
+        this.loading = true;
         return isJPG && isLt2M;
+      },
+      //上传文件失败
+      handleAvatarError(res, file){
+        this.loading = false;
+        this.$message({
+          type: 'error',
+          message: "上传失败"
+        });
       },
       //新建
       onSubmit() {
@@ -87,6 +113,11 @@
           type: 0,
         }
         if(fromdata.phone.length < 1){
+          this.$message({
+            showClose: true,
+            type: "error",
+            message: '请完善信息！！！'
+          });
           return
         }
         this.$axios.post('/api/back/customers', fromdata)

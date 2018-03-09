@@ -4,7 +4,7 @@
   <div class="website-mccount-management m20">
     <el-breadcrumb separator=">">
       <el-breadcrumb-item :to="{ path: '/roleam' }">角色权限管理</el-breadcrumb-item>
-      <el-breadcrumb-item>{{truename}}-管理员列表</el-breadcrumb-item>
+      <el-breadcrumb-item>管理员列表</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="searchBox">
       <el-form :inline="true" class="demo-form-inline mt10">

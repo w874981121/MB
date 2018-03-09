@@ -9,10 +9,12 @@
         <span class="title">公司logo:</span>
         <el-upload
           class="avatar-uploader mb18"
-          action="/api/back/users/image"
+          v-loading="loading"
+          :action="upimgUrl"
           name="imagePath"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
+          :on-error="handleAvatarError"
           :before-upload="beforeAvatarUpload">
           <img v-if="form.photoUrl" :src="imageUrl" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -45,7 +47,9 @@
     name: 'new-account',
     data(){
       return {
+        upimgUrl: this.$urlapi + '/back/users/image',
         imageUrl: '',
+        loading: false,
         form: {
           photoUrl: '',
           truename: '',
@@ -61,33 +65,43 @@
     methods: {
       //上传文件之前
       beforeAvatarUpload(file) {
-        console.log(file)
-        if(file.errcode === 30004){
-          this.$message({
-            type: 'error',
-            message: "上传失败"
-          });
-        }else if(file.errcode === 0){
-          this.$message({
-            type: 'success',
-            message: "上传成功"
-          });
-        }
         const isJPG = file.type === 'image/jpeg' || 'image/png';
         const isLt2M = file.size / 1024 / 1024 < 2;
         if (!isJPG) {
           this.$message.error('上传头像图片只能是 JPG 格式!');
+          this.loading = false;
         }
         if (!isLt2M) {
           this.$message.error('上传头像图片大小不能超过 2MB!');
+          this.loading = false;
         }
+        this.loading = true;
         return isJPG && isLt2M;
       },
       //文件上传成功
       handleAvatarSuccess(res, file) {
-        this.imageUrl = this.$api + "/images/" + res.data;
-        this.form.photoUrl = res.data;
-        console.log(res.data)
+        if(res.errcode === 0){
+          this.$message({
+            type: 'success',
+            message: "上传成功"
+          });
+          this.imageUrl = this.$api + "/images/" + res.data;
+          this.form.photoUrl = res.data;
+        }else{
+          this.$message({
+            type: 'error',
+            message: "上传失败"
+          });
+        }
+        this.loading = false;
+      },
+      //上传文件失败
+      handleAvatarError(res, file){
+        this.loading = false;
+        this.$message({
+          type: 'error',
+          message: "上传失败"
+        });
       },
       //创建
       onSubmit(formName) {
@@ -113,8 +127,19 @@
             message: '创建成功！'
           });
           history.go(-1)
+        }else{
+          this.$message({
+            showClose: true,
+            type: "error",
+            message: '创建失败！'
+          });
         }
       }).catch((error) => {
+          this.$message({
+          showClose: true,
+          type: "error",
+          message: '创建失败！'
+        });
           console.log(error);
       });
       }

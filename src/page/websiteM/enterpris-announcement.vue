@@ -19,7 +19,7 @@
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="" label="备注"></el-table-column>
+      <el-table-column align="center" prop="modifyUser" label="备注"></el-table-column>
     </el-table>
     <!--翻页-->
     <el-pagination class="mt20" background layout="prev, pager, next" :page-size="pageSize" @current-change="getPage"

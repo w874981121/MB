@@ -3,7 +3,7 @@
     <el-breadcrumb separator=">">
       <el-breadcrumb-item :to="{ path: '/roleam' }">角色权限管理</el-breadcrumb-item>
       <el-breadcrumb-item :to="{ path: '/roleam/roleamlist', query: { usersid: form.parentUsersId }}">
-        {{truename}}-管理员列表
+        管理员列表
       </el-breadcrumb-item>
       <el-breadcrumb-item>修改管理员</el-breadcrumb-item>
     </el-breadcrumb>
@@ -180,8 +180,6 @@
         this.$axios.post('/api/back/purview', qs.stringify(setPurview), {
           headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'}
         }).then((response) => {
-
-          console.log(response.data.errcode)
           //权限修改成功后
           if (response.data.errcode === 0) {
             this.$axios.post('/api/back/users/role', fromdata).then((response) => {

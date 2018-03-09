@@ -10,9 +10,12 @@
         <span class="title">照片:</span>
         <el-upload
           class="avatar-uploader mb18"
-          action="/api/back/customers/image"
+          v-loading="loading"
+          :action="upimgUrl"
+          name="imagePath"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
+          :on-error="handleAvatarError"
           :before-upload="beforeAvatarUpload">
           <img v-if="imageUrl" :src="imageUrl" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -59,7 +62,9 @@
     name: 'revise-doctor-management',
     data(){
       return {
+        upimgUrl: this.$urlapi + '/back/customers/image',
         imageUrl: this.$api+"/images/" + this.photoUrl,
+        loading:false,
         form: {},
         status: null,
         guest: null,
@@ -105,16 +110,34 @@
         if (!isLt2M) {
           this.$message.error('上传头像图片大小不能超过 2MB!');
         }
-        debugger
+        this.loading = true;
         return isJPG && isLt2M;
       },
       //文件上传成功
       handleAvatarSuccess(res, file) {
-        this.imageUrl = this.$api+"/images/" + res.data;
-        this.form.photoUrl = res.data;
-        console.log(res.data)
+        if(res.errcode === 0){
+          this.$message({
+            type: 'success',
+            message: "上传成功"
+          });
+          this.imageUrl = this.$api+"/images/" + res.data;
+          this.form.photoUrl = res.data;
+        }else{
+          this.$message({
+            type: 'error',
+            message: "上传失败"
+          });
+        }
+        this.loading = false;
       },
-
+//上传文件失败
+      handleAvatarError(res, file){
+        this.loading = false;
+        this.$message({
+          type: 'error',
+          message: "上传失败"
+        });
+      },
       //设为特邀
       setGuest(){
 

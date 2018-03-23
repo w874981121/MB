@@ -67,7 +67,7 @@
       this.$axios.get('/api/back/customers/' + this.$route.query.customerId).then((response)=> {
         console.log(response)
         let data = response.data.data;
-        this.imageUrl = this.$api+"/images/" + data.photoUrl,
+         this.imageUrl = this.$api+"/images/" + data.photoUrl,
           this.form = {
             photoUrl: data.photoUrl,  //头像地址
             customerName: decodeURIComponent(data.customerName),  //用户姓名

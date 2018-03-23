@@ -33,7 +33,7 @@ Axios.interceptors.request.use(function (config) {
 
   let re = new RegExp("/api", "g"),
       srt  = config.url.replace(re, "http://47.104.146.162:8080");
-      config.url = srt
+      // config.url = srt
   //
   // let token = Vue.prototype.cookieFn.get("token")
   // config.headers.common['Authorization'] = token

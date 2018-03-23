@@ -12,9 +12,9 @@ Vue.use(Vuex)
 
 
 export const state = {
-  username: '',
-  truename: '',
-  type: ''
+  username: null,
+  truename: null,
+  type: null
 }
 
 export const mutations = {

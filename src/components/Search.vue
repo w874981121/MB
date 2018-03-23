@@ -14,7 +14,7 @@
 <template>
 	<div class="searchBox">
 		<el-form :inline="true" class="demo-form-inline mt10">
-			<el-button class="fl ml10" type="primary" @click="newAccount">新建账号</el-button>
+			<el-button class="fl ml10" type="primary" @click="newAccount">{{searchData.newname ? searchData.newname : '新建账号'}}</el-button>
       <el-form-item class="fr">
         <el-button icon="el-icon-search" type="primary" @click="onSubmit">查询</el-button>
       </el-form-item>

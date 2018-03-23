@@ -32,6 +32,9 @@
         <el-form-item label="密码：">
           <el-input v-model="form.passWord"></el-input>
         </el-form-item>
+        <el-form-item label="设备编号：">
+          <el-input v-model="form.cardNo"></el-input>
+        </el-form-item>
         <el-form-item>
           <el-button plain @click="disableFn">{{form.status ==0 ? '禁用账号':'启用账号'}}</el-button>
           <!--<el-button plain @click="setReset">重置密码</el-button>-->
@@ -67,7 +70,6 @@
     },
     watch: {},
     mounted(){
-      console.log("0000000")
       this.getData()
     },
     methods: {

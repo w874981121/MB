@@ -19,12 +19,12 @@
         <el-form-item label="网址：">
           <el-input :disabled="true" v-model="form.weburl"></el-input>
         </el-form-item>
-        <el-form-item label="账号：">
-          <el-input :disabled="true" v-model="form.username"></el-input>
-        </el-form-item>
-        <el-form-item label="密码：">
-          <el-input :disabled="true" v-model="form.password"></el-input>
-        </el-form-item>
+        <!--<el-form-item label="账号：">-->
+          <!--<el-input :disabled="true" v-model="form.username"></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="密码：">-->
+          <!--<el-input :disabled="true" v-model="form.password"></el-input>-->
+        <!--</el-form-item>-->
         <!--<el-form-item>-->
           <!--<el-button type="primary" @click="onSubmit">修改登录密码</el-button>-->
         <!--</el-form-item>-->

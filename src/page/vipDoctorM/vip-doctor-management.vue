@@ -30,7 +30,7 @@
         tableData: {
           listname: [
             {field: 'customerId', name: '编号', width: '50'},
-//            {field: 'registerDate', name: '创建时间', width: '100'},
+            {field: 'creatDate', name: '创建时间', width: '100'},
             {field: 'photoUrl', name: '头像', width: '100'},
             {field: 'customerName', name: '姓名'},
             {field: 'price', name: '诊疗价格'},
@@ -39,8 +39,7 @@
             {field: 'department', name: '科室',},
             {field: 'title', name: '职称',},
             {field: 'loginName', name: '账号'},
-//            {field: 'passWord', name: '密码',},
-            {field: 'date', name: '会员',},
+            {field: 'customer', name: '会员',},
             {field: 'status', name: '是否禁用',},
           ],  //设置排列顺序
           data: []
@@ -57,6 +56,7 @@
           let datelist = response.data.data.list;
           datelist.forEach(function(item,i){
             datelist[i].customerName = unescape(item.customerName);
+            datelist[i].creatDate = _this.$timeonversionC(item.creatDate);
             datelist[i].hospital = unescape(item.hospital);
             datelist[i].department = unescape(item.department);
             datelist[i].title = unescape(item.title);

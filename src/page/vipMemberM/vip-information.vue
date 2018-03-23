@@ -31,6 +31,7 @@
         tableData: {
           listname: [
             {field: 'customerId', name: '编号', width: '50'},
+            {field: 'creatDate', name: '创建时间', width: '100'},
             {field: 'photoUrl', name: '头像', width: '100'},
             {field: 'customerName', name: '姓名'},
             {field: 'phone', name: '手机号'},
@@ -53,6 +54,7 @@
           let datelist = response.data.data.list;
           datelist.forEach(function(item,i){
             datelist[i].customerName = unescape(item.customerName);
+            datelist[i].creatDate = _this.$timeonversionC(item.creatDate);
             datelist[i].status = item.status == 0 ? "未禁用" : "禁用";
             datelist[i].photoUrl = _this.$api + "/images/" + item.photoUrl;
           })

@@ -36,7 +36,8 @@
         searchData: {
           path: '/enterprisa/newannouncement',
           name:'',
-          placeholder:'输入公告名称'
+          placeholder:'输入公告名称',
+          newname: '新建公告',
         },
         total: 0,
         pageSize: 0,

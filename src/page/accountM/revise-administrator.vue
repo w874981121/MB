@@ -15,6 +15,9 @@
         <el-form-item label="账号：">
           <el-input v-model="form.username"></el-input>
         </el-form-item>
+        <el-form-item label="密码：">
+          <el-input v-model="form.password"></el-input>
+        </el-form-item>
         <el-form-item label="权限：">
           <div>
             <template v-for="name in powerTag">
@@ -97,6 +100,7 @@
           usersid: this.$route.query.usersid,     //用户id
           truename: '',  //姓名
           username: '',   //账号
+          password: '',   //密码
           lockState: '',    //状态
         }
       }
@@ -120,6 +124,7 @@
             this.form.truename = decodeURIComponent(data.truename);
             this.form.username = data.username;
             this.form.lockState = data.lockState;
+            this.form.password = data.password
             this.powerShow()
           })
           .catch(function (error) {
@@ -169,6 +174,7 @@
           parentUsersId: this.form.parentUsersId,
           truename: escape(this.form.truename),
           username: this.form.username,
+          password: this.form.password,
           type: 2,
         }
 

@@ -38,8 +38,18 @@
     <div class="tableCss">
       <el-table :data="tableData.data" height="400" border stripe style="width: 100%">
         <template v-for="i in tableData.title">
-          <el-table-column align="center" :prop="i.field" :label="i.name"
+          <el-table-column v-if="i.name !=='异常数据'" align="center" :prop="i.field" :label="i.name"
                            :width="i.width?i.width:'auto'"></el-table-column>
+
+          <el-table-column v-if="i.name =='异常数据'" align="center" :label="i.name" :width="i.width?i.width:'auto'">
+
+            <template slot-scope="scope">
+              <img v-if="scope.row.abnormalData[0].name == '心电图'" style="width:100%;display: block" :src="scope.row.abnormalDataText" alt="">
+              <span v-if="scope.row.abnormalData[0].name !== '心电图'">{{scope.row.abnormalDataText}}</span>
+            </template>
+
+          </el-table-column>
+
         </template>
       </el-table>
     </div>
@@ -91,7 +101,7 @@
             {field: 'creatDate', name: '异常上报时间', width: '200'},
             {field: 'customerName', name: '会员', width: '100'},
             {field: 'doctorName', name: '家庭医生', width: '100'},
-            {field: 'abnormalDataText', name: '异常数据'},
+            {field: 'abnormalDataText', name: '异常数据',width: '200'},
             {field: 'abnormal', name: '医生建议'},
             {field: 'state', name: '远程会诊订单状态'},
           ],
@@ -126,6 +136,7 @@
         }
         this.$axios.get('/api/back/customers/abnormal', {params: fromData}).then((response) => {
           console.log(response)
+          _this.tableData.data=[]
         if (response.data.data == null) {
           console.log("数据为空")
           return
@@ -154,7 +165,11 @@
           console.log(datelist[i].creatDate)
           datelist[i].abnormalDataText = []
           datelist[i].abnormalData.forEach(function (a, b) {
-            datelist[i].abnormalDataText.push(a.name + ":" + a.value)
+            if(a.name === '心电图'){
+              datelist[i].abnormalDataText.push(_this.$api + "/images/" + a.value)
+            }else{
+              datelist[i].abnormalDataText.push(a.name + ":" + a.value)
+            }
           })
           datelist[i].abnormalDataText = datelist[i].abnormalDataText.join("  ")
           datelist[i].state = titleText;

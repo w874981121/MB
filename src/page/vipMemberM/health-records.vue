@@ -200,10 +200,10 @@
             value: 'ECGPICTURE',
             title: [
               {field: 'dataKey', name: '用户设备编号', width: '200'},
-              {field: 'addDate', name: '添加时间', width: '90'},
+              {field: 'addDate', name: '添加时间', width: '200'},
               {field: 'customerName', name: '用户姓名'},
               {field: 'ecgPictureDataId', name: '心电数据编号'},
-              {field: 'pictureDataUrl', name: '心电图',width: '120'},
+              {field: 'pictureDataUrl', name: '心电图',width: '220'},
             ],
             data: [],
           },

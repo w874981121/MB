@@ -102,8 +102,9 @@
       </el-table>
 
     </div>
-    <el-pagination background layout="prev, pager, next" :page-size="webSitedata.pageSize" @current-change="getPage"
-                   :total="webSitedata.total"></el-pagination>
+    <el-pagination background layout="total, prev, pager, next" :current-page.sync="webSitedata.total" :page-size="webSitedata.pageSize" @current-change="getPage"
+                   :total="webSitedata.total">
+    </el-pagination>
   </div>
 </template>
 

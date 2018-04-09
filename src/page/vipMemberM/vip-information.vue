@@ -4,7 +4,7 @@
   <div class="vip-information">
     <Search :searchData="searchData" @response="onSubmit"></Search>
     <DataTable :dataTable="tableData" @modify="postModify" @healthy="seeHealthy"></DataTable>
-    <el-pagination background layout="prev, pager, next" :page-size="pageSize" @current-change="getPage" :total="total"></el-pagination>
+    <el-pagination background layout="total, prev, pager, next" :page-size="pageSize" @current-change="getPage" :total="total"></el-pagination>
   </div>
 </template>
 

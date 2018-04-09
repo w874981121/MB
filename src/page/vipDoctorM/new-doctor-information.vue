@@ -23,19 +23,19 @@
       </div>
 
       <el-form ref="form" :model="form" label-width="120px">
-        <el-form-item label="医院名称：">
+        <el-form-item label="医院名称：" prop="hospital" :rules="[{required: true, message: '请输入医院名称', trigger: 'blur'}]">
           <el-input v-model="form.hospital"></el-input>
         </el-form-item>
-        <el-form-item label="科室：">
+        <el-form-item label="科室：" prop="department" :rules="[{required: true, message: '请输入科室', trigger: 'blur'}]">
           <el-input v-model="form.department"></el-input>
         </el-form-item>
-        <el-form-item label="职称：">
+        <el-form-item label="职称：" prop="title" :rules="[{required: true, message: '请输入职称', trigger: 'blur'}]">
           <el-input v-model="form.title"></el-input>
         </el-form-item>
-        <el-form-item label="姓名：">
+        <el-form-item label="姓名：" prop="customerName" :rules="[{required: true, message: '请输入姓名', trigger: 'blur'}]">
           <el-input v-model="form.customerName"></el-input>
         </el-form-item>
-        <el-form-item label="手机号：">
+        <el-form-item label="手机号：" prop="phone" :rules="[{required: true, message: '请输入手机号', trigger: 'blur'}]">
           <el-input v-model="form.phone"></el-input>
         </el-form-item>
         <el-form-item label="我的会员：">
@@ -49,14 +49,14 @@
         <el-form-item>
           <el-button type="primary" plain @click="purviewidsAlert">添加会员</el-button>
         </el-form-item>
-        <el-form-item label="诊疗费用：">
+        <el-form-item label="诊疗费用：" prop="price" :rules="[{required: true, message: '请输入诊疗费用', trigger: 'blur'}]">
           <el-input v-model="form.price">
             <template slot="append">元</template>
           </el-input>
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">立即创建</el-button>
+          <el-button type="primary" @click="onSubmit('form')">立即创建</el-button>
         </el-form-item>
       </el-form>
 
@@ -181,7 +181,15 @@
           })
         })
       },
-      onSubmit() {
+      onSubmit(formName) {
+
+        this.$refs[formName].validate((valid) => {
+          console.log("=====")
+        if (!valid) {
+          throw new Error('参数错误'); //验证判断
+        }
+      });
+
         let formdata = {
           photoUrl: this.form.photoUrl,
           customerName: this.form.customerName,
@@ -193,12 +201,12 @@
           customersId: "",
           type: this.form.type,
         }
-        if(this.memberids.length > 0){
-          formdata.customersId = this.memberids.join(",");
-        }
-        if(formdata.phone.length < 1){
-          this.$alert("请完善信息！！！", "提示", {
-            confirmButtonText: '确定',
+
+
+        if(formdata.phone.length != 11){
+          this.$message({
+            type: 'error',
+            message: "手机号码格式错误"
           });
           return
         }

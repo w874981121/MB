@@ -34,7 +34,7 @@
       <el-table-column align="center" prop="" label="备注"></el-table-column>
     </el-table>
     <!--翻页-->
-    <el-pagination class="mt20" background layout="prev, pager, next" :page-size="pageSize" @current-change="getPage" :total="total"></el-pagination>
+    <el-pagination class="mt20" background layout="total, prev, pager, next" :page-size="pageSize" @current-change="getPage" :total="total"></el-pagination>
   </div>
 </template>
 

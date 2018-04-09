@@ -12,7 +12,7 @@
       </el-form>
     </div>
     <DataTable :dataTable="tableData" @modify="postModify"></DataTable>
-    <el-pagination background layout="prev, pager, next" @current-change="getPage" :total="total"></el-pagination>
+    <el-pagination background layout="total, prev, pager, next" @current-change="getPage" :total="total"></el-pagination>
   </div>
 </template>
 

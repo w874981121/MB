@@ -62,12 +62,13 @@
       <el-table-column align="center" label="操作">
         <template slot-scope="scope" >
             <el-button size="mini" v-if="scope.row.isShow == 0" type="primary" @click="postOffline(scope.row)">下线</el-button>
-          <el-button size="mini"  v-if="scope.row.isShow == 1"  type="primary" @click="goOnline(scope.row)">上线</el-button>
+            <el-button size="mini"  v-if="scope.row.isShow == 1"  type="primary" @click="goOnline(scope.row)">上线</el-button>
+            <!--<el-button size="mini"  v-if="scope.row.isShow == 1"  type="danger" @click="OnDelete(scope.row)">删除</el-button>-->
         </template>
       </el-table-column>
     </el-table>
     <!--翻页-->
-    <el-pagination class="mt20" background layout="prev, pager, next" :page-size="pageSize" @current-change="getPage" :total="total"></el-pagination>
+    <el-pagination class="mt20" background layout="total, prev, pager, next" :page-size="pageSize" @current-change="getPage" :total="total"></el-pagination>
 	</div>
 </template>
 
@@ -176,6 +177,35 @@
           });
         });
       },
+      //删除
+      OnDelete(row){
+        let _this = this;
+        this.$confirm('确定删除本条帖子？。', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$axios.post('/api/back/questions', {questionId: row.questionId}).then((response)=> {
+          console.log(response)
+        this.getData()
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        });
+      })
+      .catch(function (error) {
+          this.$message.error('删除失败');
+          console.log(error);
+        });
+
+      }).catch(() => {
+          this.$message({
+          type: 'info',
+          message: '取消'
+        });
+      });
+      },
+
       //文章窗口
       openText(row){
         this.$alert(row.content, row.title, {

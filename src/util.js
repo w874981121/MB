@@ -38,7 +38,7 @@ export default{
     };
 
     Vue.prototype.$api = "http://47.104.146.162:8080";
-    Vue.prototype.$urlapi = "/api";  //http://47.104.146.162:8080
+    Vue.prototype.$urlapi = "http://47.104.146.162:8080";  //http://47.104.146.162:8080
     Vue.prototype.$timeonversionC = function(t){
       this.zeroillF = function(z){
         return z < 10 ? "0" + z : z;

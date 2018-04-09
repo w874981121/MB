@@ -25,6 +25,9 @@
         <el-form-item label="公司名称：" prop="truename" :rules="[{required: true, message: '请输入公司名称', trigger: 'blur'}]">
           <el-input v-model="form.truename"></el-input>
         </el-form-item>
+        <el-form-item label="网站后缀：" prop="username" :rules="[{required: true, message: '请输入后缀', trigger: 'blur'}]">
+          <el-input v-model="form.username"></el-input>
+        </el-form-item>
         <el-form-item label="公司联系人：" prop="linkName" :rules="[{required: true, message: '请输入公司联系人', trigger: 'blur'}]">
           <el-input v-model="form.linkName"></el-input>
         </el-form-item>
@@ -54,6 +57,7 @@
           photoUrl: '',
           truename: '',
           linkName: '',
+          username: '', //网站后缀
           phone: '',
           type: 1,
         }
@@ -117,8 +121,18 @@
           truename: escape(this.form.truename),
           linkName: escape(this.form.linkName),
           phone: this.form.phone,
+          username: this.form.username,
           type: 1,
         };
+
+        if(form.phone.length != 11){
+           this.$message({
+            type: 'error',
+            message: "手机号码格式错误"
+          });
+          return
+        }
+
         this.$axios.post('/api/back/users/webSite', form).then((response) => {
           if(response.data.errcode === 0){
           this.$message({

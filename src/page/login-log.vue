@@ -2,14 +2,14 @@
 <template>
   <div class="login_log m20">
 
-    <el-table :data="tableData.data" height="400" border stripe style="width: 100%">
+    <el-table :data="tableData.data" height="500" border stripe style="width: 100%">
       <template v-for="i in tableData.listname">
         <el-table-column align="center" :prop="i.field" :label="i.name" :width="i.width?i.width:'auto'"></el-table-column>
       </template>
     </el-table>
 
     <!--翻页-->
-    <el-pagination class="mt20" background layout="prev, pager, next" :page-size="pageSize" @current-change="getPage" :total="total"></el-pagination>
+    <el-pagination class="mt20" background layout="total, prev, pager, next" :page-size="pageSize" @current-change="getPage" :total="total"></el-pagination>
   </div>
 </template>
 
@@ -25,9 +25,9 @@
         //传递给table的数据
         tableData: {
           listname: [
-            {field: 'problemId', name: '编号', width: '80'},
-            {field: 'creatDate', name: '报告时间', width: '90'},
-            {field: 'loginName', name: '账号',},
+//            {field: 'problemId', name: '编号', width: '80'},
+            {field: 'creatDate', name: '报告时间', width: '180'},
+            {field: 'loginName', name: '账号',width: '150'},
             {field: 'question', name: '报告内容',},
           ],  //设置排列顺序
           data:[],

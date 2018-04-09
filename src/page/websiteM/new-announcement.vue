@@ -56,6 +56,25 @@
           content: this.form.content,
           sortCode:1,
         }
+
+        console.log(formdata.title.length)
+        if(formdata.title.length <= 0){
+          this.$message({
+            type: 'error',
+            message: "标题不能为空"
+          });
+          return
+        }
+
+        if(formdata.content.length <= 0){
+          this.$message({
+            type: 'error',
+            message: "内容不能为空"
+          });
+          return
+        }
+
+
         this.$axios.post('/api/back/article', formdata).then((response) => {
           console.log(response)
           if(response.data.errcode === 0){

@@ -23,18 +23,18 @@
       </div>
 
       <el-form ref="form" :model="form" label-width="120px">
-        <el-form-item label="姓名：">
+        <el-form-item label="姓名：" prop="customerName" :rules="[{required: true, message: '请输入姓名', trigger: 'blur'}]">
           <el-input v-model="form.customerName"></el-input>
         </el-form-item>
-        <el-form-item label="手机号：">
+        <el-form-item label="手机号：" prop="phone" :rules="[{required: true, message: '请输入手机号', trigger: 'blur'}]">
           <el-input v-model="form.phone"></el-input>
         </el-form-item>
-        <el-form-item label="设备编号：">
-          <el-input v-model="form.cardNo"></el-input>
-        </el-form-item>
+        <!--<el-form-item label="设备编号：">-->
+          <!--<el-input v-model="form.cardNo"></el-input>-->
+        <!--</el-form-item>-->
 
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">立即创建</el-button>
+          <el-button type="primary" @click="onSubmit('form')">立即创建</el-button>
         </el-form-item>
       </el-form>
 
@@ -55,7 +55,7 @@
           photoUrl: '',  //头像地址
           customerName: '',  //用户姓名
           phone:'', //手机号
-          cardNo: '', //用户设备号
+//          cardNo: '', //用户设备号
           type: 0
         }
       }
@@ -104,14 +104,32 @@
         });
       },
       //新建
-      onSubmit() {
+      onSubmit(formName) {
+
+        this.$refs[formName].validate((valid) => {
+          console.log("=====")
+        if (!valid) {
+          throw new Error('参数错误'); //验证判断
+        }
+      });
+
         let fromdata = {
           photoUrl: this.form.photoUrl,
           customerName: escape(this.form.customerName),
           phone: this.form.phone,
-          cardNo:this.form.cardNo,
+//          cardNo:this.form.cardNo,
           type: 0,
         }
+
+
+        if(fromdata.phone.length != 11){
+          this.$message({
+            type: 'error',
+            message: "手机号码格式错误"
+          });
+          return
+        }
+
         if(fromdata.phone.length < 1){
           this.$message({
             showClose: true,

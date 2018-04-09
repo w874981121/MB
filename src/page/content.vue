@@ -65,9 +65,12 @@
   }
 </script>
 
-<style scoped lang="scss" rel="stylesheet/scss" type="text/css">
+<style lang="scss" rel="stylesheet/scss" type="text/css">
   #contentbox {
     height: 100%;
+    .el-pagination{
+      padding: 2px 20px;
+    }
     .top {
       position: absolute;
       width: 100%;

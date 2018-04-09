@@ -36,6 +36,7 @@
           <el-input v-model="form.cardNo"></el-input>
         </el-form-item>
         <el-form-item>
+          <el-button plain @click="upgrade">降级为普通会员</el-button>
           <el-button plain @click="disableFn">{{form.status ==0 ? '禁用账号':'启用账号'}}</el-button>
           <!--<el-button plain @click="setReset">重置密码</el-button>-->
         </el-form-item>
@@ -187,6 +188,33 @@
           this.$message({
             type: 'info',
             message: '已取消重置'
+          });
+        })
+      },
+      //降级为普通会员
+      upgrade(){
+        this.$confirm('降级为普通会员？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$axios.post('/api/back/customers/vip', {customerId: this.$route.query.customerId})
+            .then((response) => {
+            console.log(response)
+            this.$message({
+              type: 'success',
+              message: "降级成功"
+            });
+            history.go(-1)
+          })
+        .catch(function (error) {
+            console.log(error);
+          });
+
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消降级'
           });
         })
       },

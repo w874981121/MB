@@ -3,7 +3,7 @@
 <template>
   <div class="website-mccount-management">
     <Search :searchData="searchData" @response="onSubmit"></Search>
-    <DataTable :dataTable="tableData" @modify="postModify"></DataTable>
+    <DataTable :dataTable="tableData" @modify="postModify" @delete="postDelete"></DataTable>
     <el-pagination background layout="total, prev, pager, next" :page-size="pageSize" @current-change="getPage" :total="total"></el-pagination>
   </div>
 </template>
@@ -85,7 +85,31 @@
       postModify(row){
         console.log(row)
         this.$router.push({path: "/vipdm/revisedoctorinformmation", query: {customerId: row.customerId}})
-      }
+      },
+      postDelete(row){
+        console.log(row.usersid)
+        this.$confirm('确认删除VIP医生账号？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$axios.post('/api/back/customer/delete', {customerId: row.customerId})
+            .then((response) => {
+              this.$message({
+                type: 'success',
+                message: '删除成功！',
+              });
+              this.getData();
+            }).catch(function (error) {
+            console.log(error);
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          });
+        });
+      },
     },
     components: {
       Search,

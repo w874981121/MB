@@ -23,9 +23,10 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" prop="" label="操作">
+      <el-table-column align="center" prop="" label="操作" width="160">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="postModify(scope.row)">修改</el-button>
+          <el-button size="mini" type="danger" @click="postDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -77,6 +78,9 @@
       }).catch(function (error) {
           console.log(error);
         });
+      },
+      postDelete(uid){
+        this.$emit('delete',uid);
       },
       //查看健康记录
       seeHealthy(row){

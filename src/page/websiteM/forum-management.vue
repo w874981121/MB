@@ -59,11 +59,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="操作">
+      <el-table-column align="center" label="操作" width="160">
         <template slot-scope="scope" >
             <el-button size="mini" v-if="scope.row.isShow == 0" type="primary" @click="postOffline(scope.row)">下线</el-button>
             <el-button size="mini"  v-if="scope.row.isShow == 1"  type="primary" @click="goOnline(scope.row)">上线</el-button>
-            <!--<el-button size="mini"  v-if="scope.row.isShow == 1"  type="danger" @click="OnDelete(scope.row)">删除</el-button>-->
+            <el-button size="mini"  v-if="scope.row.isShow == 0"  type="danger" @click="OnDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

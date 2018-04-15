@@ -123,14 +123,12 @@
       },
       //修改
       onSubmit(formName) {
-
         this.$refs[formName].validate((valid) => {
           console.log("=====")
         if (!valid) {
           throw new Error('参数错误'); //验证判断
         }
       });
-
         let form = {
           usersid: this.$route.query.usersid,
           photoUrl: this.form.photoUrl,

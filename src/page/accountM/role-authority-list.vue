@@ -11,7 +11,7 @@
         <el-button class="fl ml10 mb18" type="primary" @click="newAccount">新建账号</el-button>
       </el-form>
     </div>
-    <DataTable :dataTable="tableData" @modify="postModify"></DataTable>
+    <DataTable :dataTable="tableData" @modify="postModify" @delete="postDelete"></DataTable>
     <el-pagination background layout="total, prev, pager, next" @current-change="getPage" :total="total"></el-pagination>
   </div>
 </template>
@@ -78,6 +78,31 @@
       //跳转新建页
       newAccount(){
         this.$router.push({path: "/roleam/newadministrator", query: {parentUsersId: this.parentUsersId}})
+      },
+      //删除
+      postDelete(row){
+        console.log(row.usersid)
+        this.$confirm('确认删除角色账号？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$axios.post('/api/back/users/delete', {usersId: row.usersid})
+            .then((response) => {
+            this.$message({
+              type: 'success',
+              message: '删除成功！',
+            });
+            this.getData();
+          }).catch(function (error) {
+            console.log(error);
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          });
+        });
       },
     },
     components: {

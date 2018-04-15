@@ -4,9 +4,10 @@
       <template v-for="i in dataTable.listname">
           <el-table-column align="center" :prop="i.field" :label="i.name" :width="i.width?i.width:'auto'"></el-table-column>
       </template>
-      <el-table-column align="center" prop="address" label="操作">
+      <el-table-column align="center" prop="address" label="操作" width="160">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="postModify(scope.row)">修改</el-button>
+          <el-button size="mini" type="danger" @click="postDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -43,7 +44,9 @@
         console.log(uid)
         this.$emit('modify',uid);
       },   //
-
+      postDelete(uid){
+        this.$emit('delete',uid);
+      },
       newAccount(){     //跳转操作
         console.log(this)
         this.$router.push({path: ""})

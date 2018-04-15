@@ -3,7 +3,7 @@
 <template>
   <div class="vip-information">
     <Search :searchData="searchData" @response="onSubmit"></Search>
-    <DataTable :dataTable="tableData" @modify="postModify" @healthy="seeHealthy"></DataTable>
+    <DataTable :dataTable="tableData" @modify="postModify" @healthy="seeHealthy" @delete="postDelete"></DataTable>
     <el-pagination background layout="total, prev, pager, next" :page-size="pageSize" @current-change="getPage" :total="total"></el-pagination>
   </div>
 </template>
@@ -80,6 +80,30 @@
       //接收操作栏回传id//修改
       postModify(row){
         this.$router.push({path: "/vipi/revisevipinformation", query: {customerId: row.customerId}})
+      },
+      postDelete(row){
+        console.log(row.usersid)
+        this.$confirm('确认删除VIP账号？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$axios.post('/api/back/customer/delete', {customerId: row.customerId})
+            .then((response) => {
+              this.$message({
+                type: 'success',
+                message: '删除成功！',
+              });
+              this.getData();
+            }).catch(function (error) {
+            console.log(error);
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          });
+        });
       },
       //健康记录查看
       seeHealthy(row){

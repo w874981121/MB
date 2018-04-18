@@ -41,7 +41,10 @@
         <el-form-item>
           <el-button plain @click="upgrade">降级为普通会员</el-button>
           <el-button plain @click="disableFn">{{form.status ==0 ? '禁用账号':'启用账号'}}</el-button>
-          <!--<el-button plain @click="setReset">重置密码</el-button>-->
+          <el-button plain @click="prohibitRelease">{{form.release == 1 ? '开启发布论坛' : '禁止发布论坛'}}</el-button>
+        </el-form-item>
+        <el-form-item>
+          <el-button plain @click="prohibitReply">{{form.reply == 1 ? '开启回复论坛' : '禁止回复论坛'}}</el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">保存修改</el-button>
@@ -89,6 +92,8 @@
           this.form.status = data.status //状态
           this.form.passWord = data.passWord  //密码
           this.form.sex = data.sex  //性别
+          this.form.reply= data.reply ? data.reply : 0;   //回复状态   1 禁止回复   0可回复
+          this.form.release= data.release ? data.release : 0;
         }).catch(function (error) {
           console.log(error);
         });
@@ -222,6 +227,82 @@
           });
         })
       },
+
+
+      //禁止回复论坛
+      prohibitReply(){
+        let _this = this;
+        let messageText = [];
+        if (this.form.lockState == 0) {
+          messageText[0] = '确认禁止回复论坛?';
+          messageText[1] = '禁用成功！';
+        } else {
+          messageText[0] = '确认启用回复论坛！';
+          messageText[1] = '启用成功！';
+        }
+        this.$confirm(messageText[0], '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$axios.post('/api/back/customer/reply', {customerId: this.$route.query.customerId})
+            .then((response) => {
+            console.log(response)
+            this.$message({
+              type: 'success',
+              message: messageText[1]
+            });
+            history.go(-1)
+          })
+        .catch(function (error) {
+            console.log(error);
+          });
+
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消禁用'
+          });
+        })
+      },
+
+      //禁止发布论坛
+      prohibitRelease(){
+        let _this = this;
+        let messageText = [];
+        if (this.form.lockState == 0) {
+          messageText[0] = '确认禁止回发布坛?';
+          messageText[1] = '禁用成功！';
+        } else {
+          messageText[0] = '确认启用发布论坛！';
+          messageText[1] = '启用成功！';
+        }
+        this.$confirm(messageText[0], '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$axios.post('/api/back/customer/release', {customerId: this.$route.query.customerId})
+            .then((response) => {
+            console.log(response)
+            this.$message({
+              type: 'success',
+              message: messageText[1]
+            });
+            history.go(-1)
+          })
+        .catch(function (error) {
+            console.log(error);
+          });
+
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消禁用'
+          });
+        })
+      },
+
       //保存修改
       onSubmit() {
         let fromData = {

@@ -43,7 +43,7 @@
         pageSize: 0,
         webSitedata: {
           currentPage: 1,
-          categoryId: 1,
+          categoryId: 1,   //分类公告
           title:'',
         },
         tableData: {

@@ -29,7 +29,7 @@
         truename: this.cookieFn.get("truename"),
         tableData: {
           listname:[
-            {field:'usersid',name:'编号',width:'200'},
+//            {field:'usersid',name:'编号',width:'200'},
             {field:'truename',name:'姓名',width:'200'},
             {field:'username',name:'账号',width:'200'},
             {field:'password',name:'密码',width:'200'},

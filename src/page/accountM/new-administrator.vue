@@ -7,10 +7,10 @@
     </el-breadcrumb>
     <div class="get_form mt20">
       <el-form ref="form" :model="form" label-width="120px">
-        <el-form-item label="姓名：">
+        <el-form-item label="姓名：" prop="truename" :rules="[{required: true, message: '请输入姓名', trigger: 'blur'}]">
           <el-input v-model="form.truename"></el-input>
         </el-form-item>
-        <el-form-item label="账号：">
+        <el-form-item label="账号：" prop="username" :rules="[{required: true, message: '请输入账号', trigger: 'blur'}]">
           <el-input v-model="form.username"></el-input>
         </el-form-item>
         <el-form-item label="权限：">
@@ -23,7 +23,7 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">立即创建</el-button>
+          <el-button type="primary" @click="onSubmit('form')">立即创建</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -116,7 +116,14 @@
         console.log(this.powerTag)
       },
       //创建提交
-      onSubmit() {
+      onSubmit(formName) {
+        this.$refs[formName].validate((valid) => {
+          console.log("=====")
+        if (!valid) {
+          throw new Error('参数错误'); //验证判断
+        }
+      });
+
         let form = {
           parentUsersId: this.form.parentUsersId,
           truename: escape(this.form.truename),
@@ -124,8 +131,14 @@
           purviewids: this.purviewids.join(","),
           type: 2
         }
-        this.$axios.post('/api/back/users/role', form)
-          .then((response)=> {
+        this.$axios.post('/api/back/users/role', form).then((response)=> {
+          if(response.data.errcode === 30012){
+          this.$message({
+            type: "error",
+            message: '账号名重复！！'
+          });
+          return
+        }
             if (response.data.errcode === 0) {
               this.$message({
                 showClose: true,

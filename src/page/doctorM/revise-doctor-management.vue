@@ -44,6 +44,7 @@
         <el-form-item>
           <el-button plain @click="setGuest">{{guest == 1 ? '取消特邀':'设为特邀'}}</el-button>
           <el-button plain @click="disableFn">{{status == 0 ? '禁用账号':'启用账号'}}</el-button>
+          <el-button plain @click="upgrade">升级为VIP医生</el-button>
           <!--<el-button plain @click="setReset">重置密码</el-button>-->
         </el-form-item>
 
@@ -144,16 +145,16 @@
         let _this = this;
         let messageText = '';
         if (this.guest == 0) {
-          messageText = '确认取消特邀医生？';
+          messageText = '确认设置特邀医生？';
         } else {
-          messageText = '确认设置为特邀医生？';
+          messageText = '确认取消为特邀医生？';
         }
         this.$confirm(messageText, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$axios.post('/api/back/customers/lock', {customerId: this.$route.query.customerId}).then((response) => {
+          this.$axios.post('/api/back/doctor/guest', {customerId: this.$route.query.customerId}).then((response) => {
               console.log(response)
               this.$message({
                 type: 'success',
@@ -163,37 +164,12 @@
             }).catch(function (error) {
               console.log(error);
             });
-
         }).catch(() => {
           this.$message({
             type: 'info',
             message: '已取消'
           });
         })
-
-
-        this.$confirm("确认是否要设置为特邀医生？", '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$axios.post('/api/back/doctor/guest', {customerId: this.$route.query.customerId}).then((response) => {
-            console.log(response)
-            this.$message({
-              type: 'success',
-              message: "设置成功"
-            });
-            history.go(-1)
-          }).catch(function (error) {
-            console.log(error);
-          });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消'
-          });
-        })
-
       },
 
       //禁用/启用
@@ -256,6 +232,33 @@
           message: '已取消重置'
         });
       })
+      },
+      //升级会员
+      upgrade(){
+        this.$confirm('确认升级为VIP医生？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$axios.post('/api/back/customers/vip', {customerId: this.$route.query.customerId})
+            .then((response) => {
+            console.log(response)
+            this.$message({
+              type: 'success',
+              message: "升级成功"
+            });
+            history.go(-1)
+          })
+        .catch(function (error) {
+            console.log(error);
+          });
+
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消升级'
+          });
+        })
       },
       //修改确认
       onSubmit() {

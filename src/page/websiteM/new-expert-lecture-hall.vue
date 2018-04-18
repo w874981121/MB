@@ -155,6 +155,29 @@
       },
       //保存
       onSubmit(){
+        if(this.form.title.length <= 0){
+          this.$message({
+            type: 'error',
+            message: "标题不能为空"
+          });
+          return
+        }
+
+        if(this.form.imgUrl.length <= 0){
+          this.$message({
+            type: 'error',
+            message: "图片不能为空"
+          });
+          return
+        }
+
+        if(this.form.outUrl.length <= 0){
+          this.$message({
+            type: 'error',
+            message: "视频不能为空"
+          });
+          return
+        }
         let formdata = {
           title:this.form.title,
           outUrl: this.form.outUrl,
@@ -164,7 +187,8 @@
           categoryId: 2,   //专家讲堂
           sortCode: 1,
         }
-        console.log(this.cookieFn.get("truename"))
+
+
         this.$axios.post('/api/back/article', formdata).then((response) => {
           console.log(response)
         if(response.data.errcode === 0){

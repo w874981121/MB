@@ -103,7 +103,7 @@
           type: 'BG',
           customerName: '',
           currentPage: 1,
-          total: 1,
+          total: 0,
           pageSize: 1,
         },
         tableData: {
@@ -119,7 +119,11 @@
         }
       }
     },
-    watch: {},
+    watch: {
+      'webSitedatatotal'(v){
+        console.log(v)
+      }
+    },
     mounted(){
       this.getData()
     },

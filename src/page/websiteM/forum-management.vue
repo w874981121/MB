@@ -13,7 +13,7 @@
     </el-form>
     <!--table列表-->
     <el-table class="mt30" :data="tableData.data" height="400" border stripe style="width: 100%" :row-class-name="tableRowClassName">
-      <el-table-column align="center" prop="questionId" label="编号"></el-table-column>
+      <!--<el-table-column align="center" prop="questionId" label="编号"></el-table-column>-->
       <el-table-column align="center" prop="creatDate" label="创建时间" width="90"></el-table-column>
       <el-table-column align="center" prop="customerName" label="发布人">
         <template slot-scope="scope">
@@ -61,7 +61,7 @@
 
       <el-table-column align="center" label="操作" width="160">
         <template slot-scope="scope" >
-            <el-button size="mini" v-if="scope.row.isShow == 0" type="primary" @click="postOffline(scope.row)">下线</el-button>
+            <!--<el-button size="mini" v-if="scope.row.isShow == 0" type="primary" @click="postOffline(scope.row)">下线</el-button>-->
             <el-button size="mini"  v-if="scope.row.isShow == 1"  type="primary" @click="goOnline(scope.row)">上线</el-button>
             <el-button size="mini"  v-if="scope.row.isShow == 0"  type="danger" @click="OnDelete(scope.row)">删除</el-button>
         </template>

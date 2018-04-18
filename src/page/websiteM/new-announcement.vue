@@ -57,7 +57,6 @@
           sortCode:1,
         }
 
-        console.log(formdata.title.length)
         if(formdata.title.length <= 0){
           this.$message({
             type: 'error',

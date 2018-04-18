@@ -134,19 +134,28 @@
         }
 
         this.$axios.post('/api/back/users/webSite', form).then((response) => {
+          if(response.data.errcode === 30012){
+            this.$message({
+              type: "error",
+              message: '公司名重复或者网站后缀重复！！'
+            });
+            return
+          }
+
           if(response.data.errcode === 0){
           this.$message({
             showClose: true,
             type: "success",
             message: '创建成功！'
           });
-          history.go(-1)
+          return history.go(-1)
         }else{
           this.$message({
             showClose: true,
             type: "error",
             message: '创建失败！'
           });
+            return
         }
       }).catch((error) => {
           this.$message({

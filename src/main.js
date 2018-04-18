@@ -28,8 +28,8 @@ Axios.defaults.timeout = 5000
 //添加一个请求拦截器
 Axios.interceptors.request.use(function (config) {
   //在请求发出之前进行一些操作
-  console.log("请求前")
-  console.log(config)
+  // console.log("请求前")
+  // console.log(config)
 
   let re = new RegExp("/api", "g"),
       srt  = config.url.replace(re, "http://47.104.146.162:8080");
@@ -49,7 +49,7 @@ Axios.interceptors.request.use(function (config) {
   return config;
 }, function (err) {
   //请求错误
-  console.log("请求错误")
+  // console.log("请求错误")
   loadingInstance.close();
   return Promise.reject(error);
 });
@@ -57,7 +57,7 @@ Axios.interceptors.request.use(function (config) {
 Axios.interceptors.response.use(function (res) {
   //在这里对返回的数据进行处理
   loadingInstance.close();
-  console.log("请求返回")
+  // console.log("请求返回")
   if (res.status == 401) {
     router.push({path: "/"})
   }

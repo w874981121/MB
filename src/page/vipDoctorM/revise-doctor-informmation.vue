@@ -61,6 +61,7 @@
         <el-form-item>
           <el-button plain @click="setGuest">{{guest == 1 ? '取消特邀':'设为特邀'}}</el-button>
           <el-button plain @click="disableFn">{{status ==0 ? '禁用账号':'启用账号'}}</el-button>
+          <el-button plain @click="upgrade">降级为普通医生</el-button>
           <!--<el-button plain @click="setReset">重置密码</el-button>-->
         </el-form-item>
 
@@ -122,6 +123,7 @@
           type: 1
         },
         status:'',
+        guest:'',
         memberdata: generateData(), //所有权限请求
         memberids: [],        //选中权限id
         memberidsstate: false, //权限窗口状态
@@ -146,6 +148,7 @@
               customersId: data.customersId,
             }
             this.status = data.status
+            this.guest = data.guest
         }).catch(function (error) {
           console.log(error);
         });
@@ -294,20 +297,19 @@
 
       //设为特邀
       setGuest(){
-
         let _this = this;
         let messageText = '';
         if (this.guest == 0) {
-          messageText = '确认取消特邀医生？';
+          messageText = '确认设置特邀医生？';
         } else {
-          messageText = '确认设置为特邀医生？';
+          messageText = '确认取消为特邀医生？';
         }
         this.$confirm(messageText, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$axios.post('/api/back/customers/lock', {customerId: this.$route.query.customerId}).then((response) => {
+          this.$axios.post('/api/back/doctor/guest', {customerId: this.$route.query.customerId}).then((response) => {
             console.log(response)
             this.$message({
               type: 'success',
@@ -324,30 +326,34 @@
             message: '已取消'
           });
         })
+      },
 
-
-        this.$confirm("确认是否要设置为特邀医生？", '提示', {
+      //降级为普通会员
+      upgrade(){
+        this.$confirm('降级为普通医生？', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$axios.post('/api/back/doctor/guest', {customerId: this.$route.query.customerId}).then((response) => {
+          this.$axios.post('/api/back/customers/vip', {customerId: this.$route.query.customerId})
+            .then((response) => {
             console.log(response)
             this.$message({
               type: 'success',
-              message: "设置成功"
+              message: "降级成功"
             });
             history.go(-1)
-          }).catch(function (error) {
+          })
+        .catch(function (error) {
             console.log(error);
           });
+
         }).catch(() => {
           this.$message({
             type: 'info',
-            message: '已取消'
+            message: '已取消降级'
           });
         })
-
       },
 
       //保存修改

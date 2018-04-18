@@ -143,8 +143,8 @@
           type: 'BG',
           customerName: '',
           currentPage: 1,
-          total: 1,
-          pageSize: 1,
+          total: 0,
+          pageSize: 0,
           companyId:'',
         },
         tableData: {
@@ -153,7 +153,7 @@
             state: true,
             value: 'BG',
             currentPage: 1,
-            total: 1,
+            total: 0,
             title: [
               {field: 'dataKey', name: '用户设备编号', width: '200'},
               {field: 'addDate', name: '添加时间', width: '90'},
@@ -167,6 +167,8 @@
             name: '血脂数据',
             state: false,
             value: 'BLOODFAT',
+            currentPage: 1,
+            total: 0,
             title: [
               {field: 'dataKey', name: '用户设备编号', width: '200'},
               {field: 'addDate', name: '添加时间', width: '90'},
@@ -184,6 +186,8 @@
             name: '血压数据',
             state: false,
             value: 'BLOODPRESSURE',
+            currentPage: 1,
+            total: 0,
             title: [
               {field: 'dataKey', name: '用户设备编号', width: '200'},
               {field: 'addDate', name: '添加时间', width: '90'},
@@ -199,6 +203,8 @@
             name: '心电图',
             state: false,
             value: 'ECGPICTURE',
+            currentPage: 1,
+            total: 0,
             title: [
               {field: 'dataKey', name: '用户设备编号', width: '200'},
               {field: 'addDate', name: '添加时间', width: '200'},
@@ -212,6 +218,8 @@
             name: '脂肪数据',
             state: false,
             value: 'FAT',
+            currentPage: 1,
+            total: 0,
             title: [
               {field: 'dataKey', name: '用户设备编号', width: '200'},
               {field: 'addDate', name: '添加时间', width: '90'},
@@ -233,6 +241,8 @@
             name: '血氧数据',
             state: false,
             value: 'SPO',
+            currentPage: 1,
+            total: 0,
             title: [
               {field: 'dataKey', name: '用户设备编号', width: '200'},
               {field: 'addDate', name: '添加时间', width: '90'},
@@ -247,6 +257,8 @@
             name: '尿常规分析数据',
             state: false,
             value: 'UR',
+            currentPage: 1,
+            total: 0,
             title: [
               {field: 'dataKey', name: '用户设备编号', width: '200'},
               {field: 'addDate', name: '添加时间', width: '90'},
@@ -270,6 +282,8 @@
             name: '体重计数据',
             state: false,
             value: 'WEIGHT',
+            currentPage: 1,
+            total: 0,
             title: [
               {field: 'dataKey', name: '用户设备编号', width: '200'},
               {field: 'addDate', name: '添加时间', width: '90'},
@@ -308,7 +322,7 @@
         let _this = this;
         let fromData = {
           companyId: this.webSitedata.companyId,   //公司id
-          currentPage: 1, //页码
+          currentPage: this.webSitedata.currentPage, //页码
           type: this.webSitedata.type,      //数据类型
           customerName: this.webSitedata.customerName,
         }
@@ -352,7 +366,7 @@
         this.getData()
       },
       getPage(a){
-        this.tableData[fromData.type].currentPage = a;
+        this.tableData[this.webSitedata.type].currentPage = a;
         this.getData();
       },
       modifytateS(val){

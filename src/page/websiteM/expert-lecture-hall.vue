@@ -15,7 +15,7 @@
     </div>
     <!--table列表-->
     <el-table class="mt30" :data="tableData.data" height="400" border stripe style="width: 100%" :row-class-name="tableRowClassName">
-      <el-table-column align="center" prop="articleId" label="编号"></el-table-column>
+      <!--<el-table-column align="center" prop="articleId" label="编号"></el-table-column>-->
       <el-table-column align="center" prop="updateTime" label="创建时间" width="90"></el-table-column>
       <el-table-column align="center" prop="modifyUser" label="创建人名称"></el-table-column>
       <el-table-column align="center" prop="title" label="视频标题"></el-table-column>

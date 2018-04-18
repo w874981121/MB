@@ -30,7 +30,7 @@
         //传递给table的数据
         tableData: {
           listname: [
-            {field: 'customerId', name: '编号', width: '50'},
+//            {field: 'customerId', name: '编号', width: '50'},
             {field: 'creatDate', name: '创建时间', width: '100'},
             {field: 'photoUrl', name: '头像', width: '100'},
             {field: 'customerName', name: '姓名'},

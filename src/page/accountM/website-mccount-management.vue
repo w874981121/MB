@@ -31,7 +31,7 @@
         //传递给table的数据
         tableData: {
           listname: [
-            {field: 'usersid', name: '编号', width: '50'},
+//            {field: 'usersid', name: '编号', width: '50'},
             {field: 'registerDate', name: '创建时间', width: '90'},
             {field: 'truename', name: '公司名称'},
             {field: 'weburl', name: '网站地址'},

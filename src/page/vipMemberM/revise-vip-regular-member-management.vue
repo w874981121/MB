@@ -26,6 +26,9 @@
         <el-form-item label="姓名：">
           <el-input v-model="form.customerName"></el-input>
         </el-form-item>
+        <el-form-item label="性别：">
+          <el-input v-model="form.sex"></el-input>
+        </el-form-item>
         <el-form-item label="手机号：">
           <el-input v-model="form.phone"></el-input>
         </el-form-item>
@@ -85,6 +88,7 @@
           this.form.cardNo = data.cardNo //用户设备号
           this.form.status = data.status //状态
           this.form.passWord = data.passWord  //密码
+          this.form.sex = data.sex  //性别
         }).catch(function (error) {
           console.log(error);
         });

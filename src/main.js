@@ -28,17 +28,10 @@ Axios.defaults.timeout = 5000
 //添加一个请求拦截器
 Axios.interceptors.request.use(function (config) {
   //在请求发出之前进行一些操作
-  // console.log("请求前")
-  // console.log(config)
 
   let re = new RegExp("/api", "g"),
       srt  = config.url.replace(re, "http://47.104.146.162:8080");
       config.url = srt
-  //
-  // let token = Vue.prototype.cookieFn.get("token")
-  // config.headers.common['Authorization'] = token
-
-  // console.log(config.headers)
 
   loadingInstance = Loading.service({
     lock: true,

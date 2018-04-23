@@ -139,6 +139,14 @@
         }
         this.$axios.post('/api/back/doctors', fromdata).then((response)=> {
             console.log(response)
+        if(response.data.errcode == 30012){
+          this.$message({
+            showClose: true,
+            type: "error",
+            message: '手机号重复，请重新填写！'
+          });
+          return
+        }
         if(response.data.errcode === 0){
           this.$message({
             type: 'success',

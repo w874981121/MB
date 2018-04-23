@@ -9,13 +9,12 @@
           <el-button icon="el-icon-search" type="primary" @click="onSubmit">查询</el-button>
         </el-form-item>
         <el-form-item label="" class="fr">
-          <el-input v-model="text" placeholder="请输入公司名称"></el-input>
+          <el-input v-model="webSitedata.title" placeholder="请输入标题"></el-input>
         </el-form-item>
       </el-form>
     </div>
     <!--table列表-->
     <el-table class="mt30" :data="tableData.data" height="400" border stripe style="width: 100%" :row-class-name="tableRowClassName">
-      <!--<el-table-column align="center" prop="articleId" label="编号"></el-table-column>-->
       <el-table-column align="center" prop="updateTime" label="创建时间" width="90"></el-table-column>
       <el-table-column align="center" prop="modifyUser" label="创建人名称"></el-table-column>
       <el-table-column align="center" prop="title" label="视频标题"></el-table-column>
@@ -24,14 +23,14 @@
           <img style="width:100%;display: block" :src="scope.row.imgUrl" alt="">
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作" width="160">
+      <el-table-column align="center" label="操作" width="240">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" v-show="scope.row.isPass == 0" @click="postnline(scope.row)">上线</el-button>
           <el-button size="mini" type="primary" v-show="scope.row.isPass == 1" @click="postOffline(scope.row)">下线</el-button>
           <el-button size="mini" type="primary" v-show="scope.row.isPass == 0" @click="postRevise(scope.row)">修改</el-button>
+          <el-button size="mini" type="danger"  v-show="scope.row.isPass == 0" @click="postDalete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="" label="备注"></el-table-column>
     </el-table>
     <!--翻页-->
     <el-pagination class="mt20" background layout="total, prev, pager, next" :page-size="pageSize" @current-change="getPage" :total="total"></el-pagination>
@@ -49,7 +48,8 @@
         pageSize: 0,
         webSitedata:{
           currentPage: 1,
-          categoryId:2
+          categoryId:2,
+          title:'',
         },
         tableData: {
           data:[],
@@ -63,9 +63,9 @@
     methods:{
       getData(){
         let _this = this;
+        this.tableData.data = [];
         this.$axios.get('/api/back/article', { params: this.webSitedata}).then((response)=> {
           let datelist = response.data.data.list;
-          console.log(datelist)
           datelist.forEach(function(item,i){
             datelist[i].updateTime = _this.$timeonversionC(item.updateTime);
             datelist[i].truename = unescape(item.truename);
@@ -133,7 +133,30 @@
           console.log(error);
         });
       },
-
+      //删除
+      postDalete(row){
+        this.$confirm('确认删除专家讲堂？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$axios.post('/api/back/article/delete', {articleId: row.articleId})
+            .then((response) => {
+            this.$message({
+              type: 'success',
+              message: '删除成功！',
+            });
+            this.getData();
+          }).catch(function (error) {
+            console.log(error);
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          });
+        });
+      },
       //修改
       postRevise(row){
         this.$router.push({path: "/expertlh/reviseexpertlecturehall", query: {articleId: row.articleId}})

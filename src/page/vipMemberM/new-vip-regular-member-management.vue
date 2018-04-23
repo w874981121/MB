@@ -26,6 +26,16 @@
         <el-form-item label="姓名：" prop="customerName" :rules="[{required: true, message: '请输入姓名', trigger: 'blur'}]">
           <el-input v-model="form.customerName"></el-input>
         </el-form-item>
+        <el-form-item label="性别：" prop="sex" :rules="[{required: true, message: '请输入性别', trigger: 'blur'}]">
+          <el-select v-model="form.sex" placeholder="请选择性别">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="手机号：" prop="phone" :rules="[{required: true, message: '请输入手机号', trigger: 'blur'}]">
           <el-input v-model="form.phone"></el-input>
         </el-form-item>
@@ -50,12 +60,20 @@
       return {
         upimgUrl: this.$urlapi + '/back/customers/image',
         imageUrl: '',
+        options:[{
+          value: '男',
+          label: '男'
+        },{
+          value: '女',
+          label: '女'
+        }],
         loading:false,
         form: {
           photoUrl: '',  //头像地址
           customerName: '',  //用户姓名
           phone:'', //手机号
           cardNo: '', //用户设备号
+          sex: '',
           type: 1
         }
       }
@@ -83,7 +101,6 @@
       beforeAvatarUpload(file) {
         const isJPG = file.type === 'image/jpeg' || 'image/png';
         const isLt2M = file.size / 1024 / 1024 < 2;
-        console.log(file)
         if (!isJPG) {
           this.loading = false;
           this.$message.error('上传头像图片只能是 JPG 格式!');
@@ -105,7 +122,6 @@
       },
       onSubmit(formName) {
         this.$refs[formName].validate((valid) => {
-          console.log("=====")
         if (!valid) {
           throw new Error('参数错误'); //验证判断
         }
@@ -116,6 +132,7 @@
           customerName: this.form.customerName,
           phone: this.form.phone,
           cardNo:this.form.cardNo,
+          sex: this.form.sex,
           type: 1,
         }
 
@@ -130,7 +147,14 @@
 
         this.$axios.post('/api/back/customers', fromdata)
           .then((response)=> {
-            console.log(response)
+        if(response.data.errcode == 30012){
+          this.$message({
+            showClose: true,
+            type: "error",
+            message: '手机号重复，请重新填写！'
+          });
+          return
+        }
         if (response.data.errcode == 0) {
           this.$message({
             showClose: true,
@@ -146,8 +170,6 @@
       }
     },
     mounted(){
-      console.log("来了")
-      console.log(this.$route.query)
     }
   }
 </script>

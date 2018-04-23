@@ -83,7 +83,6 @@
         this.$router.push({path: "/websitemm/reviseaccount", query: {usersid: row.usersid}})
       },
       postDelete(row){
-        console.log(row.usersid)
         this.$confirm('确认删除网站账号？', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',

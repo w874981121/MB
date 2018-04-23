@@ -9,7 +9,7 @@
       <!--<el-table-column align="center" prop="articleId" label="编号"  width="120"></el-table-column>-->
       <el-table-column align="center" prop="updateTime" label="创建时间" width="90"></el-table-column>
       <el-table-column align="center" prop="title" label="公告名称"></el-table-column>
-      <el-table-column align="center" label="操作" width="160">
+      <el-table-column align="center" label="操作" width="240">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" v-show="scope.row.isPass == 0" @click="postnline(scope.row)">上线
           </el-button>
@@ -17,6 +17,7 @@
           </el-button>
           <el-button size="mini" type="primary" v-show="scope.row.isPass == 0" @click="postModify(scope.row)">修改
           </el-button>
+          <el-button size="mini" type="danger" v-show="scope.row.isPass == 0" @click="postDalete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
       <el-table-column align="center" prop="modifyUser" label="备注"></el-table-column>
@@ -58,9 +59,9 @@
     methods: {
       getData(){
         let _this = this;
+        this.tableData.data = [];
         this.$axios.get('/api/back/article', {params: this.webSitedata}).then((response)=> {
           let datelist = response.data.data.list;
-          console.log(datelist)
           datelist.forEach(function (item, i) {
             datelist[i].updateTime = _this.$timeonversionC(item.updateTime);
             datelist[i].truename = unescape(item.truename);
@@ -127,10 +128,36 @@
           console.log(error);
         });
       },
+      //删除
+      postDalete(row){
+        this.$confirm('确认删除企业公告？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$axios.post('/api/back/article/delete', {articleId: row.articleId})
+            .then((response) => {
+              this.$message({
+                type: 'success',
+                message: '删除成功！',
+              });
+              this.getData();
+            }).catch(function (error) {
+            console.log(error);
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          });
+        });
+      },
+
       //修改
       postModify(row){
         this.$router.push({path: "/enterprisa/reviseannouncement", query: {articleId: row.articleId}})
       },
+
 
       newAccount(){
         this.$router.push({path: '/enterprisa/newannouncement'})

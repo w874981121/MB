@@ -9,12 +9,13 @@
       <div class="edit mt20">
         <el-form ref="form" :model="form" label-width="60px">
           <el-form-item label="标题：">
-            <el-input v-model="form.title"></el-input>
+            <el-input v-model="form.title" placeholder="请填写标题"></el-input>
           </el-form-item>
         </el-form>
       </div>
       <div style="overflow: hidden">
         <div class="fl">上传图片：</div>
+
         <el-upload
           class="avatar-uploader mb18 fl"
           v-loading="loading"
@@ -27,6 +28,7 @@
           <img v-if="form.imgUrl" :src="imageUrl" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
+        <span style="color: #cccccc">（请上传图片）</span>
       </div>
 
 
@@ -43,6 +45,7 @@
         :before-upload="beforeAvatarUpload"
         :file-list="fileList">
         <el-button size="small" type="primary">点击上传视频</el-button>
+        <span style="color: #cccccc">（请上传图片）</span>
         <span style="color: #F56C6C">视频只支持MP4格式</span>
       </el-upload>
 

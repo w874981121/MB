@@ -50,8 +50,8 @@
       return {
         name:'',
         placeholder:'',
-        pageSize:'1',
-        total:'1',
+        pageSize:1,
+        total:1,
         currentPage: 1,
         startview: true,
         company_list: [],
@@ -69,10 +69,10 @@
         let _this = this;
         this.$axios.get('/api/back/users/webSite', { params:{name: this.name,currentPage:this.currentPage}}).then((response)=> {
           console.log(response)
+          _this.company_list = [];
           _this.pageSize = response.data.data.pageSize;
           _this.total = response.data.data.total;
           let datelist = response.data.data.list;
-
           datelist.forEach(function(item,i){
             _this.company_list.push({
               registerDate: _this.$timeonversionC(item.registerDate),

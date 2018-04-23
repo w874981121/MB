@@ -146,8 +146,6 @@
       },
       repTest(str, txt){
 
-        console.log(str, txt)
-
         let re = txt.split("/")
         if (re.length < 2) {
           re = txt
@@ -178,7 +176,6 @@
           navlistData[0].list[0].state = false;
         } else {
           this.$axios.get('/api/back/purview/' + this.cookieFn.get("usersid")).then((response)=> {
-            console.log(response)
             let data = response.data.data;
             data.forEach(function (obj, n) {
               navlistData.forEach(function (item, i) {
@@ -187,7 +184,6 @@
                 } else {
                   if (item.list !== undefined) {
                     item.list.forEach((tem, index) => {
-                      console.log(tem.name)
                       if (tem.name == obj.purviewname) {
                         navlistData[i].list[index].state = true;
                         navlistData[i].state = true;
@@ -196,21 +192,6 @@
                   }
                 }
 
-
-//                if (item.hasOwnProperty('state')) {
-//                  if (item.name == obj.purviewname) {
-//                    navlistData[i].state = true;
-//                  }
-//                } else {
-//                  item.list.forEach((tem, index) => {
-//                    if (tem.hasOwnProperty('state') && tem.name == obj.purviewname) {
-//                      if (tem.name == obj.purviewname) {
-//                        navlistData[i].list[index].state = true;
-//                        navlistData[i].state = true;
-//                      }
-//                    }
-//                  })
-//                }
               })
             })
           }).catch(function (error) {

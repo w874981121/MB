@@ -82,7 +82,6 @@
         const data = [];
         this.$axios.get('/api/back/doctors/customers')
           .then((response) => {
-            console.log(response)
             let datalist = response.data.data;
             datalist.forEach(function (item, i) {
               data.push({
@@ -182,9 +181,8 @@
         })
       },
       onSubmit(formName) {
-
         this.$refs[formName].validate((valid) => {
-          console.log("=====")
+
         if (!valid) {
           throw new Error('参数错误'); //验证判断
         }
@@ -212,7 +210,14 @@
         }
         this.$axios.post('/api/back/doctors', formdata)
           .then((response)=> {
-            console.log(response)
+        if(response.data.errcode == 30012){
+          this.$message({
+            showClose: true,
+            type: "error",
+            message: '手机号重复，请重新填写！'
+          });
+          return
+        }
         if (response.data.errcode == 0) {
           this.$message({
             showClose: true,
@@ -228,8 +233,6 @@
       }
     },
     mounted(){
-      console.log("来了")
-      console.log(this.$route.query)
     }
   }
 </script>

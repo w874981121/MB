@@ -26,8 +26,15 @@
         <el-form-item label="姓名：">
           <el-input v-model="form.customerName"></el-input>
         </el-form-item>
-        <el-form-item label="性别：">
-          <el-input v-model="form.sex"></el-input>
+        <el-form-item label="性别：" prop="sex" :rules="[{required: true, message: '请输入姓名', trigger: 'blur'}]">
+          <el-select v-model="form.sex" placeholder="请选择性别">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="手机号：">
           <el-input v-model="form.phone"></el-input>
@@ -59,6 +66,13 @@
     data(){
       return {
         loading:false,
+        options:[{
+          value: '男',
+          label: '男'
+        },{
+          value: '女',
+          label: '女'
+        }],
         upimgUrl: this.$urlapi + '/back/customers/image',
         imageUrl: '',
         form: "",
@@ -303,6 +317,7 @@
           customerName: this.form.customerName,
           phone: this.form.phone,
           passWord: this.form.passWord,
+          sex: this.form.sex,
           type: 0,
         }
         if(fromData.phone.length < 1){

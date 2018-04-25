@@ -49,7 +49,7 @@
         <el-form-item>
           <el-button plain @click="upgrade">降级为普通会员</el-button>
           <el-button plain @click="disableFn">{{form.status ==0 ? '禁用账号':'启用账号'}}</el-button>
-          <el-button plain @click="prohibitRelease">{{form.release == 1 ? '开启发布论坛' : '禁止发布论坛'}}</el-button>
+          <el-button plain @click="prohibitRelease">{{form.releases == 1 ? '开启发布论坛' : '禁止发布论坛'}}</el-button>
         </el-form-item>
         <el-form-item>
           <el-button plain @click="prohibitReply">{{form.reply == 1 ? '开启回复论坛' : '禁止回复论坛'}}</el-button>
@@ -109,7 +109,7 @@
           this.form.passWord = data.passWord  //密码
           this.form.sex = data.sex  //性别
           this.form.reply= data.reply ? data.reply : 0;   //回复状态   1 禁止回复   0可回复
-          this.form.release= data.release ? data.release : 0;
+          this.form.releases= data.releases ? data.releases : 0;
         }).catch(function (error) {
           console.log(error);
         });
@@ -249,7 +249,7 @@
       prohibitReply(){
         let _this = this;
         let messageText = [];
-        if (this.form.lockState == 0) {
+        if (this.form.reply == 0) {
           messageText[0] = '确认禁止回复论坛?';
           messageText[1] = '禁用成功！';
         } else {
@@ -286,8 +286,8 @@
       prohibitRelease(){
         let _this = this;
         let messageText = [];
-        if (this.form.lockState == 0) {
-          messageText[0] = '确认禁止回发布坛?';
+        if (this.form.releases == 0) {
+          messageText[0] = '确认禁止发布坛?';
           messageText[1] = '禁用成功！';
         } else {
           messageText[0] = '确认启用发布论坛！';

@@ -144,7 +144,6 @@
           return
         }
 
-
         this.$axios.post('/api/back/customers', fromdata)
           .then((response)=> {
         if(response.data.errcode == 30012){

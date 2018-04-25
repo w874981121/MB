@@ -362,7 +362,7 @@
       prohibitReply(){
         let _this = this;
         let messageText = [];
-        if (this.form.lockState == 0) {
+        if (this.form.reply == 0) {
           messageText[0] = '确认禁止回复论坛?';
           messageText[1] = '禁用成功！';
         } else {

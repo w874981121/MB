@@ -10,7 +10,7 @@
           </el-table-column>
       </template>
 
-      <el-table-column v-if="dataTable.soleCode" align="center" label="绑定手机唯一码" width="100">
+      <el-table-column v-if="dataTable.soleCode" align="center" label="绑定手机唯一码" width="">
         <template slot-scope="scope">
           <el-button v-if="scope.row.soleCode" size="mini" type="primary" @click="untiePhone(scope.row)">解绑手机</el-button>
           <span v-if="!scope.row.soleCode">未绑定</span>

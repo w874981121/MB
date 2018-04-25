@@ -89,6 +89,15 @@
         }).then(() => {
           this.$axios.post('/api/back/users/delete', {usersId: row.usersid})
             .then((response) => {
+
+              if(response.data.errcode === 30015){
+              this.$message({
+                type: 'info',
+                message: '当前登录账号不可删除！',
+               });
+                  return
+              }
+
             this.$message({
               type: 'success',
               message: '删除成功！',

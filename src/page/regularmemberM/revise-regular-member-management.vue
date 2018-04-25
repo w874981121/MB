@@ -239,7 +239,7 @@
       prohibitReply(){
         let _this = this;
         let messageText = [];
-        if (this.form.lockState == 0) {
+        if (this.form.reply == 0) {
           messageText[0] = '确认禁止回复论坛?';
           messageText[1] = '禁用成功！';
         } else {
@@ -253,7 +253,6 @@
         }).then(() => {
           this.$axios.post('/api/back/customer/reply', {customerId: this.$route.query.customerId})
             .then((response) => {
-            console.log(response)
             this.$message({
               type: 'success',
               message: messageText[1]
@@ -276,13 +275,15 @@
       prohibitRelease(){
         let _this = this;
         let messageText = [];
-        if (this.form.lockState == 0) {
+
+        if (this.form.release == 0) {
           messageText[0] = '确认禁止回发布坛?';
           messageText[1] = '禁用成功！';
         } else {
           messageText[0] = '确认启用发布论坛！';
           messageText[1] = '启用成功！';
         }
+
         this.$confirm(messageText[0], '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -295,7 +296,7 @@
               type: 'success',
               message: messageText[1]
             });
-            history.go(-1)
+//            history.go(-1)
           })
         .catch(function (error) {
             console.log(error);
@@ -325,7 +326,6 @@
         }
         this.$axios.post('/api/back/customers', fromData)
           .then((response)=> {
-          console.log(response)
         if (response.data.errcode == 0) {
           this.$message({
             showClose: true,

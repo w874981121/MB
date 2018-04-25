@@ -45,7 +45,6 @@
           <el-button plain @click="setGuest">{{guest == 1 ? '取消特邀':'设为特邀'}}</el-button>
           <el-button plain @click="disableFn">{{status == 0 ? '禁用账号':'启用账号'}}</el-button>
           <el-button plain @click="upgrade">升级为VIP医生</el-button>
-
         </el-form-item>
         <el-form-item>
           <el-button plain @click="prohibitReply">{{form.reply == 1 ? '开启回复论坛' : '禁止回复论坛'}}</el-button>
@@ -268,7 +267,7 @@
       prohibitReply(){
         let _this = this;
         let messageText = [];
-        if (this.form.lockState == 0) {
+        if (this.form.reply == 0) {
           messageText[0] = '确认禁止回复论坛?';
           messageText[1] = '禁用成功！';
         } else {

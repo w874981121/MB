@@ -9,7 +9,7 @@
     <div class="edit mt20">
       <el-form ref="form" :model="form" label-width="60px">
         <el-form-item label="标题：">
-          <el-input v-model="form.truename"></el-input>
+          <el-input v-model="form.truename" :maxlength="maxNumber"></el-input>
         </el-form-item>
       </el-form>
       <quill-editor ref="myTextEditor" v-model="form.content" :config="editorOption"></quill-editor>
@@ -32,6 +32,7 @@
     name: 'new-announcement',
     data(){
       return {
+        maxNumber: 100,
         editorOption: {},          // 编辑器的配置
         form: {
           truename: '',
@@ -75,7 +76,7 @@
 
 
         this.$axios.post('/api/back/article', formdata).then((response) => {
-          console.log(response)
+
           if(response.data.errcode === 0){
             this.$message({
               showClose: true,

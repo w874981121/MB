@@ -69,6 +69,7 @@
         let _this = this;
         this.$axios.get('/api/back/users/webSite', { params:{name: this.name,currentPage:this.currentPage}}).then((response)=> {
           console.log(response)
+
           _this.company_list = [];
           _this.pageSize = response.data.data.pageSize;
           _this.total = response.data.data.total;

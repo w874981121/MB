@@ -60,7 +60,7 @@
             datelist[i].department = unescape(item.department);
             datelist[i].title = unescape(item.title);
             datelist[i].status = item.status == 0 ? "未禁用" : "禁用";
-            datelist[i].photoUrl = _this.$api + "/images/" + item.photoUrl;
+            datelist[i].photoUrl = !!item.photoUrl ? _this.$api + "/images/" + item.photoUrl : _this.$api +'/images/customerPhoto/20180424/2018042422430000147261.png';
           })
           this.tableData.data = datelist;
           this.total = response.data.data.total;

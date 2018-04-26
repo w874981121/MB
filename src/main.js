@@ -24,7 +24,7 @@ Vue.use(VueQuillEditor)
 Vue.use(util);
 let loadingInstance = null;
 
-Axios.defaults.timeout = 5000
+Axios.defaults.timeout = 10000
 //添加一个请求拦截器
 Axios.interceptors.request.use(function (config) {
   //在请求发出之前进行一些操作

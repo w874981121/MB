@@ -95,6 +95,7 @@
         console.log(file.type)
         const isJPG = file.type === 'image/jpeg' || 'image/png';
         const isLt2M = file.size / 1024 / 1024 < 2;
+        this.loading = true;
         if (!isJPG) {
           this.loading = false;
           this.$message.error('上传头像图片只能是 JPG 格式!');
@@ -103,7 +104,6 @@
           this.loading = false;
           this.$message.error('上传头像图片大小不能超过 2MB!');
         }
-        this.loading = true;
         return isJPG && isLt2M;
       },
 
@@ -187,9 +187,7 @@
           sortCode: 1,
         }
 
-
         this.$axios.post('/api/back/article', formdata).then((response) => {
-
           if(response.data.errcode === 30004){
             this.$message({
               showClose: true,

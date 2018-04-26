@@ -29,16 +29,27 @@
         <el-form-item label="性别：" prop="sex" :rules="[{required: true, message: '请输入姓名', trigger: 'blur'}]">
           <el-select v-model="form.sex" placeholder="请选择性别">
             <el-option
-              v-for="item in options"
+              v-for="item in optionsSex"
               :key="item.value"
               :label="item.label"
               :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
+
+        <el-form-item label="地址：">
+          <el-cascader
+            :options="options"
+            v-model="form.address"
+            :props="props">
+          </el-cascader>
+        </el-form-item>
+
+
         <el-form-item label="手机号：">
           <el-input v-model="form.phone"></el-input>
         </el-form-item>
+
         <el-form-item label="密码：">
           <el-input v-model="form.passWord"></el-input>
         </el-form-item>
@@ -65,8 +76,14 @@
     name: 'new-doctor-management',
     data(){
       return {
+        options:[],
+        props: {
+          value: 'code',
+          label:'areaName',
+          children: 'children',
+        },
         loading:false,
-        options:[{
+        optionsSex:[{
           value: '男',
           label: '男'
         },{
@@ -75,7 +92,7 @@
         }],
         upimgUrl: this.$urlapi + '/back/customers/image',
         imageUrl: '',
-        form: "",
+        form: {},
       }
     },
     watch: {},
@@ -88,6 +105,14 @@
       this.$axios.get('/api/back/customers/' + this.$route.query.customerId).then((response)=> {
         console.log(response)
         let data = response.data.data;
+
+        data.areaList.forEach((item,a)=>{
+          data.areaList[a].children = item.secList;
+          item.secList.forEach((tem,b)=>{
+            data.areaList[a].children[b].children = tem.thirdList;
+          })
+        })
+        this.options = data.areaList;
          this.imageUrl = this.$api+"/images/" + data.photoUrl,
           this.form = {
             photoUrl: data.photoUrl,  //头像地址
@@ -100,6 +125,11 @@
             reply: data.reply ? data.reply : 0,   //回复状态   1 禁止回复   0可回复
             releases: data.releases ? data.releases : 0,
           }
+
+          if(data.address){
+            this.form.address = data.address.split(',');
+          }
+
       }).catch(function (error) {
         console.log(error);
       });
@@ -209,31 +239,6 @@
           });
         })
       },
-      //重置密码
-      setReset(){
-        this.$confirm("确认是否要重置密码？", '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$axios.post('/api/back/reset', {customerId: this.$route.query.customerId}).then((response) => {
-            console.log(response)
-            this.$message({
-              type: 'success',
-              message: "重置成功"
-            });
-            history.go(-1)
-          }).catch(function (error) {
-            console.log(error);
-          });
-
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消重置'
-          });
-        })
-      },
 
       //禁止回复论坛
       prohibitReply(){
@@ -277,7 +282,7 @@
         let messageText = [];
 
         if (this.form.releases == 0) {
-          messageText[0] = '确认禁止回发布坛?';
+          messageText[0] = '确认禁止发布坛?';
           messageText[1] = '禁用成功！';
         } else {
           messageText[0] = '确认启用发布论坛！';
@@ -296,7 +301,7 @@
               type: 'success',
               message: messageText[1]
             });
-//            history.go(-1)
+            history.go(-1)
           })
         .catch(function (error) {
             console.log(error);
@@ -319,6 +324,7 @@
           phone: this.form.phone,
           passWord: this.form.passWord,
           sex: this.form.sex,
+          address: this.form.address.join(','),
           type: 0,
         }
         if(fromData.phone.length < 1){

@@ -39,9 +39,6 @@
         <el-form-item label="手机号：" prop="phone" :rules="[{required: true, message: '请输入手机号', trigger: 'blur'}]">
           <el-input v-model="form.phone"></el-input>
         </el-form-item>
-        <!--<el-form-item label="设备编号：">-->
-          <!--<el-input v-model="form.cardNo"></el-input>-->
-        <!--</el-form-item>-->
 
         <el-form-item>
           <el-button type="primary" @click="onSubmit('form')">立即创建</el-button>

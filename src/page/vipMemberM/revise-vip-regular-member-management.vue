@@ -29,12 +29,20 @@
         <el-form-item label="性别：" prop="sex" :rules="[{required: true, message: '请选择性别', trigger: 'blur'}]">
           <el-select v-model="form.sex" placeholder="请选择性别">
             <el-option
-              v-for="item in options"
+              v-for="item in optionsSex"
               :key="item.value"
               :label="item.label"
               :value="item.value">
             </el-option>
           </el-select>
+        </el-form-item>
+
+        <el-form-item label="地址：">
+          <el-cascader
+            :options="options"
+            v-model="form.address"
+            :props="props">
+          </el-cascader>
         </el-form-item>
 
         <el-form-item label="手机号：">
@@ -69,7 +77,13 @@
     name: 'revise-viprmm',
     data(){
       return {
-        options:[{
+        options:[],
+        props: {
+          value: 'code',
+          label:'areaName',
+          children: 'children',
+        },
+        optionsSex:[{
           value: '男',
           label: '男'
         },{
@@ -100,6 +114,19 @@
         this.$axios.get('/api/back/customers/' + this.$route.query.customerId).then((response)=> {
           console.log(response)
           let data = response.data.data;
+
+
+        data.areaList.forEach((item,a)=>{
+          data.areaList[a].children = item.secList;
+        item.secList.forEach((tem,b)=>{
+          data.areaList[a].children[b].children = tem.thirdList;
+      })
+      })
+        this.options = data.areaList;
+        if(data.address){
+          this.form.address = data.address.split(',');
+        }
+
           this.imageUrl = this.$api+ "/images/" + data.photoUrl
           this.form.photoUrl = data.photoUrl  //头像地址
           this.form.customerName = decodeURIComponent(data.customerName)  //用户姓名
@@ -329,6 +356,7 @@
           cardNo: this.form.cardNo,
           passWord: this.form.passWord,
           sex:this.form.sex,
+          address: this.form.address.join(','),
           type: 1,
         }
         if(fromData.phone.length < 1){

@@ -7,7 +7,7 @@
     <el-table class="mt30" :data="tableData.data" height="400" border stripe style="width: 100%"
               :row-class-name="tableRowClassName">
       <!--<el-table-column align="center" prop="articleId" label="编号"  width="120"></el-table-column>-->
-      <el-table-column align="center" prop="updateTime" label="创建时间" width="90"></el-table-column>
+      <el-table-column align="center" prop="creatDate" label="创建时间" width="90"></el-table-column>
       <el-table-column align="center" prop="title" label="公告名称"></el-table-column>
       <el-table-column align="center" label="操作" width="240">
         <template slot-scope="scope">
@@ -63,7 +63,7 @@
         this.$axios.get('/api/back/article', {params: this.webSitedata}).then((response)=> {
           let datelist = response.data.data.list;
           datelist.forEach(function (item, i) {
-            datelist[i].updateTime = _this.$timeonversionC(item.updateTime);
+            datelist[i].creatDate = _this.$timeonversionC(item.creatDate);
             datelist[i].truename = unescape(item.truename);
             datelist[i].linkName = unescape(item.linkName);
           })

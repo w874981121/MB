@@ -9,7 +9,7 @@
       <div class="edit mt20">
         <el-form ref="form" :model="form" label-width="60px">
           <el-form-item label="标题：">
-            <el-input v-model="form.title" placeholder="请填写标题"></el-input>
+            <el-input v-model="form.title" :maxlength="maxNumber" placeholder="请填写标题"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -49,14 +49,9 @@
         <span style="color: #F56C6C">视频只支持MP4格式</span>
       </el-upload>
 
-
       <quill-editor class="mt20" ref="myTextEditor" v-model="form.content" :config="editorOption"></quill-editor>
+      <span style="color: #cccccc">（内容图片总大小不超过15M）</span>
     </div>
-
-    <!--<div class="block mt20">-->
-      <!--<span class="demonstration">上线时间：</span>-->
-      <!--<el-date-picker v-model="datatext" type="datetime" placeholder="选择上线时间"></el-date-picker>-->
-    <!--</div>-->
     <el-form ref="form" class="mt20">
       <el-form-item>
         <el-button type="primary" @click="onSubmit">立即创建</el-button>
@@ -71,6 +66,7 @@
     name: 'new-expert-lecture-hall',
     data(){
       return {
+        maxNumber: 100,
         upimgUrl: this.$urlapi + '/back/article/image',
         editorOption: {},          // 编辑器的配置
         fileList: [],
@@ -193,7 +189,16 @@
 
 
         this.$axios.post('/api/back/article', formdata).then((response) => {
-          console.log(response)
+
+          if(response.data.errcode === 30004){
+            this.$message({
+              showClose: true,
+              type: "error",
+              message: '内容区图片超过限制！'
+            });
+          return
+          }
+
         if(response.data.errcode === 0){
           this.$message({
             showClose: true,

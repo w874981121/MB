@@ -45,7 +45,7 @@
         <el-form-item>
           <el-button plain @click="upgrade">升级为VIP</el-button>
           <el-button plain @click="disableFn">{{form.status ==0 ? '禁用账号':'启用账号'}}</el-button>
-          <el-button plain @click="prohibitRelease">{{form.release == 1 ? '开启发布论坛' : '禁止发布论坛'}}</el-button>
+          <el-button plain @click="prohibitRelease">{{form.releases == 1 ? '开启发布论坛' : '禁止发布论坛'}}</el-button>
 
         </el-form-item>
         <el-form-item>
@@ -98,7 +98,7 @@
             passWord: data.passWord,
             sex: data.sex,
             reply: data.reply ? data.reply : 0,   //回复状态   1 禁止回复   0可回复
-            release: data.release ? data.release : 0,
+            releases: data.releases ? data.releases : 0,
           }
       }).catch(function (error) {
         console.log(error);
@@ -276,7 +276,7 @@
         let _this = this;
         let messageText = [];
 
-        if (this.form.release == 0) {
+        if (this.form.releases == 0) {
           messageText[0] = '确认禁止回发布坛?';
           messageText[1] = '禁用成功！';
         } else {

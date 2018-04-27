@@ -15,7 +15,7 @@
     </div>
     <!--table列表-->
     <el-table class="mt30" :data="tableData.data" height="400" border stripe style="width: 100%" :row-class-name="tableRowClassName">
-      <el-table-column align="center" prop="creatDate" label="修改时间" width="90"></el-table-column>
+      <el-table-column align="center" prop="createTime" label="修改时间" width="90"></el-table-column>
       <el-table-column align="center" prop="modifyUser" label="创建人名称"></el-table-column>
       <el-table-column align="center" prop="title" label="视频标题"></el-table-column>
       <el-table-column align="center" label="图片" width="160">
@@ -67,7 +67,7 @@
         this.$axios.get('/api/back/article', { params: this.webSitedata}).then((response)=> {
           let datelist = response.data.data.list;
           datelist.forEach(function(item,i){
-            datelist[i].creatDate = _this.$timeonversionC(item.creatDate);
+            datelist[i].createTime = _this.$timeonversionC(item.createTime);
             datelist[i].truename = unescape(item.truename);
             datelist[i].linkName = unescape(item.linkName);
             datelist[i].imgUrl = _this.$api + "/images/" + item.imgUrl

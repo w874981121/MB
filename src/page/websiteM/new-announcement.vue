@@ -12,12 +12,17 @@
           <el-input v-model="form.truename" :maxlength="maxNumber"></el-input>
         </el-form-item>
       </el-form>
-      <quill-editor ref="myTextEditor" v-model="form.content" :config="editorOption"></quill-editor>
+
+      <div  v-loading="imageLoading" element-loading-text="请稍等，图片上传中">
+        <quill-editor class="mt20" ref="newEditor" v-model="form.content" :config="editorOption"></quill-editor>
+
+        <el-upload style="display:none"  :action="upimgUrl" name="imagePath" :show-file-list="false" :before-upload='newEditorbeforeupload'  :on-success='newEditorSuccess'
+                   ref="uniqueId" id="uniqueId">
+        </el-upload >
+      </div>
+      <span style="color: #cccccc">（内容图片总大小不超过15M）</span>
     </div>
-    <!--<div class="block mt20">-->
-      <!--<span class="demonstration">上线时间：</span>-->
-      <!--<el-date-picker v-model="form.datatext" type="datetime" placeholder="选择上线时间"></el-date-picker>-->
-    <!--</div>-->
+
     <el-form ref="form" class="mt20">
       <el-form-item>
         <el-button type="primary" @click="onSubmit">立即创建</el-button>
@@ -28,10 +33,13 @@
 
 <script type="text/ecmascript-6">
   import { VueEditor } from 'vue2-editor'
+  import * as Quill from 'quill'
   export default {
     name: 'new-announcement',
     data(){
       return {
+        imageLoading:false,
+        upimgUrl: this.$urlapi + '/back/article/image',
         maxNumber: 100,
         editorOption: {},          // 编辑器的配置
         form: {
@@ -47,9 +55,38 @@
       }
     },
     mounted(){
-
+      var imgHandler = async function(state) {
+        if (state) {
+          var fileInput =document.querySelector('#uniqueId input') //隐藏的file元素
+          fileInput.click() //触发事件
+        }
+      }
+      this.$refs.newEditor.quill.getModule("toolbar").addHandler("image", imgHandler)
     },
     methods: {
+      newEditorbeforeupload(file){
+
+        const isJPG = file.type === 'image/jpeg' ||file.type ===  'image/png';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+        if (!isJPG) {
+          this.$message.error('上传图片只能是 JPG或PNG 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传图片大小不能超过 2MB!');
+        }
+        if(isJPG && isLt2M)this.imageLoading =true
+        return isJPG && isLt2M;
+      },
+      //上传图片回调
+      newEditorSuccess(response, file, fileList){
+        if(response.errcode===0){
+          console.log(this.$refs.newEditor)
+          this.addImgRange = this.$refs.newEditor.quill.getSelection()
+          this.$refs.newEditor.quill.insertEmbed(this.addImgRange != null?this.addImgRange.index:0, 'image',this.$api + "/images/" +response.data, Quill.sources.USER)
+        }
+        this.imageLoading =false
+      },
+
       onSubmit(){
         let formdata = {
           categoryId:1,

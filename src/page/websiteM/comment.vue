@@ -90,21 +90,59 @@
       },
 
       deleteask(id){
-        this.$axios.post('/api/back/questions', {questionId:id}).then((response)=> {
+        let _this = this;
+        this.$confirm('确定删除本条信息？。', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$axios.post('/api/back/questions', {questionId:id}).then((response)=> {
           console.log(response)
-          this.getData();
-        }).catch(function (error) {
+        this.getData()
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        });
+      })
+      .catch(function (error) {
+          this.$message.error('删除失败');
           console.log(error);
-        })
+        });
+
+      }).catch(() => {
+          this.$message({
+          type: 'info',
+          message: '取消'
+        });
+      });
       },
 
       deleteans(id){
-        this.$axios.post('/api/back/questions', {answerId:id}).then((response)=> {
+        let _this = this;
+        this.$confirm('确定删除本条信息？。', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$axios.post('/api/back/questions', {answerId:id}).then((response)=> {
           console.log(response)
-          this.getData()
-        }).catch(function (error) {
+        this.getData()
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        });
+      })
+      .catch(function (error) {
+          this.$message.error('删除失败');
           console.log(error);
-        })
+        });
+
+      }).catch(() => {
+          this.$message({
+          type: 'info',
+          message: '取消'
+        });
+      });
       }
 
     },

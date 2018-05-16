@@ -66,7 +66,7 @@
             url: 'forumm',
             state: false,
           }, {
-            name: '企业公告',
+            name: '公司公告',
             key: '12',
             url: 'enterprisa',
             state: false,

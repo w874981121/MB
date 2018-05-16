@@ -210,10 +210,10 @@
         let _this = this;
         let messageText = [];
         if (this.form.lockState == 0) {
-          messageText[0] = '禁用账号后，本账号的网址、医生账号、会员账号都不可继续使用！';
+          messageText[0] = '确认要禁用账号？';
           messageText[1] = '禁用成功！';
         } else {
-          messageText[0] = '启用账号后，本账号的网址、医生账号、会员账号都可继续使用！';
+          messageText[0] = '启用账号！';
           messageText[1] = '启用成功！';
         }
         this.$confirm(messageText[0], '提示', {

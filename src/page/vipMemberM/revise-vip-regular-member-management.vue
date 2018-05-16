@@ -186,11 +186,11 @@
       disableFn(){
         let _this = this;
         let messageText = [];
-        if (this.form.lockState == 0) {
-          messageText[0] = '禁用账号后此账号都不可继续使用！';
+        if (this.form.status == 0) {
+          messageText[0] = '禁用账号后此账号不可继续使用！';
           messageText[1] = '成功！';
         } else {
-          messageText[0] = '启用账号此账号都可正常使用！';
+          messageText[0] = '启用账号此账号可正常使用！';
           messageText[1] = '成功！';
         }
         this.$confirm(messageText[0], '提示', {
@@ -356,9 +356,13 @@
           cardNo: this.form.cardNo,
           passWord: this.form.passWord,
           sex:this.form.sex,
-          address: this.form.address.join(','),
           type: 1,
         }
+
+        if(!!this.form.address){
+          fromData.address= this.form.address.join(',');
+        }
+
         if(fromData.phone.length < 1){
           return
         }

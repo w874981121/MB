@@ -4,8 +4,8 @@ import Vue from 'vue'
 // ui组件
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import { Loading } from 'element-ui';
-import { Message } from 'element-ui';
+import {Loading} from 'element-ui';
+import {Message} from 'element-ui';
 import App from './App'
 import {router} from './router/index'    //路由
 import Axios from 'axios'
@@ -26,12 +26,14 @@ let loadingInstance = null;
 
 Axios.defaults.timeout = 10000
 //添加一个请求拦截器
+
+
 Axios.interceptors.request.use(function (config) {
   //在请求发出之前进行一些操作
-
   let re = new RegExp("/api", "g"),
-      srt  = config.url.replace(re, "http://47.104.146.162:8080");
-      // config.url = srt
+    srt = config.url.replace(re, "http://47.104.146.162:8080");
+    config.url = srt
+
 
   loadingInstance = Loading.service({
     lock: true,

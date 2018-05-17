@@ -4,11 +4,12 @@
   <div class="vip-information">
     <Search :searchData="searchData" @response="onSubmit"></Search>
     <DataTable :dataTable="tableData" @modify="postModify" @healthy="seeHealthy" @delete="postDelete"></DataTable>
-    <el-pagination background layout="total, prev, pager, next" :page-size="pageSize" @current-change="getPage" :total="total"></el-pagination>
+    <el-pagination background layout="total, prev, pager, next" :page-size="pageSize" @current-change="getPage"
+                   :total="total"></el-pagination>
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script type="text/javascript">
   import Search from '../../components/Search.vue'
   import DataTable from '../../components/DataTableImg.vue'
   import qs from 'qs';
@@ -18,14 +19,14 @@
       return {
         searchData: {
           path: '/vipi/newvipinformation',
-          name:'',
-          placeholder:'输入姓名'
+          name: '',
+          placeholder: '输入姓名'
         },
         total: 0,
         pageSize: 0,
-        webSitedata:{
+        webSitedata: {
           currentPage: 1,
-          customer:''
+          customer: ''
         },
         //传递给table的数据
         tableData: {
@@ -34,13 +35,13 @@
             {field: 'creatDate', name: '创建时间', width: '100'},
             {field: 'photoUrl', name: '头像', width: '100'},
             {field: 'customerName', name: '姓名'},
-            {field: 'phone', name: '手机号'},
-            {field: 'loginName', name: '账号',},
+            {field: 'phone', name: '手机号', width: '100'},
+            {field: 'loginName', name: '账号', width: '120'},
             {field: 'status', name: '状态',},
           ],  //设置排列顺序
-          soleCode:true,
-          healthy:true,
-          data:[],
+          soleCode: true,
+          healthy: true,
+          data: [],
         }
       }
     },
@@ -50,13 +51,13 @@
     methods: {
       getData(){
         let _this = this;
-        this.$axios.get('/api/back/customers/vip', { params: this.webSitedata}).then((response)=> {
+        this.$axios.get('/api/back/customers/vip', {params: this.webSitedata}).then((response)=> {
           let datelist = response.data.data.list;
-          datelist.forEach(function(item,i){
+          datelist.forEach(function (item, i) {
             datelist[i].customerName = unescape(item.customerName);
             datelist[i].creatDate = _this.$timeonversionC(item.creatDate);
             datelist[i].status = item.status == 0 ? "未禁用" : "禁用";
-            datelist[i].photoUrl =!!item.photoUrl ? _this.$api + "/images/" + item.photoUrl : _this.$api +'/images/customerPhoto/20180424/2018042422430000147261.png';
+            datelist[i].photoUrl = !!item.photoUrl ? _this.$api + "/images/" + item.photoUrl : _this.$api + '/images/customerPhoto/20180424/2018042422430000147261.png';
           })
           this.tableData.data = datelist;
           this.total = response.data.data.total;
@@ -107,7 +108,7 @@
       },
       //健康记录查看
       seeHealthy(row){
-        this.$router.push({path: "/healthr", query: {companyId: row.companyId, customerName:row.customerName}})
+        this.$router.push({path: "/healthr", query: {companyId: row.companyId, customerName: row.customerName}})
       }
     },
     components: {

@@ -26,16 +26,26 @@
         <el-form-item label="姓名：" prop="customerName" :rules="[{required: true, message: '请输入姓名', trigger: 'blur'}]">
           <el-input v-model="form.customerName"></el-input>
         </el-form-item>
+
         <el-form-item label="性别：" prop="sex" :rules="[{required: true, message: '请输入姓名', trigger: 'blur'}]">
           <el-select v-model="form.sex" placeholder="请选择性别">
             <el-option
-              v-for="item in options"
+              v-for="item in optionsSex"
               :key="item.value"
               :label="item.label"
               :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
+
+        <el-form-item label="地址：">
+          <el-cascader
+            :options="options"
+            v-model="form.address"
+            :props="props">
+          </el-cascader>
+        </el-form-item>
+
         <el-form-item label="手机号：" prop="phone" :rules="[{required: true, message: '请输入手机号', trigger: 'blur'}]">
           <el-input v-model="form.phone"></el-input>
         </el-form-item>
@@ -49,27 +59,34 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script type="text/javascript">
   import qs from 'qs';
   export default {
     name: 'new-doctor-management',
     data(){
       return {
+        options: [],
+        props: {
+          value: 'code',
+          label: 'areaName',
+          children: 'children',
+        },
         upimgUrl: this.$urlapi + '/back/customers/image',
         imageUrl: '',
-        loading:false,
-        options:[{
+        loading: false,
+        optionsSex: [{
           value: '男',
           label: '男'
-        },{
+        }, {
           value: '女',
           label: '女'
-      }],
+        }],
         form: {
           photoUrl: '',  //头像地址
           customerName: '',  //用户姓名
-          phone:'', //手机号
+          phone: '', //手机号
           sex: '',
+          address: [],
           type: 0
         }
       }
@@ -78,14 +95,14 @@
     methods: {
       //文件上传成功
       handleAvatarSuccess(res, file) {
-        if(res.errcode === 0){
+        if (res.errcode === 0) {
           this.$message({
             type: 'success',
             message: "上传成功"
           });
-          this.imageUrl = this.$api+"/images/" + res.data;
+          this.imageUrl = this.$api + "/images/" + res.data;
           this.form.photoUrl = res.data;
-        }else{
+        } else {
           this.$message({
             type: 'error',
             message: "上传失败"
@@ -117,26 +134,43 @@
           message: "上传失败"
         });
       },
+//      地址信息
+      getData(){
+        this.$axios.get('/api/back/users/allArea').then((response)=> {
+//          console.log(this.options)
+          let data = response.data.data;
+          console.log(data)
+          data.forEach((item, a)=> {
+            data[a].children = item.secList;
+            item.secList.forEach((tem, b)=> {
+              data[a].children[b].children = tem.thirdList;
+            })
+          })
+          this.options = data;
+        }).catch(function (error) {
+          console.log(error);
+        });
+      },
       //新建
       onSubmit(formName) {
-
-        this.$refs[formName].validate((valid) => {
-          console.log("=====")
-        if (!valid) {
-          throw new Error('参数错误'); //验证判断
-        }
-      });
-
         let fromdata = {
-          photoUrl: this.form.photoUrl,
           customerName: escape(this.form.customerName),
+          photoUrl: this.form.photoUrl,
           phone: this.form.phone,
           sex: this.form.sex,
           type: 0,
         }
+        if(!!this.form.address){
+          fromdata.address=this.form.address.join(',');
+        }
+        this.$refs[formName].validate((valid) => {
+          console.log("=====")
+          if (!valid) {
+            throw new Error('参数错误'); //验证判断
+          }
+        });
 
-
-        if(fromdata.phone.length != 11){
+        if (fromdata.phone.length != 11) {
           this.$message({
             type: 'error',
             message: "手机号码格式错误"
@@ -144,7 +178,7 @@
           return
         }
 
-        if(fromdata.phone.length < 1){
+        if (fromdata.phone.length < 1) {
           this.$message({
             showClose: true,
             type: "error",
@@ -155,7 +189,7 @@
         this.$axios.post('/api/back/customers', fromdata)
           .then((response)=> {
             console.log(response)
-            if(response.data.errcode == 30012){
+            if (response.data.errcode == 30012) {
               this.$message({
                 showClose: true,
                 type: "error",
@@ -164,14 +198,14 @@
               return
             }
 
-        if (response.data.errcode == 0) {
-          this.$message({
-            showClose: true,
-            type: "success",
-            message: '新建成功！'
-          });
-          history.go(-1)
-        }
+            if (response.data.errcode == 0) {
+              this.$message({
+                showClose: true,
+                type: "success",
+                message: '新建成功！'
+              });
+              history.go(-1)
+            }
           })
           .catch(function (error) {
             console.log(error);
@@ -179,6 +213,7 @@
       }
     },
     mounted(){
+      this.getData()
     }
   }
 </script>

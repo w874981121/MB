@@ -42,6 +42,7 @@
             {field: 'customer', name: '会员',},
             {field: 'status', name: '是否禁用',},
           ],  //设置排列顺序
+          soleCode: true,
           data: []
         }
       }

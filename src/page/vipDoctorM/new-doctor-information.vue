@@ -73,7 +73,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script type="text/javascript">
   import qs from 'qs';
   export default {
     name: 'new-vip-coctor-management',
@@ -99,7 +99,7 @@
       return {
         upimgUrl: this.$urlapi + '/back/customers/image',
         imageUrl: '',
-        loading:false,
+        loading: false,
         form: {
           photoUrl: '',  //头像地址
           customerName: '',  //医生姓名
@@ -121,14 +121,14 @@
     methods: {
       //文件上传成功
       handleAvatarSuccess(res, file) {
-        if(res.errcode === 0){
+        if (res.errcode === 0) {
           this.$message({
             type: 'success',
             message: "上传成功"
           });
-          this.imageUrl = this.$api+"/images/" + res.data;
+          this.imageUrl = this.$api + "/images/" + res.data;
           this.form.photoUrl = res.data;
-        }else{
+        } else {
           this.$message({
             type: 'error',
             message: "上传失败"
@@ -181,13 +181,6 @@
         })
       },
       onSubmit(formName) {
-        this.$refs[formName].validate((valid) => {
-
-        if (!valid) {
-          throw new Error('参数错误'); //验证判断
-        }
-      });
-
         let formdata = {
           photoUrl: this.form.photoUrl,
           customerName: this.form.customerName,
@@ -200,8 +193,16 @@
           type: this.form.type,
         }
 
+        this.$refs[formName].validate((valid) => {
 
-        if(formdata.phone.length != 11){
+          if (!valid) {
+            throw new Error('参数错误'); //验证判断
+          }
+        });
+
+
+
+        if (formdata.phone.length != 11) {
           this.$message({
             type: 'error',
             message: "手机号码格式错误"
@@ -210,22 +211,22 @@
         }
         this.$axios.post('/api/back/doctors', formdata)
           .then((response)=> {
-        if(response.data.errcode == 30012){
-          this.$message({
-            showClose: true,
-            type: "error",
-            message: '手机号重复，请重新填写！'
-          });
-          return
-        }
-        if (response.data.errcode == 0) {
-          this.$message({
-            showClose: true,
-            type: "success",
-            message: '新建成功！'
-          });
-          history.go(-1)
-        }
+            if (response.data.errcode == 30012) {
+              this.$message({
+                showClose: true,
+                type: "error",
+                message: '手机号重复，请重新填写！'
+              });
+              return
+            }
+            if (response.data.errcode == 0) {
+              this.$message({
+                showClose: true,
+                type: "success",
+                message: '新建成功！'
+              });
+              history.go(-1)
+            }
           })
           .catch(function (error) {
             console.log(error);

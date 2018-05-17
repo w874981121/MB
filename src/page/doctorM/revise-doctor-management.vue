@@ -23,22 +23,22 @@
       </div>
 
       <el-form ref="form" :model="form" label-width="120px">
-        <el-form-item label="医院名称：">
+        <el-form-item label="医院名称：" prop="hospital" :rules="[{required: true, message: '请输入医院名称', trigger: 'blur'}]">
           <el-input v-model="form.hospital"></el-input>
         </el-form-item>
-        <el-form-item label="科室：">
+        <el-form-item label="科室：" prop="department" :rules="[{required: true, message: '请输入科室名称', trigger: 'blur'}]">
           <el-input v-model="form.department"></el-input>
         </el-form-item>
-        <el-form-item label="职称：">
+        <el-form-item label="职称：" prop="title" :rules="[{required: true, message: '请输入职称', trigger: 'blur'}]">
           <el-input v-model="form.title"></el-input>
         </el-form-item>
-        <el-form-item label="姓名：">
+        <el-form-item label="姓名：" prop="customerName" :rules="[{required: true, message: '请输入姓名', trigger: 'blur'}]">
           <el-input v-model="form.customerName"></el-input>
         </el-form-item>
-        <el-form-item label="手机号：">
+        <el-form-item label="手机号：" prop="phone" :rules="[{required: true, message: '请输入手机号', trigger: 'blur'}]">
           <el-input v-model="form.phone"></el-input>
         </el-form-item>
-        <el-form-item label="密码：">
+        <el-form-item label="密码：" prop="passWord" :rules="[{required: true, message: '请输入密码', trigger: 'blur'}]">
           <el-input v-model="form.passWord"></el-input>
         </el-form-item>
         <el-form-item>
@@ -51,7 +51,7 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">保存修改</el-button>
+          <el-button type="primary" @click="onSubmit('form')">保存修改</el-button>
         </el-form-item>
       </el-form>
 
@@ -59,15 +59,15 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script type="text/javascript">
   import qs from 'qs';
   export default {
     name: 'revise-doctor-management',
     data(){
       return {
         upimgUrl: this.$urlapi + '/back/customers/image',
-        imageUrl: this.$api+"/images/" + this.photoUrl,
-        loading:false,
+        imageUrl: this.$api + "/images/" + this.photoUrl,
+        loading: false,
         form: {},
         status: null,
         guest: null,
@@ -84,7 +84,7 @@
         this.$axios.get('/api/back/customers/' + this.$route.query.customerId).then((response)=> {
           console.log(response)
           let data = response.data.data;
-          this.imageUrl = this.$api+"/images/" + data.photoUrl,
+          this.imageUrl = this.$api + "/images/" + data.photoUrl,
             this.form = {
               customerId: data.customerId,
               photoUrl: data.photoUrl,  //头像地址
@@ -93,11 +93,11 @@
               hospital: data.hospital, //医院名称
               department: data.department, //科室
               title: data.title, //职称
-              passWord:data.passWord, // 密码
+              passWord: data.passWord, // 密码
               reply: data.reply ? data.reply : 0,   //回复状态   1 禁止回复   0可回复
             }
-            this.status = data.status
-            this.guest = data.guest
+          this.status = data.status
+          this.guest = data.guest
         }).catch(function (error) {
           console.log(error);
         });
@@ -119,14 +119,14 @@
       },
       //文件上传成功
       handleAvatarSuccess(res, file) {
-        if(res.errcode === 0){
+        if (res.errcode === 0) {
           this.$message({
             type: 'success',
             message: "上传成功"
           });
-          this.imageUrl = this.$api+"/images/" + res.data;
+          this.imageUrl = this.$api + "/images/" + res.data;
           this.form.photoUrl = res.data;
-        }else{
+        } else {
           this.$message({
             type: 'error',
             message: "上传失败"
@@ -158,15 +158,15 @@
           type: 'warning'
         }).then(() => {
           this.$axios.post('/api/back/doctor/guest', {customerId: this.$route.query.customerId}).then((response) => {
-              console.log(response)
-              this.$message({
-                type: 'success',
-                message: '成功'
-              });
-              history.go(-1)
-            }).catch(function (error) {
-              console.log(error);
+            console.log(response)
+            this.$message({
+              type: 'success',
+              message: '成功'
             });
+            history.go(-1)
+          }).catch(function (error) {
+            console.log(error);
+          });
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -219,22 +219,22 @@
           type: 'warning'
         }).then(() => {
           this.$axios.post('/api/back/reset', {customerId: this.$route.query.customerId}).then((response) => {
-          console.log(response)
-        this.$message({
-          type: 'success',
-          message: "重置成功"
-        });
-        history.go(-1)
-      }).catch(function (error) {
-          console.log(error);
-        });
+            console.log(response)
+            this.$message({
+              type: 'success',
+              message: "重置成功"
+            });
+            history.go(-1)
+          }).catch(function (error) {
+            console.log(error);
+          });
 
-      }).catch(() => {
+        }).catch(() => {
           this.$message({
-          type: 'info',
-          message: '已取消重置'
-        });
-      })
+            type: 'info',
+            message: '已取消重置'
+          });
+        })
       },
       //升级会员
       upgrade(){
@@ -245,16 +245,16 @@
         }).then(() => {
           this.$axios.post('/api/back/customers/vip', {customerId: this.$route.query.customerId})
             .then((response) => {
-            console.log(response)
-            this.$message({
-              type: 'success',
-              message: "升级成功"
+              console.log(response)
+              this.$message({
+                type: 'success',
+                message: "升级成功"
+              });
+              history.go(-1)
+            })
+            .catch(function (error) {
+              console.log(error);
             });
-            history.go(-1)
-          })
-        .catch(function (error) {
-            console.log(error);
-          });
 
         }).catch(() => {
           this.$message({
@@ -300,7 +300,7 @@
         })
       },
       //修改确认
-      onSubmit() {
+      onSubmit(formName) {
         let fromdata = {
           customerId: this.form.customerId,
           photoUrl: this.form.photoUrl,
@@ -312,24 +312,34 @@
           passWord: this.form.passWord,
           price: 0,
         }
-        if(fromdata.phone.length < 1){
+
+        this.$refs[formName].validate((valid) => {
+          console.log("=====")
+          if (!valid) {
+            throw new Error('参数错误'); //验证判断
+          }
+        })
+        ;
+
+
+        if (fromdata.phone.length < 1) {
           this.$alert("请完善信息！！！", "提示", {
             confirmButtonText: '确定',
           });
           return
         }
-        this.$axios.post('/api/back/doctors', fromdata).then((response)=> {
+        this.$axios.post('/api/back/doctors', fromdata).then((response) => {
           console.log(response)
-        if(response.data.errcode === 0){
-          this.$message({
-            type: 'success',
-            message: "修改成功"
-          });
-          history.go(-1)
-        }
+          if (response.data.errcode === 0) {
+            this.$message({
+              type: 'success',
+              message: "修改成功"
+            });
+            history.go(-1)
+          }
         }).catch(function (error) {
-            console.log(error);
-          });
+          console.log(error);
+        });
       }
     },
   }

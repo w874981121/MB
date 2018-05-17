@@ -23,7 +23,7 @@
       </div>
 
       <el-form ref="form" :model="form" label-width="120px">
-        <el-form-item label="姓名：">
+        <el-form-item label="姓名：" prop="customerName" :rules="[{required: true, message: '请输入姓名', trigger: 'blur'}]">
           <el-input v-model="form.customerName"></el-input>
         </el-form-item>
         <el-form-item label="性别：" prop="sex" :rules="[{required: true, message: '请选择性别', trigger: 'blur'}]">
@@ -45,13 +45,13 @@
           </el-cascader>
         </el-form-item>
 
-        <el-form-item label="手机号：">
+        <el-form-item label="手机号：" prop="phone" :rules="[{required: true, message: '请输入手机号', trigger: 'blur'}]">
           <el-input v-model="form.phone"></el-input>
         </el-form-item>
-        <el-form-item label="密码：">
+        <el-form-item label="密码：" prop="passWord" :rules="[{required: true, message: '请输入密码', trigger: 'blur'}]">
           <el-input v-model="form.passWord"></el-input>
         </el-form-item>
-        <el-form-item label="设备编号：">
+        <el-form-item label="设备编号：" prop="cardNo" :rules="[{required: true, message: '请输入设备编号', trigger: 'blur'}]">
           <el-input v-model="form.cardNo"></el-input>
         </el-form-item>
         <el-form-item>
@@ -63,7 +63,7 @@
           <el-button plain @click="prohibitReply">{{form.reply == 1 ? '开启回复论坛' : '禁止回复论坛'}}</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">保存修改</el-button>
+          <el-button type="primary" @click="onSubmit('form')">保存修改</el-button>
         </el-form-item>
       </el-form>
 
@@ -71,28 +71,28 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script type="text/javascript">
   import qs from 'qs';
   export default {
     name: 'revise-viprmm',
     data(){
       return {
-        options:[],
+        options: [],
         props: {
           value: 'code',
-          label:'areaName',
+          label: 'areaName',
           children: 'children',
         },
-        optionsSex:[{
+        optionsSex: [{
           value: '男',
           label: '男'
-        },{
+        }, {
           value: '女',
           label: '女'
         }],
         upimgUrl: this.$urlapi + '/back/customers/image',
         imageUrl: '',
-        loading:false,
+        loading: false,
         form: {
           customerId: this.$route.query.customerId,
           photoUrl: '',
@@ -116,18 +116,18 @@
           let data = response.data.data;
 
 
-        data.areaList.forEach((item,a)=>{
-          data.areaList[a].children = item.secList;
-        item.secList.forEach((tem,b)=>{
-          data.areaList[a].children[b].children = tem.thirdList;
-      })
-      })
-        this.options = data.areaList;
-        if(data.address){
-          this.form.address = data.address.split(',');
-        }
+          data.areaList.forEach((item, a)=> {
+            data.areaList[a].children = item.secList;
+            item.secList.forEach((tem, b)=> {
+              data.areaList[a].children[b].children = tem.thirdList;
+            })
+          })
+          this.options = data.areaList;
+          if (data.address) {
+            this.form.address = data.address.split(',');
+          }
 
-          this.imageUrl = this.$api+ "/images/" + data.photoUrl
+          this.imageUrl = this.$api + "/images/" + data.photoUrl
           this.form.photoUrl = data.photoUrl  //头像地址
           this.form.customerName = decodeURIComponent(data.customerName)  //用户姓名
           this.form.phone = data.phone //手机号
@@ -135,22 +135,22 @@
           this.form.status = data.status //状态
           this.form.passWord = data.passWord  //密码
           this.form.sex = data.sex  //性别
-          this.form.reply= data.reply ? data.reply : 0;   //回复状态   1 禁止回复   0可回复
-          this.form.releases= data.releases ? data.releases : 0;
+          this.form.reply = data.reply ? data.reply : 0;   //回复状态   1 禁止回复   0可回复
+          this.form.releases = data.releases ? data.releases : 0;
         }).catch(function (error) {
           console.log(error);
         });
       },
       //文件上传成功
       handleAvatarSuccess(res, file) {
-        if(res.errcode === 0){
+        if (res.errcode === 0) {
           this.$message({
             type: 'success',
             message: "上传成功"
           });
-          this.imageUrl = this.$api+"/images/" + res.data;
+          this.imageUrl = this.$api + "/images/" + res.data;
           this.form.photoUrl = res.data;
-        }else{
+        } else {
           this.$message({
             type: 'error',
             message: "上传失败"
@@ -199,24 +199,24 @@
           type: 'warning'
         }).then(() => {
           this.$axios.post('/api/back/customers/lock', {customerId: this.$route.query.customerId})
-          .then((response) => {
-          console.log(response)
-        this.$message({
-          type: 'success',
-          message: messageText[1]
-        });
-        history.go(-1)
-      })
-      .catch(function (error) {
-          console.log(error);
-        });
+            .then((response) => {
+              console.log(response)
+              this.$message({
+                type: 'success',
+                message: messageText[1]
+              });
+              history.go(-1)
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
 
-      }).catch(() => {
+        }).catch(() => {
           this.$message({
-          type: 'info',
-          message: '已取消禁用'
-        });
-      })
+            type: 'info',
+            message: '已取消禁用'
+          });
+        })
       },
       //重置密码
       setReset(){
@@ -252,16 +252,16 @@
         }).then(() => {
           this.$axios.post('/api/back/customers/vip', {customerId: this.$route.query.customerId})
             .then((response) => {
-            console.log(response)
-            this.$message({
-              type: 'success',
-              message: "降级成功"
+              console.log(response)
+              this.$message({
+                type: 'success',
+                message: "降级成功"
+              });
+              history.go(-1)
+            })
+            .catch(function (error) {
+              console.log(error);
             });
-            history.go(-1)
-          })
-        .catch(function (error) {
-            console.log(error);
-          });
 
         }).catch(() => {
           this.$message({
@@ -290,16 +290,16 @@
         }).then(() => {
           this.$axios.post('/api/back/customer/reply', {customerId: this.$route.query.customerId})
             .then((response) => {
-            console.log(response)
-            this.$message({
-              type: 'success',
-              message: messageText[1]
+              console.log(response)
+              this.$message({
+                type: 'success',
+                message: messageText[1]
+              });
+              history.go(-1)
+            })
+            .catch(function (error) {
+              console.log(error);
             });
-            history.go(-1)
-          })
-        .catch(function (error) {
-            console.log(error);
-          });
 
         }).catch(() => {
           this.$message({
@@ -327,16 +327,16 @@
         }).then(() => {
           this.$axios.post('/api/back/customer/release', {customerId: this.$route.query.customerId})
             .then((response) => {
-            console.log(response)
-            this.$message({
-              type: 'success',
-              message: messageText[1]
+              console.log(response)
+              this.$message({
+                type: 'success',
+                message: messageText[1]
+              });
+              history.go(-1)
+            })
+            .catch(function (error) {
+              console.log(error);
             });
-            history.go(-1)
-          })
-        .catch(function (error) {
-            console.log(error);
-          });
 
         }).catch(() => {
           this.$message({
@@ -347,7 +347,7 @@
       },
 
       //保存修改
-      onSubmit() {
+      onSubmit(formName) {
         let fromData = {
           customerId: this.$route.query.customerId,
           photoUrl: this.form.photoUrl,
@@ -355,15 +355,19 @@
           phone: this.form.phone,
           cardNo: this.form.cardNo,
           passWord: this.form.passWord,
-          sex:this.form.sex,
+          sex: this.form.sex,
           type: 1,
         }
-
-        if(!!this.form.address){
-          fromData.address= this.form.address.join(',');
+        this.$refs[formName].validate((valid) => {
+          if (!valid) {
+            throw new Error('参数错误'); //验证判断
+          }
+        });
+        if (!!this.form.address) {
+          fromData.address = this.form.address.join(',');
         }
 
-        if(fromData.phone.length < 1){
+        if (fromData.phone.length < 1) {
           return
         }
         this.$axios.post('/api/back/customers', fromData)

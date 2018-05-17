@@ -23,22 +23,22 @@
       </div>
 
       <el-form ref="form" :model="form" label-width="120px">
-        <el-form-item label="医院名称：">
+        <el-form-item label="医院名称：" prop="hospital" :rules="[{required: true, message: '请输入医院名称', trigger: 'blur'}]">
           <el-input v-model="form.hospital"></el-input>
         </el-form-item>
-        <el-form-item label="科室：">
+        <el-form-item label="科室：" prop="department" :rules="[{required: true, message: '请输入科室', trigger: 'blur'}]">
           <el-input v-model="form.department"></el-input>
         </el-form-item>
-        <el-form-item label="职称：">
+        <el-form-item label="职称：" prop="title" :rules="[{required: true, message: '请输入职称', trigger: 'blur'}]">
           <el-input v-model="form.title"></el-input>
         </el-form-item>
-        <el-form-item label="姓名：">
+        <el-form-item label="姓名：" prop="customerName" :rules="[{required: true, message: '请输入姓名', trigger: 'blur'}]">
           <el-input v-model="form.customerName"></el-input>
         </el-form-item>
-        <el-form-item label="手机号：">
+        <el-form-item label="手机号：" prop="phone" :rules="[{required: true, message: '请输入手机号', trigger: 'blur'}]">
           <el-input v-model="form.phone"></el-input>
         </el-form-item>
-        <el-form-item label="密码：">
+        <el-form-item label="密码：" prop="passWord" :rules="[{required: true, message: '请输入密码', trigger: 'blur'}]">
           <el-input v-model="form.passWord"></el-input>
         </el-form-item>
         <el-form-item label="我的会员：">
@@ -68,7 +68,7 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">保存修改</el-button>
+          <el-button type="primary" @click="onSubmit('form')">保存修改</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -84,7 +84,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script type="text/javascript">
   import qs from 'qs';
   export default {
     name: 'revise-vip-coctor-management',
@@ -395,7 +395,7 @@
       })
       },
       //保存修改
-      onSubmit() {
+      onSubmit(formName) {
         let formdata = {
           customerId: Number(this.$route.query.customerId),
           photoUrl: this.form.photoUrl,  //头像地址
@@ -408,6 +408,13 @@
           passWord: this.form.passWord,
           customersId: '',  //会员ID
         }
+
+        this.$refs[formName].validate((valid) => {
+          if (!valid) {
+            throw new Error('参数错误'); //验证判断
+          }
+        });
+
         if(this.memberids.length > 0){
           formdata.customersId = this.memberids.join(",");
         }

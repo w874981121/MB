@@ -48,7 +48,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script type="text/javascript">
   import qs from 'qs';
   export default {
     name: 'new-doctor-management',
@@ -56,14 +56,14 @@
       return {
         upimgUrl: this.$urlapi + '/back/customers/image',
         imageUrl: '',
-        loading:false,
+        loading: false,
         form: {
           photoUrl: '',  //头像地址
           customerName: '',  //医生姓名
-          phone:'', //医生手机号
-          hospital:'', //医院名称
-          department:'', //科室
-          title:'', //职称
+          phone: '', //医生手机号
+          hospital: '', //医院名称
+          department: '', //科室
+          title: '', //职称
           type: 0
         }
       }
@@ -72,14 +72,14 @@
     methods: {
       //文件上传成功
       handleAvatarSuccess(res, file) {
-        if(res.errcode === 0){
+        if (res.errcode === 0) {
           this.$message({
             type: 'success',
             message: "上传成功"
           });
           this.imageUrl = this.$api + "/images/" + res.data;
           this.form.photoUrl = res.data;
-        }else{
+        } else {
           this.$message({
             type: 'error',
             message: "上传失败"
@@ -112,49 +112,48 @@
         });
       },
       onSubmit(formName) {
+        let fromdata = {
+          photoUrl: this.form.photoUrl,
+          customerName: escape(this.form.customerName),
+          phone: this.form.phone,
+          hospital: escape(this.form.hospital),
+          department: escape(this.form.department),
+          title: escape(this.form.title),
+          price: '0',
+          customersId: '',
+          type: this.form.type,
+        }
         this.$refs[formName].validate((valid) => {
           console.log("=====")
           if (!valid) {
             throw new Error('参数错误'); //验证判断
           }
         });
-
-        let fromdata = {
-          photoUrl: this.form.photoUrl,
-          customerName: escape(this.form.customerName),
-          phone: this.form.phone,
-          hospital:escape(this.form.hospital),
-          department:escape(this.form.department),
-          title:escape(this.form.title),
-          price: '0',
-          customersId:'',
-          type: this.form.type,
-        }
-        if(fromdata.phone.length != 11){
+        if (fromdata.phone.length != 11) {
           this.$message({
             type: 'error',
             message: "手机号码格式错误"
           });
-         return
-        }
-        this.$axios.post('/api/back/doctors', fromdata).then((response)=> {
-            console.log(response)
-        if(response.data.errcode == 30012){
-          this.$message({
-            showClose: true,
-            type: "error",
-            message: '手机号重复，请重新填写！'
-          });
           return
         }
-        if(response.data.errcode === 0){
-          this.$message({
-            type: 'success',
-            message: "新建成功"
-          });
-          history.go(-1)
-        }
-          })
+        this.$axios.post('/api/back/doctors', fromdata).then((response)=> {
+          console.log(response)
+          if (response.data.errcode == 30012) {
+            this.$message({
+              showClose: true,
+              type: "error",
+              message: '手机号重复，请重新填写！'
+            });
+            return
+          }
+          if (response.data.errcode === 0) {
+            this.$message({
+              type: 'success',
+              message: "新建成功"
+            });
+            history.go(-1)
+          }
+        })
           .catch(function (error) {
             console.log(error);
           });

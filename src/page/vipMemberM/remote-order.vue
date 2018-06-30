@@ -236,7 +236,7 @@
       //上线
       goOnline(row){
         let _this = this;
-        this.$confirm('线后，健康管理网站会展示本条提问。', '提示', {
+        this.$confirm('上线后，健康管理网站会展示本条提问。', '提示', {
           confirmButtonText: '知道了',
           cancelButtonText: '暂不上线',
           type: 'warning'

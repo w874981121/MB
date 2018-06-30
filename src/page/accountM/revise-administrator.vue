@@ -172,7 +172,7 @@
         let fromdata = {
           usersid: this.form.usersid,
           parentUsersId: this.form.parentUsersId,
-          truename: escape(this.form.truename),
+          truename: this.form.truename,
           username: this.form.username,
           password: this.form.password,
           type: 2,

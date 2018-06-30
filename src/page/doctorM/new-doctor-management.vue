@@ -114,11 +114,11 @@
       onSubmit(formName) {
         let fromdata = {
           photoUrl: this.form.photoUrl,
-          customerName: escape(this.form.customerName),
+          customerName: this.form.customerName,
           phone: this.form.phone,
-          hospital: escape(this.form.hospital),
-          department: escape(this.form.department),
-          title: escape(this.form.title),
+          hospital: this.form.hospital,
+          department: this.form.department,
+          title: this.form.title,
           price: '0',
           customersId: '',
           type: this.form.type,

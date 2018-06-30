@@ -3,7 +3,7 @@
 <template>
   <div class="new-announcement m20 fsz14">
     <el-breadcrumb separator=">">
-      <el-breadcrumb-item :to="{ path: '/enterprisa' }">企业公告</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/enterprisa' }">公司公告</el-breadcrumb-item>
       <el-breadcrumb-item>新建公告</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="edit mt20">
@@ -77,6 +77,7 @@
         if(isJPG && isLt2M)this.imageLoading =true
         return isJPG && isLt2M;
       },
+
       //上传图片回调
       newEditorSuccess(response, file, fileList){
         if(response.errcode===0){
@@ -91,9 +92,11 @@
         let formdata = {
           categoryId:1,
           title: this.form.truename,
-          content: this.form.content,
+          content:  this.form.content.toString(),
           sortCode:1,
         }
+
+
 
         if(formdata.title.length <= 0){
           this.$message({
@@ -110,7 +113,6 @@
           });
           return
         }
-
 
         this.$axios.post('/api/back/article', formdata).then((response) => {
 

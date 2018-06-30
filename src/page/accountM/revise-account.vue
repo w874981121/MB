@@ -132,8 +132,8 @@
         let form = {
           usersid: this.$route.query.usersid,
           photoUrl: this.form.photoUrl,
-          truename: escape(this.form.truename),
-          linkName: escape(this.form.linkName),
+          truename: this.form.truename,
+          linkName: this.form.linkName,
           phone: this.form.phone
         }
         this.$axios.post('/api/back/users/webSite', form)

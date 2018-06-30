@@ -118,8 +118,8 @@
 
         let form = {
           photoUrl: this.form.photoUrl,
-          truename: escape(this.form.truename),
-          linkName: escape(this.form.linkName),
+          truename: this.form.truename,
+          linkName: this.form.linkName,
           phone: this.form.phone,
           username: this.form.username,
           type: 1,

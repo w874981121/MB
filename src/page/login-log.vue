@@ -25,8 +25,8 @@
         //传递给table的数据
         tableData: {
           listname: [
-//            {field: 'problemId', name: '编号', width: '80'},
             {field: 'creatDate', name: '报告时间', width: '180'},
+            {field: 'companyName',name: '组织'},
             {field: 'loginName', name: '账号',width: '150'},
             {field: 'question', name: '报告内容',},
           ],  //设置排列顺序

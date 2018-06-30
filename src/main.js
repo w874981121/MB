@@ -17,24 +17,28 @@ import './css/style.scss'
 import VueQuillEditor from 'vue-quill-editor';
 import 'quill/dist/quill.snow.css'
 // UI组件  引入全局   并设置全局组件大小
-Vue.use(ElementUI, {size: 'small'})
+Vue.use(ElementUI, { size: 'small' })
 Vue.use(VueQuillEditor)
-
 //自定义方法
 Vue.use(util);
 let loadingInstance = null;
-
 Axios.defaults.timeout = 10000
 //添加一个请求拦截器
-
-
-Axios.interceptors.request.use(function (config) {
+Axios.interceptors.request.use(function(config){
   //在请求发出之前进行一些操作
   let re = new RegExp("/api", "g"),
-    srt = config.url.replace(re, "http://47.104.146.162:8080");
+    srt = config.url.replace(re, "http://114.113.21.32:8080");
     config.url = srt
 
-
+  
+  if (config.method === 'post' && typeof config.data != 'string'  ) {
+    for (var index in config.data) {
+      if (typeof config.data[ index ] === 'string' && index != 'content') {
+        config.data[ index ] = config.data[ index ].replace(/\s+/g, "");
+      }
+    }
+  }
+  //
   loadingInstance = Loading.service({
     lock: true,
     text: 'Loading',
@@ -42,45 +46,41 @@ Axios.interceptors.request.use(function (config) {
     background: 'rgba(255, 255, 255, 0)'
   });
   return config;
-}, function (err) {
+}, function(err){
   //请求错误
   // console.log("请求错误")
   loadingInstance.close();
   return Promise.reject(error);
 });
 //添加一个响应拦截器
-Axios.interceptors.response.use(function (res) {
+Axios.interceptors.response.use(function(res){
   //在这里对返回的数据进行处理
   loadingInstance.close();
   // console.log("请求返回")
   if (res.status == 401) {
-    router.push({path: "/"})
+    router.push({ path: "/" })
   }
   return res;
-}, function (err) {
+}, function(err){
   //返回错误
-  loadingInstance.close();
   console.log("返回错误")
+  
+  loadingInstance.close();
+ 
   if (err.response.status == 401) {
     Message.error('登陆超时')
-    router.push({path: "/"})
+    router.push({ path: "/" })
   }
   return Promise.reject(error);
 })
-
-
 //ajax 配置
 Vue.prototype.$axios = Axios;
-
 // Vue.use(VueAxios, Axios)
-
-
 new Vue({
   el: '#app',
   router,
   store,
   template: '<App/>',
-  components: {App}
+  components: { App }
 })
-
 Vue.config.productionTip = false

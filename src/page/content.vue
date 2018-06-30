@@ -42,7 +42,7 @@
       signOut(){
         let _this = this;
         this.$axios.get("/api/usersLogin").then((response) => {
-          console.log(response)
+          // console.log(response)
         this.$message({
           showClose: true,
           type: "warning",
@@ -55,7 +55,7 @@
         _this.cookieFn.delete("type")
       }).
         catch(function (error) {
-          console.log(error);
+          // console.log(error);
         });
       }
     },

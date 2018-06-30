@@ -126,7 +126,7 @@
 
         let form = {
           parentUsersId: this.form.parentUsersId,
-          truename: escape(this.form.truename),
+          truename: this.form.truename,
           username: this.form.username,
           purviewids: this.purviewids.join(","),
           type: 2

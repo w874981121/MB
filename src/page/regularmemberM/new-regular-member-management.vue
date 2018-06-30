@@ -154,7 +154,7 @@
       //新建
       onSubmit(formName) {
         let fromdata = {
-          customerName: escape(this.form.customerName),
+          customerName: this.form.customerName,
           photoUrl: this.form.photoUrl,
           phone: this.form.phone,
           sex: this.form.sex,

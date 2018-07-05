@@ -28,7 +28,7 @@ Axios.interceptors.request.use(function(config){
   //在请求发出之前进行一些操作
   let re = new RegExp("/api", "g"),
     srt = config.url.replace(re, "http://114.113.21.32:8080");
-    // config.url = srt
+    config.url = srt
 
   
   if (config.method === 'post' && typeof config.data != 'string'  ) {

@@ -37,7 +37,7 @@ export default {
       }
     };
     Vue.prototype.$api = "http://114.113.21.32:8080";
-    Vue.prototype.$urlapi = "http://114.113.21.32:8080";  //http://114.113.21.32:8080
+    Vue.prototype.$urlapi = "/api";  //http://114.113.21.32:8080
     Vue.prototype.$Trim = function(str){
       return str.replace(/\s+/g,"")
     };

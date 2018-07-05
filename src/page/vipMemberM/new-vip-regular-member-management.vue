@@ -187,7 +187,15 @@
 
         this.$axios.post('/api/back/customers', fromdata)
           .then((response)=> {
-            if (response.data.errcode == 30012) {
+            if (response.data.errcode == 30016) {
+              this.$message({
+                showClose: true,
+                type: "error",
+                message: '设备编号重复，请重新填写！'
+              });
+              return
+            }
+            if(response.data.errcode == 30012){
               this.$message({
                 showClose: true,
                 type: "error",

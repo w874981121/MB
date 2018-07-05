@@ -92,7 +92,6 @@
       getData(){
         console.log(this.$route.query.articleId)
         this.$axios.get('/api/back/article/' + this.$route.query.articleId).then((response)=> {
-          console.log(response)
           let data = response.data.data;
           this.form.title = data.title;
           this.form.content = data.content;
@@ -109,15 +108,21 @@
           sortCode:1,
         }
 
-        console.log(typeof this.form.content.toString())
-
         this.$axios.post('/api/back/article', formdata).then((response) => {
           console.log(response)
-          this.$message({
-            type: 'success',
-            message: '修改成功!'
-          });
-          history.go(-1)
+          if(response.data.errcode == 0 && response.data.errmsg == "OK"){
+            this.$message({
+              type: 'success',
+              message: '修改成功!'
+            });
+            history.go(-1)
+          }else{
+            this.$message({
+              type: 'error',
+              message: "修改失败！"
+            });
+          }
+
         }).catch((error) => {
           console.log(error);
         });

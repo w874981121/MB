@@ -28,13 +28,16 @@ Axios.interceptors.request.use(function(config){
   //在请求发出之前进行一些操作
   let re = new RegExp("/api", "g"),
     srt = config.url.replace(re, "http://114.113.21.32:8080");
-    config.url = srt
+    // config.url = srt
 
   
   if (config.method === 'post' && typeof config.data != 'string'  ) {
     for (var index in config.data) {
       if (typeof config.data[ index ] === 'string' && index != 'content') {
-        config.data[ index ] = config.data[ index ].replace(/\s+/g, "");
+        if(config.data[ index ].indexOf(' ') !== -1){
+          Message.error('输入内容中存在空格，请修正再次提交！')
+          return
+        }
       }
     }
   }
@@ -48,7 +51,6 @@ Axios.interceptors.request.use(function(config){
   return config;
 }, function(err){
   //请求错误
-  // console.log("请求错误")
   loadingInstance.close();
   return Promise.reject(error);
 });

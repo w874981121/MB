@@ -29,7 +29,7 @@
           <el-input v-model="form.linkName"></el-input>
         </el-form-item>
         <el-form-item label="电话：" prop="phone" :rules="[{required: true, message: '请输入电话', trigger: 'blur'}]">
-          <el-input v-model="form.phone" ></el-input>
+          <el-input v-model="form.phone"></el-input>
         </el-form-item>
 
         <el-form-item>
@@ -48,6 +48,8 @@
 
 <script type="text/ecmascript-6">
   import qs from 'qs';
+
+
   export default {
     name: 'new-account',
     data(){
@@ -61,33 +63,35 @@
           linkName: "",
           phone: "",
           lockState: '',
+          username:"",
         }
       }
     },
     mounted(){
-      this.$axios.get('/api/back/users/' + this.$route.query.usersid, {params: {usersid: this.$route.query.usersid}}).then((response)=> {
+      this.$axios.get('/api/back/users/' + this.$route.query.usersid, { params: { usersid: this.$route.query.usersid } }).then((response) =>{
         console.log(response)
         let data = response.data.data;
-        this.imageUrl = this.$api+ "/images/" + data.photoUrl, this.form.photoUrl = data.photoUrl;
+        this.imageUrl = this.$api + "/images/" + data.photoUrl, this.form.photoUrl = data.photoUrl;
         this.form.truename = data.truename;
         this.form.linkName = data.linkName;
         this.form.phone = data.phone;
         this.form.lockState = data.lockState;
+        this.form.username = data.username;
         console.log(this.getdata)
-      }).catch(function (error) {
+      }).catch(function(error){
         console.log(error);
       });
     },
     methods: {
       //上传文件之前
-      beforeAvatarUpload(file) {
+      beforeAvatarUpload(file){
         const isJPG = file.type === 'image/jpeg' || 'image/png';
         const isLt2M = file.size / 1024 / 1024 < 2;
-        if (!isJPG) {
+        if (! isJPG) {
           this.loading = false;
           this.$message.error('上传头像图片只能是 JPG 格式!');
         }
-        if (!isLt2M) {
+        if (! isLt2M) {
           this.loading = false;
           this.$message.error('上传头像图片大小不能超过 2MB!');
         }
@@ -95,24 +99,23 @@
         return isJPG && isLt2M;
       },
       //文件上传成功
-      handleAvatarSuccess(res, file) {
-        if(res.errcode === 0){
+      handleAvatarSuccess(res, file){
+        if (res.errcode === 0) {
           this.$message({
             type: 'success',
             message: "上传成功"
           });
           this.imageUrl = this.$api + "/images/" + res.data;
           this.form.photoUrl = res.data;
-        }else{
+        }
+        else {
           this.$message({
             type: 'error',
             message: "上传失败"
           });
         }
         this.loading = false;
-
       },
-
       //上传文件失败
       handleAvatarError(res, file){
         this.loading = false;
@@ -122,69 +125,80 @@
         });
       },
       //修改
-      onSubmit(formName) {
-        this.$refs[formName].validate((valid) => {
-        if (!valid) {
-          throw new Error('参数错误'); //验证判断
-        }
-      });
+      onSubmit(formName){
+        let _this = this;
+        this.$refs[ formName ].validate((valid) =>{
+          if (! valid) {
+            throw new Error('参数错误'); //验证判断
+          }
+        });
         let form = {
           usersid: this.$route.query.usersid,
           photoUrl: this.form.photoUrl,
           truename: this.form.truename,
           linkName: this.form.linkName,
-          phone: this.form.phone
-        }
-        this.$axios.post('/api/back/users/webSite', form)
-          .then((response)=> {
-            this.$message({
-              showClose: true,
-              type: "success",
-              message: '修改成功！'
-            });
-            history.go(-1)
-          })
-          .catch(function (error) {
-          this.$message({
-            showClose: true,
-            type: "error",
-            message: '修改失败！'
-          });
-            console.log(error);
-          });
-      },
+          phone: this.form.phone,
+          username: this.form.username,
+          type: 1
+        };
 
+        this.$axios.post('/api/back/users/webSite', form)
+            .then((response) =>{
+              if (response.data.errcode == 0) {
+                _this.$message({
+                  showClose: true,
+                  type: "success",
+                  message: '修改成功！'
+                });
+                history.go(- 1)
+              }
+              else {
+                _this.$message({
+                  showClose: true,
+                  type: "error",
+                  message: '修改失败！'
+                });
+              }
+            })
+            .catch(function(error){
+              _this.$message({
+                showClose: true,
+                type: "error",
+                message: '修改失败！'
+              });
+              console.log(error);
+            });
+      },
       //禁用账号
-      disableFn() {
+      disableFn(){
         let _this = this;
         let messageText = [];
         if (this.form.lockState == 0) {
-          messageText[0] = '禁用账号后，本账号的网址、医生账号、会员账号都不可继续使用！';
-          messageText[1] = '禁用成功！';
-        }else{
-          messageText[0] = '启用账号后，本账号的网址、医生账号、会员账号都可继续使用！';
-          messageText[1] = '启用成功！';
+          messageText[ 0 ] = '禁用账号后，本账号的网址、医生账号、会员账号都不可继续使用！';
+          messageText[ 1 ] = '禁用成功！';
         }
-        this.$confirm(messageText[0], '提示', {
+        else {
+          messageText[ 0 ] = '启用账号后，本账号的网址、医生账号、会员账号都可继续使用！';
+          messageText[ 1 ] = '启用成功！';
+        }
+        this.$confirm(messageText[ 0 ], '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
-        }).then(() => {
-          this.$axios.post('/api/back/users', {usersid: this.$route.query.usersid})
-            .then((response)=> {
-              console.log(response)
-              this.$message({
-                type: 'success',
-                message: messageText[1],
+        }).then(() =>{
+          this.$axios.post('/api/back/users', { usersid: this.$route.query.usersid })
+              .then((response) =>{
+                console.log(response)
+                this.$message({
+                  type: 'success',
+                  message: messageText[ 1 ],
+                });
+                history.go(- 1)
+              })
+              .catch(function(error){
+                console.log(error);
               });
-
-              history.go(-1)
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
-
-        }).catch(() => {
+        }).catch(() =>{
           this.$message({
             type: 'info',
             message: '已取消'
@@ -192,18 +206,18 @@
         });
       },
       //  重置
-      resetFn() {
+      resetFn(){
         this.$confirm('重置密码, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
-        }).then(() => {
+        }).then(() =>{
           //发送请求
           this.$message({
             type: 'success',
             message: '重置成功!'
           });
-        }).catch(() => {
+        }).catch(() =>{
           this.$message({
             type: 'info',
             message: '已取消重置'

@@ -35,7 +35,7 @@ Axios.interceptors.request.use(function(config){
     for (var index in config.data) {
       if (typeof config.data[ index ] === 'string' && index != 'content') {
         if(config.data[ index ].indexOf(' ') !== -1){
-          Message.error('输入内容中存在空格，请修正再次提交！')
+          Message.error('输入内容中存在空格，请修正后再次提交！')
           return
         }
       }
@@ -61,6 +61,9 @@ Axios.interceptors.response.use(function(res){
   // console.log("请求返回")
   if (res.status == 401) {
     router.push({ path: "/" })
+  }
+  if (res.status == 500){
+    Message.error('500服务器出错！')
   }
   return res;
 }, function(err){

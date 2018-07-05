@@ -100,9 +100,6 @@
       this.$refs.newEditor.quill.getModule("toolbar").addHandler("image", imgHandler)
     },
     methods: {
-
-
-
       getData(){
         console.log(this.$route.query.articleId)
         this.$axios.get('/api/back/article/' + this.$route.query.articleId).then((response)=> {
